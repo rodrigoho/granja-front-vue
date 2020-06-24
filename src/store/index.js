@@ -9,7 +9,9 @@ export default new Vuex.Store({
     user: null,
     userName: localStorage.getItem('userName') || 'Usuário',
     token: localStorage.getItem('token') || null,
+    cargoPackings: [],
     customers: [],
+    selectedCustomer: {},
     notifications: ['1', '2'],
   },
   getters: {
@@ -19,8 +21,14 @@ export default new Vuex.Store({
     getToken(state) {
       return state.token;
     },
+    getCargoPackings(state) {
+      return state.cargoPackings;
+    },
     getCustomers(state) {
       return state.customers;
+    },
+    getSelectedCustomer(state) {
+      return state.selectedCustomer;
     },
     getUser(state) {
       return state.user;
@@ -43,8 +51,17 @@ export default new Vuex.Store({
       state.token = payload;
       localStorage.setItem('token', payload);
     },
-    SET_CUSTOMERS(state, payload) {
+    SET_CARGO_PACKINGS(state, payload) {
+      state.cargoPackings = payload;
+    },
+    SET_CUSTOMERS_LIST(state, payload) {
       state.customers = payload;
+    },
+    SET_SELECTED_CUSTOMER(state, payload) {
+      state.selectedCustomer = payload;
+    },
+    CREATE_CUSTOMER(state, payload) {
+      state.customers.push(payload);
     },
     LOGOUT(state) {
       localStorage.removeItem('token');
@@ -70,11 +87,41 @@ export default new Vuex.Store({
       localStorage.removeItem('token');
       commit('LOGOUT');
     },
-    loadCustomers: async ({ commit }) => {
+    loadCargoPackings: async ({ commit }) => {
       try {
         const res = await api.get('cargo-packing');
-        commit('SET_CUSTOMERS', res.data);
+        commit('SET_CARGO_PACKINGS', res.data);
         return res;
+      } catch (err) {
+        console.log(err.response.data.error);
+        throw err;
+      }
+    },
+    loadCustomers: async ({ commit }) => {
+      try {
+        const res = await api.get('customers');
+        commit('SET_CUSTOMERS_LIST', res.data);
+        return res;
+      } catch (err) {
+        console.log(err.response.data.error);
+        throw err;
+      }
+    },
+    loadSelectedCustomer: async ({ commit }, payload) => {
+      try {
+        const res = await api.get(`customers/${payload}`);
+        commit('SET_SELECTED_CUSTOMER', res.data);
+        return res;
+      } catch (err) {
+        console.log(err.response.data.error);
+        throw err;
+      }
+    },
+    createCustomer: async ({ commit }, payload) => {
+      try {
+        const res = await api.post('customers', payload);
+        commit('CREATE_CUSTOMER', payload);
+        return res.data;
       } catch (err) {
         console.log(err.response.data.error);
         throw err;

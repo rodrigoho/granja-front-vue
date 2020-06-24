@@ -1,7 +1,7 @@
 <template>
   <div class="r-header">
     <span>{{ title }}</span>
-    <button type="button" v-if="buttonTitle">{{ buttonTitle }}</button>
+    <button type="button" v-if="buttonTitle" @click="handleClick">{{ buttonTitle }}</button>
   </div>
 </template>
 
@@ -17,6 +17,16 @@ export default {
     buttonTitle: {
       type: String,
       required: false,
+    },
+    toRouterName: {
+      type: String,
+      required: true,
+      default: 'home',
+    },
+  },
+  methods: {
+    handleClick() {
+      this.$router.push({ name: this.toRouterName });
     },
   },
 };

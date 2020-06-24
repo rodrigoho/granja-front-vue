@@ -35,7 +35,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['logout', 'getCustomers']),
+    ...mapActions(['logout', 'getCargoPackings']),
     async handleLogout() {
       await this.logout();
       this.$router.push({ name: 'login' });

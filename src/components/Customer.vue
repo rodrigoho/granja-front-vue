@@ -1,8 +1,8 @@
 <template>
   <div>
     <b-col>
-      <div class="cargo-packing">
-        <label-value :values="cargoPackingData" />
+      <div class="customer">
+        <label-value :values="customerData" />
         <button type="button" @click="handleClick">Detalhes</button>
       </div>
     </b-col>
@@ -11,33 +11,23 @@
 
 <script>
 import LabelValue from '@/components/LabelValue.vue';
-import { format, parseISO } from 'date-fns';
-import pt from 'date-fns/locale/pt';
 
 export default {
   name: 'CargoPacking',
-  props: ['cargoPacking'],
+  props: ['customer'],
   components: {
     LabelValue,
   },
   data() {
     return {
-      cargoPackingData: [
+      customerData: [
         {
           label: 'Nome:',
-          value: this.cargoPacking.customer.name,
+          value: this.customer.name,
         },
         {
-          label: 'Número da nota:',
-          value: this.cargoPacking.receipt_number,
-        },
-        {
-          label: 'Status:',
-          value: this.cargoPacking.is_paid ? 'Pago' : 'Em aberto',
-        },
-        {
-          label: 'Valor:',
-          value: format(parseISO(this.cargoPacking.due_to), "d 'de' MMMM", { locale: pt }),
+          label: 'Telefone:',
+          value: this.customer.phone,
         },
       ],
     };
@@ -52,7 +42,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.cargo-packing {
+.customer {
   width: 300px;
   padding: 15px 20px 15px;
   border-radius: 4px;

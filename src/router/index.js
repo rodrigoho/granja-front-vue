@@ -17,28 +17,45 @@ const routes = [
   {
     path: '/home',
     name: 'home',
-    component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
+    component: () => import(/* webpackChunkName: "home" */ '../views/CargoPacking/Home.vue'),
     meta: {
       requiresAuth: true,
     },
   },
-  // {
-  //   path: '/tags',
-  //   name: 'tags',
-  //   component: () => import(/* webpackChunkName: "home" */ '../pages/Tags.vue'),
-  //   meta: {
-  //     requiresAuth: true,
-  //   },
-  // },
-  // {
-  //   path: '/customer',
-  //   name: 'customer',
-  //   component: () => import(/* webpackChunkName: "newCustomer" */ '../pages/NewCustomer.vue'),
-  //   props: true,
-  //   meta: {
-  //     requiresAuth: true,
-  //   },
-  // },
+  {
+    path: '/new-cargo-packing',
+    name: 'newCargoPacking',
+    component: () =>
+      import(/* webpackChunkName: "newCargoPacking" */ '../views/CargoPacking/NewCargoPacking.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/eggs',
+    name: 'eggs',
+    component: () => import(/* webpackChunkName: "eggs" */ '../views/Eggs.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/customers',
+    name: 'customers',
+    component: () => import(/* webpackChunkName: "customers" */ '../views/Customer/Customers.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/new-customer',
+    name: 'newCustomer',
+    component: () =>
+      import(/* webpackChunkName: "newCustomer" */ '../views/Customer/NewCustomer.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
 ];
 
 const router = new VueRouter({

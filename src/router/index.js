@@ -15,7 +15,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue'),
   },
   {
-    path: '/home',
+    path: '/',
     name: 'home',
     component: () => import(/* webpackChunkName: "home" */ '../views/CargoPacking/Home.vue'),
     meta: {
@@ -48,13 +48,23 @@ const routes = [
     },
   },
   {
-    path: '/new-customer',
+    path: '/customers/new-customer',
     name: 'newCustomer',
     component: () =>
       import(/* webpackChunkName: "newCustomer" */ '../views/Customer/NewCustomer.vue'),
     meta: {
       requiresAuth: true,
     },
+  },
+  {
+    path: '/customers/customer-details',
+    name: 'customerDetails',
+    component: () =>
+      import(/* webpackChunkName: "customerDetails" */ '../views/Customer/CustomerDetails.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+    props: true,
   },
 ];
 

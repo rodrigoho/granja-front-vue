@@ -1,7 +1,7 @@
 <template>
   <div class="customers">
-    <b-container fluid>
-      <r-header :title="'Clientes'" :buttonTitle="'Novo Cliente'" :toRouterName="'newCustomer'" />
+    <r-header :title="'Clientes'" :buttonTitle="'Novo Cliente'" :toRouterName="'newCustomer'" />
+    <b-container>
       <b-row align-h="center" class="align-cards">
         <customer v-for="(customer, idx) in getCustomers" :key="idx" :customer="customer" />
       </b-row>

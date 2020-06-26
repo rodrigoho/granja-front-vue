@@ -34,7 +34,8 @@ export default {
   },
   methods: {
     handleClick() {
-      console.log('fui clicado');
+      this.$router.push({ name: 'customerDetails' });
+      localStorage.setItem('selectedCustomer', JSON.stringify(this.customer));
     },
   },
   computed: {},

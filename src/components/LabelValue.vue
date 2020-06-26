@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-for="(value, idx) in values" :key="idx" class="teste">
+    <div v-for="(value, idx) in values" :key="idx" class="flex">
       <span class="label">
         {{ value.label }}
       </span>
@@ -19,7 +19,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.teste {
+.flex {
   display: flex;
   justify-content: space-between;
   flex-direction: row;

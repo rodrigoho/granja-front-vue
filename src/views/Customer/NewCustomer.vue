@@ -1,14 +1,10 @@
 <template>
-  <div class="new-cargo-packing">
+  <div class="new-customer">
+    <r-header :title="'Cliente'" :buttonTitle="'Voltar aos clientes'" :toRouterName="'customers'" />
     <b-container fluid>
-      <r-header
-        :title="'Cliente'"
-        :buttonTitle="'Voltar aos clientes'"
-        :toRouterName="'customers'"
-      />
       <b-card align-h="center" class="align-cards">
         <!-- CargoPacking form -->
-        <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+        <b-form @submit="onSubmit" @reset="onReset">
           <!-- Customer Data section -->
           <h3>Dados</h3>
 
@@ -113,10 +109,9 @@
               >
                 <b-form-input
                   id="input-rural-fund"
-                  type="decimal"
+                  type="number"
                   v-model="form.customerRuralFund"
                   step="0.1"
-                  required
                   size="sm"
                   placeholder="Valor do fundo rural"
                 ></b-form-input>
@@ -136,7 +131,6 @@
                   v-model="form.customerIcms"
                   type="number"
                   step="0.1"
-                  required
                   size="sm"
                   placeholder="Valor do ICMS"
                 ></b-form-input>
@@ -149,7 +143,7 @@
 
           <!-- Customer Zipcode -->
           <b-row align-v="center" cols="4" class="flex">
-            <b-col sm="3" class="test">
+            <b-col sm="3" class="address-align">
               <b-form-group
                 id="input-group-zipcode"
                 label="CEP:"
@@ -163,6 +157,7 @@
                   v-model="form.customerZipcode"
                   placeholder="Digite o CEP"
                   size="sm"
+                  required
                 ></b-form-input>
               </b-form-group>
             </b-col>
@@ -180,7 +175,7 @@
             </b-col>
 
             <!-- Customer State select -->
-            <b-col sm="3" class="test">
+            <b-col sm="3" class="address-align">
               <b-form-group
                 id="input-group-3"
                 label="Estado:"
@@ -195,6 +190,7 @@
                     v-for="(state, idx) in states"
                     :value="state.text"
                     :key="idx"
+                    required
                     >{{ state.text }}</b-form-select-option
                   >
                 </b-form-select>
@@ -202,7 +198,7 @@
             </b-col>
 
             <!-- Customer City -->
-            <b-col sm="4" class="test">
+            <b-col sm="4" class="address-align">
               <b-form-group
                 id="input-group-city"
                 label="Cidade:"
@@ -212,9 +208,10 @@
                 <b-form-input
                   id="input-city"
                   type="text"
-                  v-model="form.customerAddressCity"
+                  v-model="form.customerAddrCity"
                   placeholder="Digite a cidade"
                   size="sm"
+                  required
                 ></b-form-input>
               </b-form-group>
             </b-col>
@@ -222,7 +219,7 @@
 
           <!-- Customer Address line -->
           <b-row align-v="center" class="flex" cols="2">
-            <b-col sm="6" class="test">
+            <b-col sm="7" class="address-align">
               <b-form-group
                 id="input-group-line"
                 label="Endereço:"
@@ -235,12 +232,13 @@
                   v-model="form.customerAddressLine"
                   placeholder="Digite o endereço"
                   size="sm"
+                  required
                 ></b-form-input>
               </b-form-group>
             </b-col>
 
             <!-- Customer Neighborhood -->
-            <b-col sm="6" class="test">
+            <b-col sm="5" class="address-align">
               <b-form-group
                 id="input-group-neighborhood"
                 label="Bairro:"
@@ -253,14 +251,15 @@
                   v-model="form.customerAddrNeighborhood"
                   placeholder="Nome do bairro"
                   size="sm"
+                  required
                 ></b-form-input>
               </b-form-group>
             </b-col>
           </b-row>
 
-          <b-row align-v="center" class="flex" cols="2">
+          <b-row align-v="center" class="flex">
             <!-- Customer Address Complement -->
-            <b-col sm="8" class="test">
+            <b-col class="address-align">
               <b-form-group
                 id="input-group-complement"
                 label="Complemento:"
@@ -273,24 +272,7 @@
                   v-model="form.customerAddressComplement"
                   placeholder="Digite o complemento"
                   size="sm"
-                ></b-form-input>
-              </b-form-group>
-            </b-col>
-
-            <!-- Customer Address Number -->
-            <b-col sm="4" class="test">
-              <b-form-group
-                id="input-group-number"
-                label="Número:"
-                label-for="input-number"
-                class="same"
-              >
-                <b-form-input
-                  id="input-number"
-                  type="text"
-                  v-model="form.customerAddressNumber"
-                  placeholder="Digite o número"
-                  size="sm"
+                  required
                 ></b-form-input>
               </b-form-group>
             </b-col>
@@ -320,6 +302,7 @@ export default {
   data() {
     return {
       form: {
+        id: null,
         customerName: '',
         customerEmail: '',
         customerPhone: '',
@@ -329,65 +312,104 @@ export default {
         customerIcms: '',
         customerZipcode: '',
         customerState: null,
-        customerCity: '',
+        customerAddrCity: '',
         customerAddressLine: '',
         customerAddrNeighborhood: '',
         customerAddressComplement: '',
-        customerAddressNumber: '',
         food: null,
         checked: [],
       },
+      customerEditing: false,
+      customerId: null,
       states: STATES_LIST,
-      customersList: [],
       selectedUserId: null,
-      foods: [{ text: 'Select One', value: null }, 'Carrots', 'Beans', 'Tomatoes', 'Corn'],
-      show: true,
     };
   },
   created() {
-    this.handleCustomersList();
+    if (this.getCustomerToEdit) {
+      const {
+        id,
+        cnpj,
+        discount,
+        email,
+        icms_tax,
+        name,
+        phone,
+        rural_fund_tax,
+        zip_code,
+        address,
+      } = this.getCustomerToEdit;
+      this.form.id = id;
+      this.form.customerName = name;
+      this.form.customerEmail = email;
+      this.form.customerPhone = phone;
+      this.form.customerCnpj = cnpj;
+      this.form.customerDiscount = discount;
+      this.form.customerRuralFund = rural_fund_tax;
+      this.form.customerIcms = icms_tax;
+      this.form.customerZipcode = zip_code;
+      this.form.customerState = address.state;
+      this.form.customerAddrCity = address.city;
+      this.form.customerAddressLine = address.public_area;
+      this.form.customerAddrNeighborhood = address.neighborhood;
+      this.form.customerAddressComplement = address.complement;
+      this.customerEditing = true;
+    }
+    this.setCustomerToEdit(null);
   },
   methods: {
-    ...mapActions(['loadCustomers', 'loadSelectedCustomer', 'createCustomer']),
-    async handleCustomersList() {
-      await this.loadCustomers();
-      const customersMap = [...this.getCustomers.map((c) => ({ value: c.id, text: c.name }))];
-
-      this.customersList = customersMap;
-    },
+    ...mapActions([
+      'loadCustomers',
+      'loadSelectedCustomer',
+      'createCustomer',
+      'setCustomerToEdit',
+      'editCustomer',
+    ]),
     async handleZipcode() {
       const response = await axios.get(
         `https://viacep.com.br/ws/${this.form.customerZipcode}/json`
       );
       this.form.customerState = response.data.uf;
-      this.form.customerAddressCity = response.data.localidade;
+      this.form.customerAddrCity = response.data.localidade;
       this.form.customerAddressLine = response.data.logradouro;
       this.form.customerAddrNeighborhood = response.data.bairro;
-      console.log(response.data);
     },
-    onSubmit(evt) {
+    async onSubmit(evt) {
       evt.preventDefault();
       const customer = this.form;
-      const newCustomer = {
+      const customerData = {
+        id: customer.id,
         name: customer.customerName,
         cnpj: customer.customerCnpj,
         phone: customer.customerPhone,
         email: customer.customerEmail,
-        discount: customer.customerDiscount,
-        rural_fund_tax: customer.customerRuralFund,
-        icms_tax: customer.customerIcms,
+        discount: customer.customerDiscount ? customer.customerDiscount : 0,
+        rural_fund_tax: customer.customerRuralFund ? customer.customerRuralFund : 0,
+        icms_tax: customer.customerIcms ? customer.customerIcms : 0,
         zip_code: customer.customerZipcode,
         address: {
           public_area: customer.customerAddressLine,
           complement: customer.customerAddressComplement,
-          city: customer.customerAddressCity,
+          city: customer.customerAddrCity,
           neighborhood: customer.customerAddrNeighborhood,
           state: customer.customerState,
         },
       };
-
-      this.createCustomer(newCustomer);
-      this.$router.push({ name: 'customers' });
+      try {
+        if (this.customerEditing) {
+          await this.editCustomer(customerData);
+        } else {
+          await this.createCustomer(customerData);
+        }
+        await this.loadCustomers();
+        this.$router.push({ name: 'customers' });
+      } catch (err) {
+        this.$bvToast.toast(`${err}`, {
+          title: 'Verifique os dados',
+          autoHideDelay: 5000,
+          variant: 'danger',
+        });
+      }
     },
     onReset(evt) {
       evt.preventDefault();
@@ -407,15 +429,10 @@ export default {
       this.form.customerAddrNeighborhood = '';
       this.form.customerAddressComplement = '';
       this.form.customerAddressNumber = '';
-      // Trick to reset/clear native browser form validation state
-      this.show = false;
-      this.$nextTick(() => {
-        this.show = true;
-      });
     },
   },
   computed: {
-    ...mapGetters(['getCustomers', 'getSelectedCustomer']),
+    ...mapGetters(['getCustomers', 'getSelectedCustomer', 'getCustomerToEdit']),
   },
 };
 </script>
@@ -433,7 +450,7 @@ export default {
 .flex {
   display: flex;
   padding: 0 1.375rem;
-  .test {
+  .address-align {
     padding: 0 0.375rem;
   }
 }
@@ -453,19 +470,9 @@ export default {
   padding: 0 0.375rem;
 }
 
-.teste {
-  width: 250px;
-  padding-left: 0.9375rem;
-  margin-bottom: 0.9375rem;
-}
-.section-header {
-  background: red;
-}
-
 .form-buttons {
   display: flex;
   justify-content: flex-end;
-  /* padding-right: 0.9375rem; */
 
   button + button {
     margin-left: 0.9375rem;

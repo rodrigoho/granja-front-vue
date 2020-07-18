@@ -1,6 +1,11 @@
 <template>
   <div class="new-customer">
-    <r-header :title="'Cliente'" :buttonTitle="'Voltar aos clientes'" :toRouterName="'customers'" />
+    <r-header
+      :title="'Cliente'"
+      :buttonTitle="'Voltar aos clientes'"
+      :toRouteName="'customers'"
+      :shouldShowButton="true"
+    />
     <b-container fluid>
       <b-card align-h="center" class="align-cards">
         <!-- CargoPacking form -->
@@ -79,7 +84,7 @@
           <!-- Customer Fees -->
           <h3>Taxas</h3>
 
-          <b-row class="flex" cols="3">
+          <b-row class="flex" cols="4">
             <!-- Customer Discount -->
             <b-col>
               <b-form-group
@@ -93,7 +98,26 @@
                   type="number"
                   v-model="form.customerDiscount"
                   step="0.1"
-                  placeholder="Valor do desconto"
+                  placeholder="0"
+                  size="sm"
+                ></b-form-input>
+              </b-form-group>
+            </b-col>
+
+            <!-- Customer Additional Fee -->
+            <b-col>
+              <b-form-group
+                id="input-group-discount"
+                label="Adicional:"
+                label-for="input-discount"
+                description="Taxa Ovo vermelho"
+              >
+                <b-form-input
+                  id="input-discount"
+                  type="number"
+                  v-model="form.customerAdditionalFee"
+                  step="0.1"
+                  placeholder="0"
                   size="sm"
                 ></b-form-input>
               </b-form-group>
@@ -113,7 +137,7 @@
                   v-model="form.customerRuralFund"
                   step="0.1"
                   size="sm"
-                  placeholder="Valor do fundo rural"
+                  placeholder="0"
                 ></b-form-input>
               </b-form-group>
             </b-col>
@@ -132,7 +156,7 @@
                   type="number"
                   step="0.1"
                   size="sm"
-                  placeholder="Valor do ICMS"
+                  placeholder="0"
                 ></b-form-input>
               </b-form-group>
             </b-col>
@@ -308,6 +332,7 @@ export default {
         customerPhone: '',
         customerCnpj: '',
         customerDiscount: '',
+        customerAdditionalFee: '',
         customerRuralFund: '',
         customerIcms: '',
         customerZipcode: '',
@@ -477,5 +502,10 @@ export default {
   button + button {
     margin-left: 0.9375rem;
   }
+}
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 </style>

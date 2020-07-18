@@ -32,9 +32,29 @@ const routes = [
     },
   },
   {
+    path: '/cargo-packing-details',
+    name: 'cargoPackingDetails',
+    component: () =>
+      import(
+        /* webpackChunkName: "cargoPackingDetails" */ '../views/CargoPacking/CargoPackingDetails.vue'
+      ),
+    meta: {
+      requiresAuth: true,
+    },
+    props: true,
+  },
+  {
     path: '/eggs',
     name: 'eggs',
-    component: () => import(/* webpackChunkName: "eggs" */ '../views/Eggs.vue'),
+    component: () => import(/* webpackChunkName: "eggs" */ '../views/Eggs/Eggs.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/new-eggs',
+    name: 'newEggs',
+    component: () => import(/* webpackChunkName: "newEggs" */ '../views/Eggs/NewEggs.vue'),
     meta: {
       requiresAuth: true,
     },

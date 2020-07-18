@@ -1,25 +1,32 @@
 <template>
-  <b-container fluid>
-    <r-header :title="'Cliente'" :buttonTitle="'Voltar aos clientes'" :toRouterName="'customers'" />
-    <b-card align-h="center" class="align-cards">
-      <template v-slot:header>
-        <h4 class="mb-0">{{ customer.name }}</h4>
-      </template>
-      <b-row cols="2">
-        <b-col><label-value :values="customerData"/></b-col>
-        <b-col
-          ><div><strong>Endereço:</strong></div>
-          {{ address }}</b-col
-        >
-      </b-row>
-      <template v-slot:footer>
-        <div class="footer">
-          <b-button size="sm" variant="primary" @click="handleEdit">Editar</b-button>
-          <b-button size="sm" variant="danger" @click="handleDelete">Remover</b-button>
-        </div>
-      </template>
-    </b-card>
-  </b-container>
+  <div class="customer-details">
+    <r-header
+      :title="'Cliente'"
+      :buttonTitle="'Voltar aos clientes'"
+      :toRouteName="'customers'"
+      :shouldShowButton="true"
+    />
+    <b-container>
+      <b-card align-h="center" class="align-cards">
+        <template v-slot:header>
+          <h4 class="mb-0">{{ customer.name }}</h4>
+        </template>
+        <b-row cols="2">
+          <b-col><label-value :values="customerData"/></b-col>
+          <b-col
+            ><div><strong>Endereço:</strong></div>
+            {{ address }}</b-col
+          >
+        </b-row>
+        <template v-slot:footer>
+          <div class="footer">
+            <b-button size="sm" variant="primary" @click="handleEdit">Editar</b-button>
+            <b-button size="sm" variant="danger" @click="handleDelete">Remover</b-button>
+          </div>
+        </template>
+      </b-card>
+    </b-container>
+  </div>
 </template>
 
 <script>
@@ -84,7 +91,7 @@ export default {
         },
         {
           label: 'CNPJ',
-          value: c.cnpj,
+          value: c.cnpj ? c.cnpj : '-',
         },
         {
           label: 'Telefone',
@@ -92,11 +99,15 @@ export default {
         },
         {
           label: 'Email',
-          value: c.email,
+          value: c.email ? c.email : '-',
         },
         {
           label: 'Desconto',
           value: c.discount,
+        },
+        {
+          label: 'Taxa ovo vermelho',
+          value: c.red_egg_tax,
         },
         {
           label: 'Fundo Rural',
@@ -126,7 +137,6 @@ export default {
   width: 700px;
 }
 .row {
-  background-image: url('~@/assets/logo.png');
   padding: 0 5px;
 }
 .footer {

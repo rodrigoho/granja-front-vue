@@ -1,7 +1,9 @@
 <template>
   <div class="r-header">
     <span>{{ title }}</span>
-    <button type="button" v-if="buttonTitle" @click="handleClick">{{ buttonTitle }}</button>
+    <button type="button" v-if="buttonTitle && shouldShowButton" @click="handleClick">
+      {{ buttonTitle }}
+    </button>
   </div>
 </template>
 
@@ -18,15 +20,18 @@ export default {
       type: String,
       required: false,
     },
-    toRouterName: {
+    toRouteName: {
       type: String,
+      required: false,
+    },
+    shouldShowButton: {
+      type: Boolean,
       required: true,
-      default: 'home',
     },
   },
   methods: {
     handleClick() {
-      this.$router.push({ name: this.toRouterName });
+      if (this.toRouteName) this.$router.push({ name: this.toRouteName });
     },
   },
 };

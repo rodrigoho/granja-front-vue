@@ -27,16 +27,20 @@ export default {
           label: 'Nome:',
           value: this.cargoPacking.customer.name,
         },
+        // {
+        //   label: 'Número da nota:',
+        //   value: this.cargoPacking.receipt_number,
+        // },
         {
-          label: 'Número da nota:',
-          value: this.cargoPacking.receipt_number,
+          label: 'ID para teste:',
+          value: this.cargoPacking.id,
         },
         {
           label: 'Status:',
           value: this.cargoPacking.is_paid ? 'Pago' : 'Em aberto',
         },
         {
-          label: 'Valor:',
+          label: 'Vencimento:',
           value: format(parseISO(this.cargoPacking.due_to), "d 'de' MMMM", { locale: pt }),
         },
       ],
@@ -44,7 +48,11 @@ export default {
   },
   methods: {
     handleClick() {
-      console.log('fui clicado');
+      localStorage.setItem('selectedCargoPackingId', this.cargoPacking.id);
+      this.$router.push({
+        name: 'cargoPackingDetails',
+        params: { cargoPackingId: this.cargoPacking.id },
+      });
     },
   },
   computed: {},

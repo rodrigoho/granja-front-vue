@@ -1,6 +1,11 @@
 <template>
   <div class="new-customer">
-    <r-header :title="'Cliente'" :buttonTitle="'Voltar aos clientes'" :toRouterName="'customers'" />
+    <r-header
+      :title="'Cliente'"
+      :buttonTitle="'Voltar aos clientes'"
+      :toRouteName="'customers'"
+      :shouldShowButton="true"
+    />
     <b-container fluid>
       <b-card align-h="center" class="align-cards">
         <!-- CargoPacking form -->
@@ -29,7 +34,6 @@
                   id="input-email"
                   v-model="form.customerEmail"
                   type="email"
-                  required
                   size="sm"
                   placeholder="Digite o email"
                 ></b-form-input>
@@ -67,7 +71,6 @@
                   id="input-cnpj"
                   v-model="form.customerCnpj"
                   type="text"
-                  required
                   size="sm"
                   placeholder="Digite o CNPJ"
                 ></b-form-input>
@@ -79,7 +82,7 @@
           <!-- Customer Fees -->
           <h3>Taxas</h3>
 
-          <b-row class="flex" cols="3">
+          <b-row class="flex" cols="4">
             <!-- Customer Discount -->
             <b-col>
               <b-form-group
@@ -93,7 +96,28 @@
                   type="number"
                   v-model="form.customerDiscount"
                   step="0.1"
-                  placeholder="Valor do desconto"
+                  required
+                  placeholder="0"
+                  size="sm"
+                ></b-form-input>
+              </b-form-group>
+            </b-col>
+
+            <!-- Customer Additional Fee -->
+            <b-col>
+              <b-form-group
+                id="input-group-additional-fee"
+                label="Adicional:"
+                label-for="input-additional-fee"
+                description="Taxa Ovo vermelho"
+              >
+                <b-form-input
+                  id="input-additional-fee"
+                  type="number"
+                  v-model="form.customerAdditionalFee"
+                  step="0.1"
+                  required
+                  placeholder="0"
                   size="sm"
                 ></b-form-input>
               </b-form-group>
@@ -112,8 +136,9 @@
                   type="number"
                   v-model="form.customerRuralFund"
                   step="0.1"
+                  required
                   size="sm"
-                  placeholder="Valor do fundo rural"
+                  placeholder="0"
                 ></b-form-input>
               </b-form-group>
             </b-col>
@@ -130,9 +155,10 @@
                   id="input-icms"
                   v-model="form.customerIcms"
                   type="number"
+                  required
                   step="0.1"
                   size="sm"
-                  placeholder="Valor do ICMS"
+                  placeholder="0"
                 ></b-form-input>
               </b-form-group>
             </b-col>
@@ -307,16 +333,16 @@ export default {
         customerEmail: '',
         customerPhone: '',
         customerCnpj: '',
-        customerDiscount: '',
-        customerRuralFund: '',
-        customerIcms: '',
+        customerDiscount: 0,
+        customerAdditionalFee: 0.0,
+        customerRuralFund: 0.0,
+        customerIcms: 0.0,
         customerZipcode: '',
         customerState: null,
         customerAddrCity: '',
         customerAddressLine: '',
         customerAddrNeighborhood: '',
         customerAddressComplement: '',
-        food: null,
         checked: [],
       },
       customerEditing: false,
@@ -383,9 +409,10 @@ export default {
         cnpj: customer.customerCnpj,
         phone: customer.customerPhone,
         email: customer.customerEmail,
-        discount: customer.customerDiscount ? customer.customerDiscount : 0,
-        rural_fund_tax: customer.customerRuralFund ? customer.customerRuralFund : 0,
-        icms_tax: customer.customerIcms ? customer.customerIcms : 0,
+        discount: customer.customerDiscount,
+        rural_fund_tax: customer.customerRuralFund,
+        red_egg_tax: customer.customerAdditionalFee,
+        icms_tax: customer.customerIcms,
         zip_code: customer.customerZipcode,
         address: {
           public_area: customer.customerAddressLine,
@@ -395,6 +422,7 @@ export default {
           state: customer.customerState,
         },
       };
+      console.log(customerData);
       try {
         if (this.customerEditing) {
           await this.editCustomer(customerData);
@@ -477,5 +505,10 @@ export default {
   button + button {
     margin-left: 0.9375rem;
   }
+}
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 </style>

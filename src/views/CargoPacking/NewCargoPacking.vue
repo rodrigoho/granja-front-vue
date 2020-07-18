@@ -1,162 +1,248 @@
 <template>
   <div class="new-cargo-packing">
+    <r-header
+      :title="'Romaneio'"
+      :buttonTitle="'Voltar à pagina anterior'"
+      :toRouteName="'home'"
+      :shouldShowButton="true"
+    />
     <b-container fluid>
-      <r-header
-        :title="'Romaneio'"
-        :buttonTitle="'Voltar à pagina anterior'"
-        :toRouterName="'home'"
-      />
       <b-card align-h="center" class="align-cards">
-        <h4>Cliente</h4>
-        <div class="flex">
-          <b-form-select
-            id="input-3"
-            v-model="selectedUserId"
-            :options="customersList"
-            @change="handleCustomerSelect"
-            size="sm"
-            class="teste"
-          >
-            <template v-slot:first>
-              <b-form-select-option :value="null" disabled
-                >Selecione um cliente</b-form-select-option
-              >
-            </template>
-          </b-form-select>
+        <!-- {{ getSelectedCustomer }}
+        ---
+        {{ redEggs }}
+        {{ whiteEggs }} -->
+        <!-- {{ getRedEggsList }} -->
+        <!-- <span>{{ selectedDate }}</span> -->
+
+        <b-row class="flex align-bottom">
+          <b-col sm="6">
+            <b-form-select
+              id="input-3"
+              v-model="selectedCustomerId"
+              :options="customersList"
+              @change="handleCustomerSelect"
+              size="sm"
+              class="align-customer-select"
+            >
+              <template v-slot:first>
+                <b-form-select-option :value="null" disabled
+                  >Selecione o cliente</b-form-select-option
+                >
+              </template>
+            </b-form-select>
+          </b-col>
+          <b-col><date-picker :selectedDate.sync="selectedDate" class="align-due-date"/></b-col>
+        </b-row>
+        <!-- Eggs -->
+        <div class="eggs">
+          <b-row>
+            <b-col offset="1">
+              <div class="white-eggs">
+                <b-col offset="3"><h5>Branco</h5></b-col>
+                <b-row>
+                  <b-col>Jumbo</b-col>
+                  <b-col><b-input v-model="wJumbo.amount" class="input-size"/></b-col>
+                </b-row>
+                <b-row>
+                  <b-col>Extra</b-col>
+                  <b-col><b-input v-model="wExtra.amount" class="input-size"/></b-col>
+                </b-row>
+                <b-row>
+                  <b-col>Grande</b-col>
+                  <b-col><b-input v-model="wGrande.amount" class="input-size"/></b-col>
+                </b-row>
+                <b-row>
+                  <b-col>Médio</b-col>
+                  <b-col><b-input v-model="wMedio.amount" class="input-size"/></b-col>
+                </b-row>
+                <b-row>
+                  <b-col>Pequeno</b-col>
+                  <b-col><b-input v-model="wPequeno.amount" class="input-size"/></b-col>
+                </b-row>
+                <b-row>
+                  <b-col>Industrial</b-col>
+                  <b-col><b-input v-model="wIndustrial.amount" class="input-size"/></b-col>
+                </b-row>
+              </div>
+            </b-col>
+            <b-col>
+              <div class="red-eggs">
+                <b-col offset="3"><h5>Vermelho</h5></b-col>
+
+                <b-row>
+                  <b-col>Jumbo</b-col>
+                  <b-col><b-input v-model="rJumbo.amount" class="input-size"/></b-col>
+                </b-row>
+                <b-row>
+                  <b-col>Extra</b-col>
+                  <b-col><b-input v-model="rExtra.amount" class="input-size"/></b-col>
+                </b-row>
+                <b-row>
+                  <b-col>Grande</b-col>
+                  <b-col><b-input v-model="rGrande.amount" class="input-size"/></b-col>
+                </b-row>
+                <b-row>
+                  <b-col>Médio</b-col>
+                  <b-col><b-input v-model="rMedio.amount" class="input-size"/></b-col>
+                </b-row>
+                <b-row>
+                  <b-col>Pequeno</b-col>
+                  <b-col><b-input v-model="rPequeno.amount" class="input-size"/></b-col>
+                </b-row>
+                <b-row>
+                  <b-col>Industrial</b-col>
+                  <b-col><b-input v-model="rIndustrial.amount" class="input-size"/></b-col>
+                </b-row>
+              </div>
+            </b-col>
+          </b-row>
         </div>
         <!-- CargoPacking form -->
         <b-form @submit="onSubmit" @reset="onReset" v-if="show">
-          <!-- Customer data section -->
-          <h3>Dados</h3>
-          <div class="flex">
-            <!-- Customer name -->
-            <b-form-group
-              id="input-group-name"
-              label="Nome completo:"
-              label-for="input-name"
-              class="same"
-            >
-              <b-form-input
-                id="input-name"
-                v-model="form.customerName"
-                required
-                size="sm"
-                placeholder="Digite o nome completo"
-              ></b-form-input>
-            </b-form-group>
+          <b-row class="style-inputs">
+            <!-- Receipt number -->
+            <b-col>
+              <b-form-group
+                id="input-group-phone"
+                label="Numero da nota:"
+                label-for="input-receipt-number"
+              >
+                <b-form-input
+                  id="input-receipt-number"
+                  type="number"
+                  v-model="form.receiptNumber"
+                  required
+                  size="sm"
+                  placeholder="Digite o numero da nota"
+                ></b-form-input>
+              </b-form-group>
+            </b-col>
 
-            <!-- Customer email -->
-            <b-form-group
-              id="input-group-email"
-              label="Email:"
-              label-for="input-email"
-              class="same"
-            >
-              <b-form-input
-                id="input-email"
-                v-model="form.customerEmail"
-                type="email"
-                required
-                size="sm"
-                placeholder="Digite o email"
-              ></b-form-input>
-            </b-form-group>
-          </div>
+            <!-- Receipt value -->
+            <b-col>
+              <b-form-group
+                id="input-group-cnpj"
+                label="Valor da nota:"
+                label-for="input-receipt-value"
+              >
+                <b-form-input
+                  id="input-receipt-value"
+                  v-model="form.receiptValue"
+                  step="0.01"
+                  type="number"
+                  required
+                  size="sm"
+                  placeholder="Digite o valor da nota"
+                ></b-form-input>
+              </b-form-group>
+            </b-col>
+            <b-col class="align-data" sm="2"
+              ><b-form-group
+                id="input-group-discount"
+                label="Seguro:"
+                label-for="input-discount"
+                class="same"
+              >
+                <b-form-checkbox v-model="form.hasInsurance" :value="true" :unchecked-value="false"
+                  >Sim</b-form-checkbox
+                >
+              </b-form-group>
+            </b-col>
+            <b-col sm="2">
+              <b-form-group
+                id="input-group-discount"
+                label="Pago:"
+                label-for="input-discount"
+                class="same"
+              >
+                <b-form-checkbox v-model="form.isPaid" :value="true" :unchecked-value="false"
+                  >Sim</b-form-checkbox
+                >
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row class="style-inputs">
+            <!-- EggTray -->
+            <b-col
+              ><b-row
+                ><b-col offset="4"><h5>Bandejas</h5></b-col></b-row
+              >
+              <b-row class="flex-row">
+                <!-- Egg tray price -->
+                <b-col>
+                  <b-form-group
+                    id="input-group-egg-tray-price"
+                    label="Preço:"
+                    label-for="input-egg-tray-price"
+                  >
+                    <b-form-input
+                      id="input-egg-tray-price"
+                      type="number"
+                      step="0.01"
+                      v-model="form.eggTrayPrice"
+                      required
+                      size="sm"
+                    ></b-form-input>
+                  </b-form-group>
+                </b-col>
 
-          <div class="flex">
-            <!-- Customer phone number -->
-            <b-form-group
-              id="input-group-phone"
-              label="Telefone:"
-              label-for="input-phone"
-              description="(61) 99999-9999"
-              class="same"
-            >
-              <b-form-input
-                id="input-phone"
-                type="text"
-                v-model="form.customerPhone"
-                required
-                size="sm"
-                placeholder="Digite o telefone"
-              ></b-form-input>
-            </b-form-group>
+                <!-- Egg tray amount -->
+                <b-col>
+                  <b-form-group
+                    id="input-group-egg-tray-amount"
+                    label="Quantidade:"
+                    label-for="input-egg-tray-amount"
+                  >
+                    <b-form-input
+                      id="input-egg-tray-amount"
+                      v-model="form.eggTrayAmount"
+                      type="number"
+                      required
+                      size="sm"
+                    ></b-form-input>
+                  </b-form-group> </b-col></b-row
+            ></b-col>
+            <!-- Egg box price -->
+            <b-col
+              ><b-row
+                ><b-col offset="4"><h5>Caixas</h5></b-col></b-row
+              >
+              <b-row class="flex-row"
+                ><b-col>
+                  <b-form-group
+                    id="input-group-egg-box-price"
+                    label="Preço:"
+                    label-for="input-egg-box-price"
+                  >
+                    <b-form-input
+                      id="input-egg-box-price"
+                      type="number"
+                      v-model="form.eggBoxPrice"
+                      step="0.01"
+                      required
+                      size="sm"
+                    ></b-form-input>
+                  </b-form-group>
+                </b-col>
 
-            <!-- Customer CNPJ -->
-            <b-form-group
-              id="input-group-cnpj"
-              label="CNPJ:"
-              label-for="input-cnpj"
-              class="same"
-              description="00.000.000/0001-01"
-            >
-              <b-form-input
-                id="input-cnpj"
-                v-model="form.customerCnpj"
-                type="text"
-                required
-                size="sm"
-                placeholder="Digite o CNPJ"
-              ></b-form-input>
-            </b-form-group>
-          </div>
-
-          <!-- Customer Fees -->
-          <h3>Taxas</h3>
-          <div class="flex">
-            <!-- Customer Discount -->
-            <b-form-group
-              id="input-group-discount"
-              label="Desconto:"
-              label-for="input-discount"
-              description="1.0 ou 2.0"
-              class="same"
-            >
-              <b-form-input
-                id="input-discount"
-                type="text"
-                v-model="form.customerDiscount"
-                placeholder="Valor do desconto"
-                size="sm"
-              ></b-form-input>
-            </b-form-group>
-
-            <!-- Customer Rural fund discount -->
-            <b-form-group
-              id="input-group-rural-fund"
-              label="Fundo Rural:"
-              label-for="input-rural-fund"
-              description="(61) 99999-9999"
-              class="same"
-            >
-              <b-form-input
-                id="input-rural-fund"
-                type="text"
-                v-model="form.customerRuralFund"
-                required
-                size="sm"
-                placeholder="Valor do fundo rural"
-              ></b-form-input>
-            </b-form-group>
-
-            <!-- Customer ICMS -->
-            <b-form-group
-              id="input-group-icms"
-              label="ICMS:"
-              label-for="input-icms"
-              class="same"
-              description="1.2"
-            >
-              <b-form-input
-                id="input-icms"
-                v-model="form.customerIcms"
-                type="text"
-                required
-                size="sm"
-                placeholder="Valor do ICMS"
-              ></b-form-input>
-            </b-form-group>
-          </div>
+                <!-- Customer CNPJ -->
+                <b-col>
+                  <b-form-group
+                    id="input-group-egg-box-amount"
+                    label="Quantidade:"
+                    label-for="input-egg-box-amount"
+                  >
+                    <b-form-input
+                      id="input-egg-box-amount"
+                      v-model="form.eggBoxAmount"
+                      type="text"
+                      required
+                      size="sm"
+                    ></b-form-input>
+                  </b-form-group> </b-col></b-row
+            ></b-col>
+          </b-row>
 
           <div class="form-buttons">
             <b-button type="reset" variant="danger" size="sm">Limpar</b-button>
@@ -164,27 +250,6 @@
           </div>
         </b-form>
       </b-card>
-      <!-- <r-header
-        :title="'Romaneios'"
-        :buttonTitle="'Voltar à pagina anterior'"
-        :toRouterName="'home'"
-      />
-      <b-row align-h="center" class="align-cards">
-        <b-card header="Novo Romaneio" class="login-card">
-          <b-form @submit.prevent="submit">
-            <b-form-group>
-              <b-form-input size="sm" type="email" required placeholder="Digite seu email" />
-            </b-form-group>
-
-            <b-form-group>
-              <b-form-input size="sm" type="password" placeholder="Digite sua senha" />
-            </b-form-group>
-            <b-button class="login-button" type="submit" variant="primary" size="sm"
-              >Entrar</b-button
-            >
-          </b-form>
-        </b-card>
-      </b-row>-->
     </b-container>
   </div>
 </template>
@@ -193,28 +258,96 @@
 // @ is an alias to /src
 import RHeader from '@/components/RHeader.vue';
 import { mapActions, mapGetters } from 'vuex';
+import DatePicker from '@/components/DatePicker.vue';
 
 export default {
   name: 'NewCargoPacking',
   components: {
     RHeader,
+    DatePicker,
   },
   data() {
     return {
       form: {
+        isPaid: false,
+        hasInsurance: false,
+        discount: '',
+        ruralFundTax: '',
         customerName: '',
-        customerEmail: '',
-        customerPhone: '',
-        customerCnpj: '',
-        customerDiscount: '',
-        customerRuralFund: '',
-        customerIcms: '',
-        food: null,
-        checked: [],
+        icmsTax: '',
+        eggTrayAmount: 0,
+        eggTrayPrice: 0,
+        eggBoxAmount: 0,
+        eggBoxPrice: 0,
+        receiptValue: 0,
+        receiptNumber: 0,
       },
+      eggsCargo: [],
+      rJumbo: {
+        color: 'Vermelho',
+        size: 'Jumbo',
+        amount: 0,
+      },
+      rExtra: {
+        color: 'Vermelho',
+        size: 'Extra',
+        amount: 0,
+      },
+      rGrande: {
+        color: 'Vermelho',
+        size: 'Grande',
+        amount: 0,
+      },
+      rMedio: {
+        color: 'Vermelho',
+        size: 'Médio',
+        amount: 0,
+      },
+      rPequeno: {
+        color: 'Vermelho',
+        size: 'Pequeno',
+        amount: 0,
+      },
+      rIndustrial: {
+        color: 'Vermelho',
+        size: 'Industrial',
+        amount: 0,
+      },
+      wJumbo: {
+        color: 'Branco',
+        size: 'Jumbo',
+        amount: 0,
+      },
+      wExtra: {
+        color: 'Branco',
+        size: 'Extra',
+        amount: 0,
+      },
+      wGrande: {
+        color: 'Branco',
+        size: 'Grande',
+        amount: 0,
+      },
+      wMedio: {
+        color: 'Branco',
+        size: 'Médio',
+        amount: 0,
+      },
+      wPequeno: {
+        color: 'Branco',
+        size: 'Pequeno',
+        amount: 0,
+      },
+      wIndustrial: {
+        color: 'Branco',
+        size: 'Industrial',
+        amount: 0,
+      },
+
       customersList: [],
-      selectedUserId: null,
-      foods: [{ text: 'Select One', value: null }, 'Carrots', 'Beans', 'Tomatoes', 'Corn'],
+      customer: null,
+      selectedCustomerId: null,
+      selectedDate: null,
       show: true,
     };
   },
@@ -222,39 +355,74 @@ export default {
     this.handleCustomersList();
   },
   methods: {
-    ...mapActions(['loadCustomers', 'loadSelectedCustomer']),
+    ...mapActions(['loadCustomers', 'loadSelectedCustomer', 'createCargoPacking']),
     async handleCustomersList() {
       await this.loadCustomers();
-      const customersMap = [...this.getCustomers.map((c) => ({ value: c.id, text: c.name }))];
+      const customersMap = [
+        ...this.getCustomers.map((c) => ({ value: c.id, text: `${c.name} - ${c.email}` })),
+      ];
 
       this.customersList = customersMap;
     },
     async handleCustomerSelect() {
-      await this.loadSelectedCustomer(this.selectedUserId);
+      await this.loadSelectedCustomer(this.selectedCustomerId);
       const customer = this.getSelectedCustomer;
+      this.customer = customer;
       this.form.customerName = customer.name;
       this.form.customerEmail = customer.email;
-      this.form.customerPhone = customer.phone;
-      this.form.customerCnpj = customer.cnpj;
-      this.form.customerDiscount = customer.discount;
-      this.form.customerRuralFund = customer.rural_fund_tax;
-      this.form.customerIcms = customer.icms_tax;
+      this.form.discount = customer.discount;
+      this.form.ruralFundTax = customer.rural_fund_tax;
+      this.form.icmsTax = customer.icms_tax;
     },
     onSubmit(evt) {
       evt.preventDefault();
-      alert(JSON.stringify(this.form));
+      const receiptValue = parseFloat(this.form.receiptValue).toFixed(2);
+      const receiptNumber = parseFloat(this.form.receiptNumber).toFixed(2);
+      const eggsCargo = [
+        this.wJumbo,
+        this.wExtra,
+        this.wGrande,
+        this.wMedio,
+        this.wPequeno,
+        this.wIndustrial,
+        this.rJumbo,
+        this.rExtra,
+        this.rGrande,
+        this.rMedio,
+        this.rPequeno,
+        this.rIndustrial,
+      ];
+      // console.log(a);
+
+      // const { customerName } = this.form;
+      const newCargoPacking = {
+        eggs_cargo: eggsCargo,
+        is_paid: this.form.isPaid,
+        due_to: this.selectedDate,
+        discount: this.customer.discount,
+        has_insurance_fee: this.form.hasInsurance,
+        customer_id: this.selectedCustomerId,
+        created_by_user_id: 1, //arrumar o id do usuario
+        updated_by_user_id: null,
+        receipt_value: receiptValue,
+        receipt_number: receiptNumber,
+        egg_tray_amount: this.form.eggTrayAmount,
+        egg_tray_price: this.form.eggTrayPrice,
+        egg_retail_box_amount: this.form.eggBoxAmount,
+        egg_retail_box_price: this.form.eggBoxPrice,
+      };
+      this.createCargoPacking(newCargoPacking);
+      console.log(newCargoPacking);
     },
     onReset(evt) {
       evt.preventDefault();
       // Reset our form values
       this.form.customerName = '';
       this.form.customerEmail = '';
-      this.form.customerPhone = '';
-      this.form.customerCnpj = '';
-      this.form.customerDiscount = '';
-      this.form.customerRuralFund = '';
-      this.form.customerIcms = '';
-      this.selectedUserId = null;
+      this.form.discount = '';
+      this.form.ruralFundTax = '';
+      this.form.icmsTax = '';
+      this.selectedCustomerId = null;
       // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {
@@ -263,7 +431,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['getCustomers', 'getSelectedCustomer']),
+    ...mapGetters(['getCustomers', 'getSelectedCustomer', 'getCargoPackings', 'getRedEggsList']),
   },
 };
 </script>
@@ -277,10 +445,25 @@ export default {
   margin: 50px auto;
   width: 700px;
 }
+.align-bottom {
+  margin-bottom: 15px;
+}
+.eggs {
+  margin-bottom: 15px;
+}
 
+.input-size {
+  position: relative;
+  top: 2px;
+  height: 21px;
+  width: 50px;
+  font-size: 12px;
+  text-align: center;
+}
 .flex {
   display: flex;
   padding: 0 15px;
+
   .same {
     flex-grow: 1;
   }
@@ -288,13 +471,24 @@ export default {
     margin-left: 15px;
   }
 }
-.teste {
+.align-data {
+  position: relative;
+  left: 15px;
+}
+h5 {
+  color: red;
+}
+/* .teste {
   width: 250px;
   padding-left: 15px;
   margin-bottom: 15px;
-}
+} */
 .section-header {
   background: red;
+}
+
+.style-inputs {
+  padding: 0 15px;
 }
 
 .form-buttons {
@@ -305,5 +499,20 @@ export default {
   button + button {
     margin-left: 15px;
   }
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.align-packages-title {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.align-customer-select {
+  position: relative;
+  top: 32px;
 }
 </style>

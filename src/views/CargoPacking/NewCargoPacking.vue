@@ -354,7 +354,7 @@ export default {
     this.handleCustomersList();
   },
   methods: {
-    ...mapActions(['loadCustomers', 'loadSelectedCustomer']),
+    ...mapActions(['loadCustomers', 'loadSelectedCustomer', 'createCargoPacking']),
     async handleCustomersList() {
       await this.loadCustomers();
       const customersMap = [
@@ -410,6 +410,7 @@ export default {
         egg_retail_box_amount: this.form.eggBoxAmount,
         egg_retail_box_price: this.form.eggBoxPrice,
       };
+      this.createCargoPacking(newCargoPacking);
       console.log(newCargoPacking);
     },
     onReset(evt) {

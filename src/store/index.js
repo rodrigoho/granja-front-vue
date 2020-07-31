@@ -88,6 +88,12 @@ export default new Vuex.Store({
     SET_CARGO_PACKINGS(state, payload) {
       state.cargoPackings = payload;
     },
+    CREATE_CARGO_PACKING(state, payload) {
+      state.cargoPackings.push(payload);
+    },
+    SET_SELECTED_CARGO_PACKING(state, payload) {
+      state.selectedCargoPacking = payload;
+    },
 
     SET_SELECTED_CARGO_PACKING(state, payload) {
       state.selectedCargoPacking = payload;
@@ -178,7 +184,15 @@ export default new Vuex.Store({
         throw err.response.data.error;
       }
     },
-
+    createCargoPacking: async ({ commit }, payload) => {
+      try {
+        const res = await api.post('cargo-packing', payload);
+        commit('CREATE_CARGO_PACKING', payload);
+        return res;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
     loadSelectedCargoPacking: async ({ commit }, payload) => {
       try {
         const res = await api.get(`cargo-packing/${payload}`);

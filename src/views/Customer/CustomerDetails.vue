@@ -91,7 +91,7 @@ export default {
         },
         {
           label: 'CNPJ',
-          value: c.cnpj,
+          value: c.cnpj ? c.cnpj : '-',
         },
         {
           label: 'Telefone',
@@ -99,7 +99,7 @@ export default {
         },
         {
           label: 'Email',
-          value: c.email,
+          value: c.email ? c.email : '-',
         },
         {
           label: 'Desconto',
@@ -107,7 +107,7 @@ export default {
         },
         {
           label: 'Taxa ovo vermelho',
-          value: 'R$ 12',
+          value: c.red_egg_tax,
         },
         {
           label: 'Fundo Rural',

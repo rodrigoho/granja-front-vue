@@ -34,7 +34,6 @@
                   id="input-email"
                   v-model="form.customerEmail"
                   type="email"
-                  required
                   size="sm"
                   placeholder="Digite o email"
                 ></b-form-input>
@@ -72,7 +71,6 @@
                   id="input-cnpj"
                   v-model="form.customerCnpj"
                   type="text"
-                  required
                   size="sm"
                   placeholder="Digite o CNPJ"
                 ></b-form-input>
@@ -98,6 +96,7 @@
                   type="number"
                   v-model="form.customerDiscount"
                   step="0.1"
+                  required
                   placeholder="0"
                   size="sm"
                 ></b-form-input>
@@ -107,16 +106,17 @@
             <!-- Customer Additional Fee -->
             <b-col>
               <b-form-group
-                id="input-group-discount"
+                id="input-group-additional-fee"
                 label="Adicional:"
-                label-for="input-discount"
+                label-for="input-additional-fee"
                 description="Taxa Ovo vermelho"
               >
                 <b-form-input
-                  id="input-discount"
+                  id="input-additional-fee"
                   type="number"
                   v-model="form.customerAdditionalFee"
                   step="0.1"
+                  required
                   placeholder="0"
                   size="sm"
                 ></b-form-input>
@@ -136,6 +136,7 @@
                   type="number"
                   v-model="form.customerRuralFund"
                   step="0.1"
+                  required
                   size="sm"
                   placeholder="0"
                 ></b-form-input>
@@ -154,6 +155,7 @@
                   id="input-icms"
                   v-model="form.customerIcms"
                   type="number"
+                  required
                   step="0.1"
                   size="sm"
                   placeholder="0"
@@ -331,17 +333,16 @@ export default {
         customerEmail: '',
         customerPhone: '',
         customerCnpj: '',
-        customerDiscount: '',
-        customerAdditionalFee: '',
-        customerRuralFund: '',
-        customerIcms: '',
+        customerDiscount: 0,
+        customerAdditionalFee: 0.0,
+        customerRuralFund: 0.0,
+        customerIcms: 0.0,
         customerZipcode: '',
         customerState: null,
         customerAddrCity: '',
         customerAddressLine: '',
         customerAddrNeighborhood: '',
         customerAddressComplement: '',
-        food: null,
         checked: [],
       },
       customerEditing: false,
@@ -408,9 +409,10 @@ export default {
         cnpj: customer.customerCnpj,
         phone: customer.customerPhone,
         email: customer.customerEmail,
-        discount: customer.customerDiscount ? customer.customerDiscount : 0,
-        rural_fund_tax: customer.customerRuralFund ? customer.customerRuralFund : 0,
-        icms_tax: customer.customerIcms ? customer.customerIcms : 0,
+        discount: customer.customerDiscount,
+        rural_fund_tax: customer.customerRuralFund,
+        red_egg_tax: customer.customerAdditionalFee,
+        icms_tax: customer.customerIcms,
         zip_code: customer.customerZipcode,
         address: {
           public_area: customer.customerAddressLine,
@@ -420,6 +422,7 @@ export default {
           state: customer.customerState,
         },
       };
+      console.log(customerData);
       try {
         if (this.customerEditing) {
           await this.editCustomer(customerData);

@@ -53,7 +53,7 @@ export default {
     return {
       cargoPackingsList: [],
       currentPage: 1,
-      rows: 13,
+      rows: 1,
       perPage: 9,
     };
   },

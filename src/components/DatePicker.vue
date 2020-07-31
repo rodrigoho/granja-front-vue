@@ -35,6 +35,6 @@ export default {
   justify-content: center;
 }
 .teste {
-  width: 220px;
+  width: 250px;
 }
 </style>

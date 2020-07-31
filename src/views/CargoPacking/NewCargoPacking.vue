@@ -129,7 +129,6 @@
                 <b-form-input
                   id="input-receipt-value"
                   v-model="form.receiptValue"
-                  step="0.01"
                   type="number"
                   required
                   size="sm"

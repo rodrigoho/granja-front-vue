@@ -95,6 +95,10 @@ export default new Vuex.Store({
       state.selectedCargoPacking = payload;
     },
 
+    SET_SELECTED_CARGO_PACKING(state, payload) {
+      state.selectedCargoPacking = payload;
+    },
+
     // Customers
     SET_CUSTOMERS_LIST(state, payload) {
       state.customers = payload;

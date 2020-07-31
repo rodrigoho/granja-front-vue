@@ -61,12 +61,7 @@
 
             <!-- Customer CNPJ -->
             <b-col>
-              <b-form-group
-                id="input-group-cnpj"
-                label="CNPJ:"
-                label-for="input-cnpj"
-                description="00.000.000/0001-01"
-              >
+              <b-form-group id="input-group-cnpj" label="CNPJ:" label-for="input-cnpj" description="00.000.000/0001-01">
                 <b-form-input
                   id="input-cnpj"
                   v-model="form.customerCnpj"
@@ -95,7 +90,6 @@
                   id="input-discount"
                   type="number"
                   v-model="form.customerDiscount"
-                  step="0.1"
                   required
                   placeholder="0"
                   size="sm"
@@ -145,12 +139,7 @@
 
             <!-- Customer ICMS -->
             <b-col>
-              <b-form-group
-                id="input-group-icms"
-                label="ICMS:"
-                label-for="input-icms"
-                description="2.00 ou 3.50"
-              >
+              <b-form-group id="input-group-icms" label="ICMS:" label-for="input-icms" description="2.00 ou 3.50">
                 <b-form-input
                   id="input-icms"
                   v-model="form.customerIcms"
@@ -190,47 +179,28 @@
 
             <!-- Search Zipcode button -->
             <b-col sm="2">
-              <b-button
-                type="button"
-                variant="primary"
-                size="sm"
-                class="align-button"
-                @click="handleZipcode"
+              <b-button type="button" variant="primary" size="sm" class="align-button" @click="handleZipcode"
                 >Pesquisar</b-button
               >
             </b-col>
 
             <!-- Customer State select -->
             <b-col sm="3" class="address-align">
-              <b-form-group
-                id="input-group-3"
-                label="Estado:"
-                label-for="input-3"
-                class="align-input"
-              >
+              <b-form-group id="input-group-3" label="Estado:" label-for="input-3" class="align-input">
                 <b-form-select id="input-3" v-model="form.customerState" size="sm">
                   <template v-slot:first>
                     <b-form-select-option :value="null" disabled>Selecione</b-form-select-option>
                   </template>
-                  <b-form-select-option
-                    v-for="(state, idx) in states"
-                    :value="state.text"
-                    :key="idx"
-                    required
-                    >{{ state.text }}</b-form-select-option
-                  >
+                  <b-form-select-option v-for="(state, idx) in states" :value="state.text" :key="idx" required>{{
+                    state.text
+                  }}</b-form-select-option>
                 </b-form-select>
               </b-form-group>
             </b-col>
 
             <!-- Customer City -->
             <b-col sm="4" class="address-align">
-              <b-form-group
-                id="input-group-city"
-                label="Cidade:"
-                label-for="input-city"
-                class="align-input"
-              >
+              <b-form-group id="input-group-city" label="Cidade:" label-for="input-city" class="align-input">
                 <b-form-input
                   id="input-city"
                   type="text"
@@ -246,12 +216,7 @@
           <!-- Customer Address line -->
           <b-row align-v="center" class="flex" cols="2">
             <b-col sm="7" class="address-align">
-              <b-form-group
-                id="input-group-line"
-                label="Endereço:"
-                label-for="input-line"
-                class="same"
-              >
+              <b-form-group id="input-group-line" label="Endereço:" label-for="input-line" class="same">
                 <b-form-input
                   id="input-line"
                   type="text"
@@ -265,12 +230,7 @@
 
             <!-- Customer Neighborhood -->
             <b-col sm="5" class="address-align">
-              <b-form-group
-                id="input-group-neighborhood"
-                label="Bairro:"
-                label-for="input-neighborhood"
-                class="same"
-              >
+              <b-form-group id="input-group-neighborhood" label="Bairro:" label-for="input-neighborhood" class="same">
                 <b-form-input
                   id="input-neighborhood"
                   type="text"
@@ -286,19 +246,24 @@
           <b-row align-v="center" class="flex">
             <!-- Customer Address Complement -->
             <b-col class="address-align">
-              <b-form-group
-                id="input-group-complement"
-                label="Complemento:"
-                label-for="input-complement"
-                class="same"
-              >
+              <b-form-group id="input-group-complement" label="Complemento:" label-for="input-complement" class="same">
                 <b-form-input
                   id="input-complement"
                   type="text"
                   v-model="form.customerAddressComplement"
                   placeholder="Digite o complemento"
                   size="sm"
-                  required
+                ></b-form-input>
+              </b-form-group>
+            </b-col>
+            <b-col class="address-align" sm="3">
+              <b-form-group id="input-group-number" label="Número:" label-for="input-number" class="same">
+                <b-form-input
+                  id="input-number"
+                  type="text"
+                  v-model="form.customerAddressNumber"
+                  placeholder="Digite o Número"
+                  size="sm"
                 ></b-form-input>
               </b-form-group>
             </b-col>
@@ -306,6 +271,7 @@
           <div class="form-buttons">
             <b-button type="reset" variant="danger" size="sm">Limpar</b-button>
             <b-button type="submit" variant="primary" size="sm">Salvar</b-button>
+            <b-button v-if="customerEditing" @click="handleCancel" type="button" size="sm">Cancelar</b-button>
           </div>
         </b-form>
       </b-card>
@@ -379,22 +345,18 @@ export default {
       this.form.customerAddressLine = address.public_area;
       this.form.customerAddrNeighborhood = address.neighborhood;
       this.form.customerAddressComplement = address.complement;
+      this.form.customerAddressNumber = address.number;
       this.customerEditing = true;
     }
     this.setCustomerToEdit(null);
   },
   methods: {
-    ...mapActions([
-      'loadCustomers',
-      'loadSelectedCustomer',
-      'createCustomer',
-      'setCustomerToEdit',
-      'editCustomer',
-    ]),
+    ...mapActions(['loadCustomers', 'loadSelectedCustomer', 'createCustomer', 'setCustomerToEdit', 'editCustomer']),
+    handleCancel() {
+      this.$router.push({ name: 'customerDetails' });
+    },
     async handleZipcode() {
-      const response = await axios.get(
-        `https://viacep.com.br/ws/${this.form.customerZipcode}/json`
-      );
+      const response = await axios.get(`https://viacep.com.br/ws/${this.form.customerZipcode}/json`);
       this.form.customerState = response.data.uf;
       this.form.customerAddrCity = response.data.localidade;
       this.form.customerAddressLine = response.data.logradouro;
@@ -417,12 +379,12 @@ export default {
         address: {
           public_area: customer.customerAddressLine,
           complement: customer.customerAddressComplement,
+          number: customer.customerAddressNumber,
           city: customer.customerAddrCity,
           neighborhood: customer.customerAddrNeighborhood,
           state: customer.customerState,
         },
       };
-      console.log(customerData);
       try {
         if (this.customerEditing) {
           await this.editCustomer(customerData);

@@ -14,36 +14,20 @@
               <span>{{ egg.size }}</span>
             </b-col>
             <b-col sm="3" class="align-inputs">
-              <b-input
-                v-model="egg.price"
-                type="number"
-                class="align-single-input"
-                size="sm"
-                step=".01"
-              />
+              <b-input v-model="egg.price" type="number" class="align-single-input" size="sm" step=".01" />
             </b-col>
           </b-row>
           <b-row class="flex red-fee-row" cols="2"
             ><b-col sm="9"><span>Taxa Ovo Vermelho: </span></b-col
             ><b-col sm="3"
-              ><b-input
-                v-model="additionalFee"
-                type="number"
-                class="align-single-input"
-                size="sm"
-                step=".01"/></b-col
+              ><b-input v-model="additionalFee" type="number" class="align-single-input" size="sm" step=".01" /></b-col
           ></b-row>
           <b-row class="flex" cols="2"
             ><b-col sm="7"><span>Ovo Online: </span></b-col
             ><b-col sm="5" class="flex-row"
-              ><b-input v-model="leftNumber" type="number" class="input-size" size="sm" step=".01"/>
+              ><b-input v-model="leftNumber" type="number" class="input-size" size="sm" step=".01" />
               <span class="align-inputs">a</span>
-              <b-input
-                v-model="rightNumber"
-                type="number"
-                class="input-size"
-                size="sm"
-                step=".01"/></b-col
+              <b-input v-model="rightNumber" type="number" class="input-size" size="sm" step=".01" /></b-col
           ></b-row>
           <!-- End of Customer Data section -->
 

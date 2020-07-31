@@ -6,19 +6,33 @@
       :toRouteName="'newCargoPacking'"
       :shouldShowButton="true"
     />
-    <!-- {{ cargoPackingsList.length }} -->
+    <b-row class="align-filter-counter">
+      <!-- <b-col sm="2"> -->
+      <b-form-select
+        id="input-3"
+        class="teste"
+        v-model="selectedCargoPackingFilter"
+        :options="cargoPackingFilters"
+        @change="handleCargoPackingFilter"
+        size="sm"
+      >
+        <template v-slot:first>
+          <b-form-select-option :value="null" disabled>Selecione o Filtro</b-form-select-option>
+        </template>
+      </b-form-select>
+      <!-- </b-col> -->
+      <!-- <b-col offset="1"> -->
+      <span class="style-count">Total de romaneios: {{ getCargoPackings.count }}</span>
+      <!-- </b-col      > -->
+    </b-row>
     <b-container>
-      <!-- {{ displayCargoPackings.length }} <br />
-      {{ currentPage }} <br /> -->
       <b-row align-h="center" class="align-cards">
-        <!-- {{ getCargoPackings }} <br /> -->
-        <!-- <div class="cargo-packings-section"> -->
+        <!-- {{ cargoPackingsList }} -->
         <cargo-packing
           v-for="cargoPacking in getCargoPackings.rows"
           :key="cargoPacking.id"
           :cargoPacking="cargoPacking"
         />
-        <!-- </div> -->
       </b-row>
       <b-row class="align-pagination">
         <b-pagination
@@ -38,7 +52,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import CargoPacking from '@/components/CargoPacking.vue';
 import RHeader from '@/components/RHeader.vue';
 import { mapActions, mapGetters } from 'vuex';
@@ -53,27 +66,58 @@ export default {
     return {
       cargoPackingsList: [],
       currentPage: 1,
-      rows: 1,
       perPage: 9,
+      selectedCargoPackingFilter: 3,
+      cargoPackingFilters: [
+        {
+          value: 0,
+          text: 'Em aberto',
+        },
+        {
+          value: 1,
+          text: 'Pagos',
+        },
+        {
+          value: 2,
+          text: 'Todos',
+        },
+        {
+          value: 3,
+          text: 'Análise',
+        },
+      ],
     };
   },
   created() {
     this.handleCargoPackingsLoading();
   },
   methods: {
-    ...mapActions(['loadCargoPackings']),
+    ...mapActions(['loadCargoPackings', 'loadDueCargoPackings', 'loadPaidCargoPackings', 'loadAnalysisCargoPackings']),
     async handleCargoPackingsLoading() {
-      await this.loadCargoPackings(this.currentPage);
+      await this.loadAnalysisCargoPackings(this.currentPage);
       this.cargoPackingsList = this.getCargoPackings;
     },
     async paginate(currentPage) {
-      console.log(currentPage);
       await this.loadCargoPackings(currentPage);
-      console.log(JSON.stringify(this.getCargoPackings));
+    },
+    async handleCargoPackingFilter() {
+      if (this.selectedCargoPackingFilter === 1) {
+        await this.loadDueCargoPackings(this.currentPage);
+      } else if (this.selectedCargoPackingFilter === 2) {
+        await this.loadPaidCargoPackings(this.currentPage);
+      } else if (this.selectedCargoPackingFilter === 3) {
+        await this.loadAnalysisCargoPackings();
+      } else {
+        await this.loadCargoPackings(this.currentPage);
+      }
+      this.cargoPackingsList = this.getCargoPackings;
     },
   },
   computed: {
     ...mapGetters(['getCargoPackings']),
+    rows() {
+      return this.cargoPackingsList.count;
+    },
   },
 };
 </script>
@@ -83,13 +127,37 @@ export default {
   position: relative;
   top: 50px;
   display: flex;
-  align-items: flex-end;
   padding: 0 30px;
 }
 
+.align-filter-counter {
+  padding-left: 85px;
+  padding-right: 40px;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  top: 40px;
+  align-items: center;
+}
+
+.style-count {
+  font-weight: bold;
+  position: relative;
+  right: 50px;
+  padding: 2px;
+  text-align: center;
+  background: #fff;
+  border-radius: 4px;
+  height: 30px;
+  width: 210px;
+}
+
 .align-pagination {
-  /* position: absolute; */
   margin-top: 90px;
   justify-content: center;
+}
+
+.teste {
+  width: 200px;
 }
 </style>

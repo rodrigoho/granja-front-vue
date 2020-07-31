@@ -8,87 +8,92 @@
     />
     <b-container>
       <b-col>
-        <!-- {{ getSelectedCargoPacking.cargoVirtualData }} -->
-        <!-- {{ eggPackages }} -->
-        <!-- {{ bankData }} -->
         <div class="eggs">
-          <b-row align-h="center">
-            <h3>
-              {{ getSelectedCargoPacking && getSelectedCargoPacking.cargoPacking.customer.name }}
-            </h3>
-          </b-row>
+          <div class="flex-center">
+            <h3>{{ getSelectedCargoPacking && getSelectedCargoPacking.cargoPacking.customer.name }}</h3>
+          </div>
+          <div>
+            <h5 class="align-address">{{ address }}</h5>
+          </div>
 
           <div class="flex opac">
             <b-row>
               <!-- <b-row>{{ orderItems }}</b-row> -->
-              <img class="test" src="~@/assets/granja-limpo.png"/>
-              <b-col
-                ><eggs-list
+              <img class="test" src="~@/assets/granja-limpo.png" />
+              <b-col>
+                <eggs-list
                   :eggsColor="'white'"
                   :eggsList="whiteEggsList"
                   :isFromCargoPacking="true"
                   :cardTitle="'Branco'"
                   class="bg-transparent"
-                ></eggs-list></b-col
-              ><b-col
-                ><eggs-list
+                ></eggs-list>
+              </b-col>
+              <b-col>
+                <eggs-list
                   :eggsColor="'red'"
                   :eggsList="redEggsList"
                   :isFromCargoPacking="true"
                   :cardTitle="'Vermelho'"
                   class="bg-transparent"
-                ></eggs-list></b-col
-            ></b-row>
+                ></eggs-list>
+              </b-col>
+            </b-row>
             <b-row>
               <b-col sm="4" class="data">
                 <h5>Dados</h5>
-                <label-value :values="generalData"
-              /></b-col>
+                <label-value :values="generalData" />
+              </b-col>
               <b-col sm="4" class="data">
                 <h5>Dados financeiros</h5>
-                <label-value :values="moneyData"/><label-value :values="dueDate" class="due-date"
-              /></b-col>
+                <label-value :values="moneyData" />
+                <label-value :values="dueDate" class="due-date" />
+              </b-col>
               <b-col sm="4" class="data">
                 <h5>Embalagens</h5>
                 <b-row>
                   <b-col>
-                    <b-row
-                      ><b-col></b-col>
-                      <b-col><span>Quantidade</span></b-col>
-                      <b-col><span>Preço</span></b-col></b-row
-                    >
                     <b-row>
-                      <b-col><span>Bandejas</span></b-col>
-                      <b-col>{{
-                        eggPackages.eggTray.eggTrayAmount ? eggPackages.eggTray.eggTrayAmount : '-'
-                      }}</b-col>
-                      <b-col>{{
-                        eggPackages.eggTray.eggTrayPrice > 0
-                          ? `R$ ${eggPackages.eggTray.eggTrayPrice}`
-                          : '-'
-                      }}</b-col>
+                      <b-col></b-col>
+                      <b-col>
+                        <span>Quantidade</span>
+                      </b-col>
+                      <b-col>
+                        <span>Preço</span>
+                      </b-col>
                     </b-row>
                     <b-row>
-                      <b-col><span>Caixas</span></b-col>
-                      <b-col>{{
-                        eggPackages.eggBox.eggBoxAmount ? eggPackages.eggBox.eggBoxAmount : '-'
-                      }}</b-col>
-                      <b-col>{{
-                        eggPackages.eggBox.eggBoxPrice > 0
-                          ? `R$ ${eggPackages.eggBox.eggBoxPrice}`
-                          : '-'
-                      }}</b-col>
+                      <b-col>
+                        <span>Bandejas</span>
+                      </b-col>
+                      <b-col>{{ eggPackages.eggTray.eggTrayAmount ? eggPackages.eggTray.eggTrayAmount : '-' }}</b-col>
+                      <b-col>
+                        {{ eggPackages.eggTray.eggTrayPrice > 0 ? `R$ ${eggPackages.eggTray.eggTrayPrice}` : '-' }}
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>
+                        <span>Caixas</span>
+                      </b-col>
+                      <b-col>{{ eggPackages.eggBox.eggBoxAmount ? eggPackages.eggBox.eggBoxAmount : '-' }}</b-col>
+                      <b-col>
+                        {{ eggPackages.eggBox.eggBoxPrice > 0 ? `R$ ${eggPackages.eggBox.eggBoxPrice}` : '-' }}
+                      </b-col>
                     </b-row>
                   </b-col>
                 </b-row>
                 <b-row>
                   <b-col offset="2">
-                    <b-row
-                      ><b-col><span>Bradesco</span></b-col></b-row
-                    >
-                    <b-row
-                      ><b-col><label-value :values="bankData"/></b-col
-                    ></b-row>
+                    <b-row>
+                      <b-col>
+                        <span>Bradesco</span>
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>
+                        <label-value :values="bankData" />
+                      </b-col>
+                    </b-row>
                   </b-col>
                 </b-row>
               </b-col>
@@ -96,17 +101,13 @@
           </div>
           <b-row class="align-footer-buttons" v-if="isEditing">
             <b-col class="buttons">
-              <b-button type="button" variant="danger" @click="handleCancel" size="sm"
-                >Cancelar</b-button
-              >
-              <b-button type="submit" variant="primary" @click="handleSubmit" size="sm"
-                >Salvar</b-button
-              >
+              <b-button type="button" variant="danger" @click="handleCancel" size="sm">Cancelar</b-button>
+              <b-button type="submit" variant="primary" @click="handleSubmit" size="sm">Salvar</b-button>
             </b-col>
           </b-row>
         </div>
-      </b-col></b-container
-    >
+      </b-col>
+    </b-container>
   </div>
 </template>
 
@@ -147,12 +148,7 @@ export default {
     this.handleCargoPackingLoading();
   },
   methods: {
-    ...mapActions([
-      'deleteCustomer',
-      'loadCustomers',
-      'setCustomerToEdit',
-      'loadSelectedCargoPacking',
-    ]),
+    ...mapActions(['deleteCustomer', 'loadCustomers', 'setCustomerToEdit', 'loadSelectedCargoPacking']),
     handleSubmit() {
       console.log('salvar');
     },
@@ -171,7 +167,7 @@ export default {
             price: egg.cur_egg_price,
           };
         });
-      this.redEggsList.sort(function(a, b) {
+      this.redEggsList.sort(function (a, b) {
         if (a.price > b.price) {
           return -1;
         }
@@ -192,7 +188,7 @@ export default {
             price: egg.cur_egg_price,
           };
         });
-      this.whiteEggsList.sort(function(a, b) {
+      this.whiteEggsList.sort(function (a, b) {
         if (a.price > b.price) {
           return -1;
         }
@@ -202,8 +198,6 @@ export default {
         // a must be equal to b
         return 0;
       });
-      console.log(JSON.stringify(this.redEggsList));
-      console.log(JSON.stringify(this.whiteEggsList));
       const cargoPacking = this.getSelectedCargoPacking.cargoPacking;
       const cargoPackingVD = this.getSelectedCargoPacking.cargoVirtualData;
       this.generalData = [
@@ -243,8 +237,7 @@ export default {
         },
         {
           label: 'Seguro: ',
-          value:
-            cargoPackingVD.insurancePrice === false ? '-' : `R$ ${cargoPackingVD.insurancePrice}`,
+          value: cargoPackingVD.insurancePrice === false ? '-' : `R$ ${cargoPackingVD.insurancePrice}`,
         },
         {
           label: 'Valor Embalagens: ',
@@ -263,14 +256,6 @@ export default {
     async handleEdit() {
       await this.setCustomerToEdit(this.customer);
       this.$router.push({ name: 'newCustomer' });
-      // const customerToEdit = {
-      //   id: this.customer.id,
-      //   name: this.customer.name,
-      //   email: this.customer.email,
-      // };
-      // this.setCustomerToEdit(customerToEdit);
-
-      // this.$router.push({ name: 'customer' });
     },
     handleDelete() {
       this.$bvModal
@@ -297,17 +282,13 @@ export default {
   },
   computed: {
     ...mapGetters(['getSelectedCargoPacking']),
-    eggPackages: function() {
-      const eggTrayAmount =
-        this.getSelectedCargoPacking && this.getSelectedCargoPacking.cargoPacking.egg_tray_amount;
-      const eggTrayPrice =
-        this.getSelectedCargoPacking && this.getSelectedCargoPacking.cargoPacking.egg_tray_price;
+    eggPackages: function () {
+      const eggTrayAmount = this.getSelectedCargoPacking && this.getSelectedCargoPacking.cargoPacking.egg_tray_amount;
+      const eggTrayPrice = this.getSelectedCargoPacking && this.getSelectedCargoPacking.cargoPacking.egg_tray_price;
       const eggBoxAmount =
-        this.getSelectedCargoPacking &&
-        this.getSelectedCargoPacking.cargoPacking.egg_retail_box_amount;
+        this.getSelectedCargoPacking && this.getSelectedCargoPacking.cargoPacking.egg_retail_box_amount;
       const eggBoxPrice =
-        this.getSelectedCargoPacking &&
-        this.getSelectedCargoPacking.cargoPacking.egg_retail_box_price;
+        this.getSelectedCargoPacking && this.getSelectedCargoPacking.cargoPacking.egg_retail_box_price;
 
       const packagesValue = (eggTrayAmount * eggTrayPrice + eggBoxAmount * eggBoxPrice).toFixed(2);
       console.log(packagesValue);
@@ -319,7 +300,11 @@ export default {
     },
     address: () => {
       const c = JSON.parse(localStorage.getItem('selectedCustomer')).address;
-      return `${c.public_area}, ${c.complement}, ${c.neighborhood}, ${c.city}, ${c.state}`;
+      const { city, state } = c;
+      let address = `${city}, ${state}`;
+      address = address.replace('undefined, ', '');
+      address = address.replace(', ,', ',');
+      return address;
     },
   },
 };
@@ -370,6 +355,19 @@ input[type='number']::-webkit-outer-spin-button {
   }
 }
 
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.align-address {
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+  bottom: 35px;
+}
+
 .bold {
   font-weight: bold;
 }
@@ -389,6 +387,11 @@ input[type='number']::-webkit-outer-spin-button {
   button + button {
     margin-left: 5px;
   }
+}
+
+.align-name-address {
+  display: flex;
+  align-items: center;
 }
 
 .row {

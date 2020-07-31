@@ -4,22 +4,11 @@
       <b-card header="Login" class="login-card">
         <b-form @submit.prevent="submit">
           <b-form-group>
-            <b-form-input
-              size="sm"
-              v-model="form.email"
-              type="email"
-              required
-              placeholder="Digite seu email"
-            />
+            <b-form-input size="sm" v-model="form.email" type="email" required placeholder="Digite seu email" />
           </b-form-group>
 
           <b-form-group>
-            <b-form-input
-              size="sm"
-              v-model="form.password"
-              type="password"
-              placeholder="Digite sua senha"
-            />
+            <b-form-input size="sm" v-model="form.password" type="password" placeholder="Digite sua senha" />
           </b-form-group>
           <span>{{ loginError }}</span>
           <b-button class="login-button" type="submit" variant="primary" size="sm">Entrar</b-button>

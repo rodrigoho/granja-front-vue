@@ -12,7 +12,7 @@
           <h4 class="mb-0">{{ customer.name }}</h4>
         </template>
         <b-row cols="2">
-          <b-col><label-value :values="customerData"/></b-col>
+          <b-col><label-value :values="customerData" /></b-col>
           <b-col
             ><div><strong>Endereço:</strong></div>
             {{ address }}</b-col
@@ -21,7 +21,7 @@
         <template v-slot:footer>
           <div class="footer">
             <b-button size="sm" variant="primary" @click="handleEdit">Editar</b-button>
-            <b-button size="sm" variant="danger" @click="handleDelete">Remover</b-button>
+            <!-- <b-button size="sm" variant="danger" @click="handleDelete">Remover</b-button> -->
           </div>
         </template>
       </b-card>
@@ -49,14 +49,6 @@ export default {
     async handleEdit() {
       await this.setCustomerToEdit(this.customer);
       this.$router.push({ name: 'newCustomer' });
-      // const customerToEdit = {
-      //   id: this.customer.id,
-      //   name: this.customer.name,
-      //   email: this.customer.email,
-      // };
-      // this.setCustomerToEdit(customerToEdit);
-
-      // this.$router.push({ name: 'customer' });
     },
     handleDelete() {
       this.$bvModal
@@ -121,7 +113,11 @@ export default {
     },
     address: () => {
       const c = JSON.parse(localStorage.getItem('selectedCustomer')).address;
-      return `${c.public_area}, ${c.complement}, ${c.neighborhood}, ${c.city}, ${c.state}`;
+      const { public_area: publicArea, complement, neighborhood, city, state, number } = c;
+      let address = `${publicArea}, ${complement}, ${number}, ${neighborhood}, ${city}, ${state}`;
+      address = address.replace('undefined, ', '');
+      address = address.replace(', ,', ',');
+      return address;
     },
   },
 };

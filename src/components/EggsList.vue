@@ -39,9 +39,7 @@
           >
           <b-row class="align-buttons" v-if="isEditing">
             <b-col class="buttons">
-              <b-button type="button" variant="danger" @click="handleCancel" size="sm"
-                >Cancelar</b-button
-              >
+              <b-button type="button" variant="danger" @click="handleCancel" size="sm">Cancelar</b-button>
               <b-button type="submit" variant="primary" size="sm">Salvar</b-button>
             </b-col>
           </b-row>
@@ -129,7 +127,7 @@ export default {
   },
   computed: {
     ...mapGetters(['getAdditionalFee', 'getRedEggsList', 'getWhiteEggsList']),
-    eggs: function() {
+    eggs: function () {
       let test = [];
       if (!this.isFromCargoPacking && this.eggsColor === 'white') {
         test = this.getWhiteEggsList;
@@ -141,7 +139,7 @@ export default {
       // return this.eggsColor === 'white' ? this.getWhiteEggsList : this.getRedEggsList;
       return test;
     },
-    boxesAmount: function() {
+    boxesAmount: function () {
       let test = 0;
       this.eggsList && this.eggsList.map((egg) => (test += egg.amount));
       return test;

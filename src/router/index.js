@@ -25,8 +25,7 @@ const routes = [
   {
     path: '/new-cargo-packing',
     name: 'newCargoPacking',
-    component: () =>
-      import(/* webpackChunkName: "newCargoPacking" */ '../views/CargoPacking/NewCargoPacking.vue'),
+    component: () => import(/* webpackChunkName: "newCargoPacking" */ '../views/CargoPacking/NewCargoPacking.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -35,9 +34,7 @@ const routes = [
     path: '/cargo-packing-details',
     name: 'cargoPackingDetails',
     component: () =>
-      import(
-        /* webpackChunkName: "cargoPackingDetails" */ '../views/CargoPacking/CargoPackingDetails.vue'
-      ),
+      import(/* webpackChunkName: "cargoPackingDetails" */ '../views/CargoPacking/CargoPackingDetails.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -70,8 +67,7 @@ const routes = [
   {
     path: '/customers/new-customer',
     name: 'newCustomer',
-    component: () =>
-      import(/* webpackChunkName: "newCustomer" */ '../views/Customer/NewCustomer.vue'),
+    component: () => import(/* webpackChunkName: "newCustomer" */ '../views/Customer/NewCustomer.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -79,8 +75,7 @@ const routes = [
   {
     path: '/customers/customer-details',
     name: 'customerDetails',
-    component: () =>
-      import(/* webpackChunkName: "customerDetails" */ '../views/Customer/CustomerDetails.vue'),
+    component: () => import(/* webpackChunkName: "customerDetails" */ '../views/Customer/CustomerDetails.vue'),
     meta: {
       requiresAuth: true,
     },

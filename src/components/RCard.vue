@@ -36,21 +36,14 @@
                 {{ onlineFee }}
               </b-col>
               <b-col v-if="isEditing" sm="4" class="flex-row">
-                <b-input
-                  v-model="leftNumber"
-                  type="number"
-                  class="input-size"
-                  size="sm"
-                  step=".01"/>
+                <b-input v-model="leftNumber" type="number" class="input-size" size="sm" step=".01" />
                 <span class="align-inputs">a</span>
                 <b-input v-model="rightNumber" type="number" class="input-size" size="sm" step=".01"
               /></b-col>
             </b-row>
             <b-row class="align-buttons" v-if="isEditing">
               <b-col class="buttons">
-                <b-button type="button" variant="danger" @click="handleCancel" size="sm"
-                  >Cancelar</b-button
-                >
+                <b-button type="button" variant="danger" @click="handleCancel" size="sm">Cancelar</b-button>
                 <b-button type="submit" variant="primary" size="sm">Salvar</b-button>
               </b-col>
             </b-row>

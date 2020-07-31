@@ -27,13 +27,9 @@ export default {
           label: 'Nome:',
           value: this.cargoPacking.customer.name,
         },
-        // {
-        //   label: 'Número da nota:',
-        //   value: this.cargoPacking.receipt_number,
-        // },
         {
-          label: 'ID para teste:',
-          value: this.cargoPacking.id,
+          label: 'Número da nota:',
+          value: this.cargoPacking.receipt_number,
         },
         {
           label: 'Status:',

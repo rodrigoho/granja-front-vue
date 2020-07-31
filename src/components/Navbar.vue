@@ -11,8 +11,8 @@
         <b-nav-item :to="{ name: 'customers' }">Clientes</b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
-        <b-button size="sm" variant="primary" style="min-width: 120px">
-          Notificações <b-badge variant="light">{{ getNotifications.length }}</b-badge>
+        <b-button @click="handleNotificationsClick" size="sm" variant="primary" style="min-width: 120px;">
+          Notificações <b-badge variant="light">{{ getNotifications }}</b-badge>
         </b-button>
         <b-nav-item-dropdown :text="getUserName" right>
           <b-dropdown-item href="#">Account</b-dropdown-item>
@@ -28,17 +28,20 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'Navbar',
-  data() {
-    return {
-      userName: 'Satie',
-      tests: [{ name: 'oi' }, { name: 'teste' }, { name: 'nova notificação' }],
-    };
+  created() {
+    this.handleAnalysisLoading();
   },
   methods: {
-    ...mapActions(['logout', 'getCargoPackings']),
+    ...mapActions(['logout', 'loadAnalysisCargoPackings']),
     async handleLogout() {
       await this.logout();
       this.$router.push({ name: 'login' });
+    },
+    async handleAnalysisLoading() {
+      await this.loadAnalysisCargoPackings();
+    },
+    async handleNotificationsClick() {
+      this.loadAnalysisCargoPackings();
     },
   },
   computed: {

@@ -13,7 +13,7 @@ export default new Vuex.Store({
     customers: [],
     customerToEdit: null,
     selectedCustomer: {},
-    notifications: ['1', '2'],
+    notifications: [],
     whiteEggsList: null,
     redEggsList: null,
     additionalFee: null,
@@ -78,6 +78,7 @@ export default new Vuex.Store({
       state.user = payload;
       state.userName = payload.name;
       localStorage.setItem('userName', payload.name);
+      localStorage.setItem('userId', payload.id);
     },
     SET_TOKEN(state, payload) {
       state.token = payload;
@@ -88,15 +89,11 @@ export default new Vuex.Store({
     SET_CARGO_PACKINGS(state, payload) {
       state.cargoPackings = payload;
     },
-    CREATE_CARGO_PACKING(state, payload) {
-      state.cargoPackings.push(payload);
-    },
     SET_SELECTED_CARGO_PACKING(state, payload) {
       state.selectedCargoPacking = payload;
     },
-
-    SET_SELECTED_CARGO_PACKING(state, payload) {
-      state.selectedCargoPacking = payload;
+    SET_NOTIFICATIONS_COUNT(state, payload) {
+      state.notifications = payload;
     },
 
     // Customers
@@ -135,15 +132,10 @@ export default new Vuex.Store({
 
     UPDATE_RED_EGG(state, payload) {
       const redEggs = state.redEggsList;
-      console.log('antes\n' + JSON.stringify(redEggs));
       const removeIndex = redEggs.findIndex((i) => {
-        // console.log(i.id);
         return i.id === payload.id;
       });
-      console.log('removeIndex ' + removeIndex);
-      console.log(payload);
       redEggs.splice(removeIndex, 1, payload);
-      // console.log('depois' + JSON.stringify(redEggs));
     },
 
     SET_ADDITIONAL_FEE(state, payload) {
@@ -184,12 +176,31 @@ export default new Vuex.Store({
         throw err.response.data.error;
       }
     },
-    createCargoPacking: async ({ commit }, payload) => {
+    loadDueCargoPackings: async ({ commit }, page) => {
       try {
-        const res = await api.post('cargo-packing', payload);
-        commit('CREATE_CARGO_PACKING', payload);
+        const res = await api.get(`due-cargo-packing?page=${page}`);
+        commit('SET_CARGO_PACKINGS', res.data);
         return res;
       } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+    loadPaidCargoPackings: async ({ commit }, page) => {
+      try {
+        const res = await api.get(`paid-cargo-packing?page=${page}`);
+        commit('SET_CARGO_PACKINGS', res.data);
+        return res;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+    createCargoPacking: async ({ dispatch }, payload) => {
+      try {
+        const res = await api.post('cargo-packing', payload);
+        await dispatch('loadCargoPackings', 1);
+        return res;
+      } catch (err) {
+        console.log(err);
         throw err.response.data.error;
       }
     },
@@ -197,6 +208,15 @@ export default new Vuex.Store({
       try {
         const res = await api.get(`cargo-packing/${payload}`);
         commit('SET_SELECTED_CARGO_PACKING', res.data);
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+    loadAnalysisCargoPackings: async ({ commit }) => {
+      try {
+        const res = await api.get(`analysis-cargo-packing`);
+        commit('SET_NOTIFICATIONS_COUNT', res.data.count);
+        commit('SET_CARGO_PACKINGS', res.data);
       } catch (err) {
         throw err.response.data.error;
       }
@@ -278,7 +298,6 @@ export default new Vuex.Store({
       try {
         const whiteEgg = { id: payload.id, price: payload.price, size: payload.size };
         const currentRedEgg = state.redEggsList.find((e) => e.size === payload.size);
-        console.log('additionalFee ' + JSON.stringify(state.additionalFee.current_fee_price));
         const redEgg = {
           ...payload,
           color: 'Vermelho',

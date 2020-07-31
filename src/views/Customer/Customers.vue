@@ -1,11 +1,6 @@
 <template>
   <div class="customers">
-    <r-header
-      :title="'Clientes'"
-      :buttonTitle="'Novo Cliente'"
-      :toRouteName="'newCustomer'"
-      :shouldShowButton="true"
-    />
+    <r-header :title="'Clientes'" :buttonTitle="'Novo Cliente'" :toRouteName="'newCustomer'" :shouldShowButton="true" />
     <b-container>
       <b-row align-h="center" class="align-cards">
         <customer v-for="(customer, idx) in getCustomers" :key="idx" :customer="customer" />

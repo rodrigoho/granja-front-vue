@@ -8,13 +8,6 @@
     />
     <b-container fluid>
       <b-card align-h="center" class="align-cards">
-        <!-- {{ getSelectedCustomer }}
-        ---
-        {{ redEggs }}
-        {{ whiteEggs }} -->
-        <!-- {{ getRedEggsList }} -->
-        <!-- <span>{{ selectedDate }}</span> -->
-
         <b-row class="flex align-bottom">
           <b-col sm="6">
             <b-form-select
@@ -26,13 +19,11 @@
               class="align-customer-select"
             >
               <template v-slot:first>
-                <b-form-select-option :value="null" disabled
-                  >Selecione o cliente</b-form-select-option
-                >
+                <b-form-select-option :value="null" disabled>Selecione o cliente</b-form-select-option>
               </template>
             </b-form-select>
           </b-col>
-          <b-col><date-picker :selectedDate.sync="selectedDate" class="align-due-date"/></b-col>
+          <b-col><date-picker :selectedDate.sync="selectedDate" class="align-due-date" /></b-col>
         </b-row>
         <!-- Eggs -->
         <div class="eggs">
@@ -42,27 +33,27 @@
                 <b-col offset="3"><h5>Branco</h5></b-col>
                 <b-row>
                   <b-col>Jumbo</b-col>
-                  <b-col><b-input v-model="wJumbo.amount" class="input-size"/></b-col>
+                  <b-col><b-input v-model="wJumbo.amount" class="input-size" /></b-col>
                 </b-row>
                 <b-row>
                   <b-col>Extra</b-col>
-                  <b-col><b-input v-model="wExtra.amount" class="input-size"/></b-col>
+                  <b-col><b-input v-model="wExtra.amount" class="input-size" /></b-col>
                 </b-row>
                 <b-row>
                   <b-col>Grande</b-col>
-                  <b-col><b-input v-model="wGrande.amount" class="input-size"/></b-col>
+                  <b-col><b-input v-model="wGrande.amount" class="input-size" /></b-col>
                 </b-row>
                 <b-row>
                   <b-col>Médio</b-col>
-                  <b-col><b-input v-model="wMedio.amount" class="input-size"/></b-col>
+                  <b-col><b-input v-model="wMedio.amount" class="input-size" /></b-col>
                 </b-row>
                 <b-row>
                   <b-col>Pequeno</b-col>
-                  <b-col><b-input v-model="wPequeno.amount" class="input-size"/></b-col>
+                  <b-col><b-input v-model="wPequeno.amount" class="input-size" /></b-col>
                 </b-row>
                 <b-row>
                   <b-col>Industrial</b-col>
-                  <b-col><b-input v-model="wIndustrial.amount" class="input-size"/></b-col>
+                  <b-col><b-input v-model="wIndustrial.amount" class="input-size" /></b-col>
                 </b-row>
               </div>
             </b-col>
@@ -72,27 +63,27 @@
 
                 <b-row>
                   <b-col>Jumbo</b-col>
-                  <b-col><b-input v-model="rJumbo.amount" class="input-size"/></b-col>
+                  <b-col><b-input v-model="rJumbo.amount" class="input-size" /></b-col>
                 </b-row>
                 <b-row>
                   <b-col>Extra</b-col>
-                  <b-col><b-input v-model="rExtra.amount" class="input-size"/></b-col>
+                  <b-col><b-input v-model="rExtra.amount" class="input-size" /></b-col>
                 </b-row>
                 <b-row>
                   <b-col>Grande</b-col>
-                  <b-col><b-input v-model="rGrande.amount" class="input-size"/></b-col>
+                  <b-col><b-input v-model="rGrande.amount" class="input-size" /></b-col>
                 </b-row>
                 <b-row>
                   <b-col>Médio</b-col>
-                  <b-col><b-input v-model="rMedio.amount" class="input-size"/></b-col>
+                  <b-col><b-input v-model="rMedio.amount" class="input-size" /></b-col>
                 </b-row>
                 <b-row>
                   <b-col>Pequeno</b-col>
-                  <b-col><b-input v-model="rPequeno.amount" class="input-size"/></b-col>
+                  <b-col><b-input v-model="rPequeno.amount" class="input-size" /></b-col>
                 </b-row>
                 <b-row>
                   <b-col>Industrial</b-col>
-                  <b-col><b-input v-model="rIndustrial.amount" class="input-size"/></b-col>
+                  <b-col><b-input v-model="rIndustrial.amount" class="input-size" /></b-col>
                 </b-row>
               </div>
             </b-col>
@@ -103,11 +94,7 @@
           <b-row class="style-inputs">
             <!-- Receipt number -->
             <b-col>
-              <b-form-group
-                id="input-group-phone"
-                label="Numero da nota:"
-                label-for="input-receipt-number"
-              >
+              <b-form-group id="input-group-receipt-number" label="Numero da nota:" label-for="input-receipt-number">
                 <b-form-input
                   id="input-receipt-number"
                   type="number"
@@ -121,11 +108,7 @@
 
             <!-- Receipt value -->
             <b-col>
-              <b-form-group
-                id="input-group-cnpj"
-                label="Valor da nota:"
-                label-for="input-receipt-value"
-              >
+              <b-form-group id="input-group-receipt-value" label="Valor da nota:" label-for="input-receipt-value">
                 <b-form-input
                   id="input-receipt-value"
                   v-model="form.receiptValue"
@@ -137,27 +120,15 @@
               </b-form-group>
             </b-col>
             <b-col class="align-data" sm="2"
-              ><b-form-group
-                id="input-group-discount"
-                label="Seguro:"
-                label-for="input-discount"
-                class="same"
-              >
+              ><b-form-group id="input-group-insurance" label="Seguro:" label-for="input-insurance" class="same">
                 <b-form-checkbox v-model="form.hasInsurance" :value="true" :unchecked-value="false"
                   >Sim</b-form-checkbox
                 >
               </b-form-group>
             </b-col>
             <b-col sm="2">
-              <b-form-group
-                id="input-group-discount"
-                label="Pago:"
-                label-for="input-discount"
-                class="same"
-              >
-                <b-form-checkbox v-model="form.isPaid" :value="true" :unchecked-value="false"
-                  >Sim</b-form-checkbox
-                >
+              <b-form-group id="input-group-paid" label="Pago:" label-for="input-paid" class="same">
+                <b-form-checkbox v-model="form.isPaid" :value="true" :unchecked-value="false">Sim</b-form-checkbox>
               </b-form-group>
             </b-col>
           </b-row>
@@ -170,17 +141,12 @@
               <b-row class="flex-row">
                 <!-- Egg tray price -->
                 <b-col>
-                  <b-form-group
-                    id="input-group-egg-tray-price"
-                    label="Preço:"
-                    label-for="input-egg-tray-price"
-                  >
+                  <b-form-group id="input-group-egg-tray-price" label="Preço:" label-for="input-egg-tray-price">
                     <b-form-input
                       id="input-egg-tray-price"
                       type="number"
                       step="0.01"
                       v-model="form.eggTrayPrice"
-                      required
                       size="sm"
                     ></b-form-input>
                   </b-form-group>
@@ -188,16 +154,11 @@
 
                 <!-- Egg tray amount -->
                 <b-col>
-                  <b-form-group
-                    id="input-group-egg-tray-amount"
-                    label="Quantidade:"
-                    label-for="input-egg-tray-amount"
-                  >
+                  <b-form-group id="input-group-egg-tray-amount" label="Quantidade:" label-for="input-egg-tray-amount">
                     <b-form-input
                       id="input-egg-tray-amount"
                       v-model="form.eggTrayAmount"
                       type="number"
-                      required
                       size="sm"
                     ></b-form-input>
                   </b-form-group> </b-col></b-row
@@ -209,17 +170,12 @@
               >
               <b-row class="flex-row"
                 ><b-col>
-                  <b-form-group
-                    id="input-group-egg-box-price"
-                    label="Preço:"
-                    label-for="input-egg-box-price"
-                  >
+                  <b-form-group id="input-group-egg-box-price" label="Preço:" label-for="input-egg-box-price">
                     <b-form-input
                       id="input-egg-box-price"
                       type="number"
                       v-model="form.eggBoxPrice"
                       step="0.01"
-                      required
                       size="sm"
                     ></b-form-input>
                   </b-form-group>
@@ -227,16 +183,11 @@
 
                 <!-- Customer CNPJ -->
                 <b-col>
-                  <b-form-group
-                    id="input-group-egg-box-amount"
-                    label="Quantidade:"
-                    label-for="input-egg-box-amount"
-                  >
+                  <b-form-group id="input-group-egg-box-amount" label="Quantidade:" label-for="input-egg-box-amount">
                     <b-form-input
                       id="input-egg-box-amount"
                       v-model="form.eggBoxAmount"
                       type="text"
-                      required
                       size="sm"
                     ></b-form-input>
                   </b-form-group> </b-col></b-row
@@ -270,10 +221,10 @@ export default {
       form: {
         isPaid: false,
         hasInsurance: false,
-        discount: '',
-        ruralFundTax: '',
+        discount: 0,
+        ruralFundTax: 0,
         customerName: '',
-        icmsTax: '',
+        icmsTax: 0,
         eggTrayAmount: 0,
         eggTrayPrice: 0,
         eggBoxAmount: 0,
@@ -357,9 +308,7 @@ export default {
     ...mapActions(['loadCustomers', 'loadSelectedCustomer', 'createCargoPacking']),
     async handleCustomersList() {
       await this.loadCustomers();
-      const customersMap = [
-        ...this.getCustomers.map((c) => ({ value: c.id, text: `${c.name} - ${c.email}` })),
-      ];
+      const customersMap = [...this.getCustomers.map((c) => ({ value: c.id, text: `${c.name} - ${c.email}` }))];
 
       this.customersList = customersMap;
     },
@@ -373,10 +322,8 @@ export default {
       this.form.ruralFundTax = customer.rural_fund_tax;
       this.form.icmsTax = customer.icms_tax;
     },
-    onSubmit(evt) {
+    async onSubmit(evt) {
       evt.preventDefault();
-      const receiptValue = parseFloat(this.form.receiptValue).toFixed(2);
-      const receiptNumber = parseFloat(this.form.receiptNumber).toFixed(2);
       const eggsCargo = [
         this.wJumbo,
         this.wExtra,
@@ -401,16 +348,17 @@ export default {
         discount: this.customer.discount,
         has_insurance_fee: this.form.hasInsurance,
         customer_id: this.selectedCustomerId,
-        created_by_user_id: 1, //arrumar o id do usuario
+        created_by_user_id: localStorage.getItem('userId'),
         updated_by_user_id: null,
-        receipt_value: receiptValue,
-        receipt_number: receiptNumber,
+        receipt_value: this.form.receiptValue,
+        receipt_number: this.form.receiptNumber,
         egg_tray_amount: this.form.eggTrayAmount,
         egg_tray_price: this.form.eggTrayPrice,
         egg_retail_box_amount: this.form.eggBoxAmount,
         egg_retail_box_price: this.form.eggBoxPrice,
       };
-      this.createCargoPacking(newCargoPacking);
+      await this.createCargoPacking(newCargoPacking);
+      this.$router.push({ name: 'home' });
       console.log(newCargoPacking);
     },
     onReset(evt) {
@@ -422,7 +370,6 @@ export default {
       this.form.ruralFundTax = '';
       this.form.icmsTax = '';
       this.selectedCustomerId = null;
-      // Trick to reset/clear native browser form validation state
       this.show = false;
       this.$nextTick(() => {
         this.show = true;

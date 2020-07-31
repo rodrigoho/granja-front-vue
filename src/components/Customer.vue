@@ -34,8 +34,8 @@ export default {
   },
   methods: {
     handleClick() {
-      this.$router.push({ name: 'customerDetails' });
       localStorage.setItem('selectedCustomer', JSON.stringify(this.customer));
+      this.$router.push({ name: 'customerDetails' });
     },
   },
   computed: {},

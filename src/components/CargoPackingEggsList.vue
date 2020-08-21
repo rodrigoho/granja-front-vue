@@ -2,31 +2,37 @@
   <div>
     <div class="eggs-list">
       <b-row align-h="center">
-        <h3>
+        <h3 class="titleColor">
           {{ cardTitle }}
         </h3>
       </b-row>
       <!-- {{ eggs }} -->
       <div class="flex">
-        <button class="button-style" v-if="cardTitle === 'Branco'" variant="primary" @click="handleEditClick">
-          Editar
-        </button>
         <b-form class="align-body" @submit="onSubmit" @reset="onReset">
           <div class="card-height">
-            <b-row v-for="egg in eggs" :key="egg.id">
-              <b-col class="bold">{{ egg.size }}</b-col>
-              <b-col v-show="!isEditing" class="align-price">R$ {{ egg.price }}</b-col>
+            <b-row class="align-title">
+              <b-col sm="2"></b-col>
+              <b-col class="align-amount-label bold" sm="1">Qtd</b-col>
+              <b-col class="align-price-label bold" sm="3">Preço</b-col>
+              <b-col class="align-total-price-label bold" sm="4">Total</b-col>
+            </b-row>
+            <b-row class="flex-evenly" v-for="egg in eggs" :key="egg.id">
+              <b-col class="bold" sm="2">{{ egg.size }}</b-col>
+              <b-col v-show="!isEditing" class="align-amount" sm="1">{{ egg.amount }}</b-col>
+              <b-col v-show="isEditing" sm="2">
+                <b-input v-model="egg.amount" type="number" class="input-size" step=".01" />
+              </b-col>
+              <b-col v-show="!isEditing" class="align-price" sm="4">R$ {{ egg.price }}</b-col>
               <b-col v-show="isEditing"
                 ><b-input v-model="egg.price" type="number" class="input-size" step=".01"
               /></b-col>
+              <b-col class="align-total-price" sm="4">R$ {{ (egg.price * egg.amount).toFixed(2) }}</b-col>
             </b-row>
           </div>
-          <b-row class="align-buttons" v-if="isEditing">
-            <b-col class="buttons">
-              <b-button type="button" variant="danger" @click="handleCancel" size="sm">Cancelar</b-button>
-              <b-button type="submit" variant="primary" size="sm">Salvar</b-button>
-            </b-col>
-          </b-row>
+          <b-row class="align-total-boxes"
+            ><b-col sm="5"><span class="bold">Total de caixas</span></b-col> <b-col></b-col
+            ><b-col class="box-amount bold">{{ boxesAmount }}</b-col></b-row
+          >
         </b-form>
       </div>
 
@@ -39,16 +45,12 @@
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
-  name: 'EggsList',
+  name: 'CargoPackingEggsList',
   props: {
     eggsColor: String,
     cardTitle: String,
     eggsList: Array,
-  },
-  data() {
-    return {
-      isEditing: false,
-    };
+    isEditing: Boolean,
   },
   created() {
     this.handleAdditionalFeeLoading();
@@ -94,14 +96,12 @@ export default {
     ...mapGetters(['getAdditionalFee', 'getRedEggsList', 'getWhiteEggsList']),
     eggs: function () {
       let test = [];
-      if (!this.isFromCargoPacking && this.eggsColor === 'white') {
-        test = this.getWhiteEggsList;
-      } else if (this.eggsList) {
-        test = this.eggsList;
-      } else {
-        test = this.getRedEggsList;
-      }
+      test = this.eggsList;
       return test;
+    },
+    boxesAmount() {
+      const totalBoxesAmount = this.eggsList && this.eggsList.reduce((acc, egg) => acc + egg.amount, 0);
+      return totalBoxesAmount;
     },
   },
 };
@@ -110,35 +110,64 @@ export default {
 <style scoped lang="scss">
 .eggs-list {
   position: relative;
-  min-width: 300px;
+  min-width: 350px;
   padding: 15px 30px 15px;
   margin: 10px;
+  /* left: 45px; */
 }
 
-.button-style {
-  position: absolute;
-  right: 30px;
-  top: 24px;
-  height: 20px;
-  width: 50px;
-  font-size: 11px;
-  background: #007bff;
-  color: #fff;
-  border: 0;
-  border-radius: 4px;
+.align-total-boxes {
+  position: relative;
+  /* top: 14px; */
+}
+
+.align-amount-label {
+  position: relative;
+  left: 30px;
+}
+
+.align-amount {
+  position: relative;
+  left: 25px;
+}
+
+.align-price-label {
+  position: relative;
+  left: 65px;
+}
+
+.align-price {
+  position: relative;
+  left: 30px;
+}
+
+.align-total-price-label {
+  position: relative;
+  left: 70px;
+}
+
+.align-total-price {
+  position: relative;
+  right: 15px;
+}
+
+.flex-evenly {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .titleColor {
   color: red;
 }
 
-.align-total-price {
+/* .align-total-price {
   left: 65px;
-}
+} */
 
 .align-title {
   position: relative;
-  left: 85px;
+  /* left: 75px; */
 }
 
 .input-size {
@@ -174,10 +203,13 @@ input[type='number']::-webkit-outer-spin-button {
 
 .card-height {
   min-height: 175px;
+  line-height: 1.8;
 }
 
 .align-body {
+  position: relative;
   margin-top: 10px;
+  left: 30px;
 }
 
 .bold {

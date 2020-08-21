@@ -8,6 +8,7 @@
     />
     <b-container fluid>
       <b-card align-h="center" class="align-cards">
+        {{ customer }}
         <b-row class="flex align-bottom">
           <b-col sm="6">
             <b-form-select
@@ -23,67 +24,97 @@
               </template>
             </b-form-select>
           </b-col>
-          <b-col><date-picker :selectedDate.sync="selectedDate" class="align-due-date" /></b-col>
+          <b-col>
+            <date-picker :selectedDate.sync="selectedDate" class="align-due-date" />
+          </b-col>
         </b-row>
         <!-- Eggs -->
         <div class="eggs">
           <b-row>
             <b-col offset="1">
               <div class="white-eggs">
-                <b-col offset="3"><h5>Branco</h5></b-col>
+                <b-col offset="3">
+                  <h5>Branco</h5>
+                </b-col>
                 <b-row>
                   <b-col>Jumbo</b-col>
-                  <b-col><b-input v-model="wJumbo.amount" class="input-size" /></b-col>
+                  <b-col>
+                    <b-input v-model="wJumbo.amount" class="input-size" />
+                  </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Extra</b-col>
-                  <b-col><b-input v-model="wExtra.amount" class="input-size" /></b-col>
+                  <b-col>
+                    <b-input v-model="wExtra.amount" class="input-size" />
+                  </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Grande</b-col>
-                  <b-col><b-input v-model="wGrande.amount" class="input-size" /></b-col>
+                  <b-col>
+                    <b-input v-model="wGrande.amount" class="input-size" />
+                  </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Médio</b-col>
-                  <b-col><b-input v-model="wMedio.amount" class="input-size" /></b-col>
+                  <b-col>
+                    <b-input v-model="wMedio.amount" class="input-size" />
+                  </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Pequeno</b-col>
-                  <b-col><b-input v-model="wPequeno.amount" class="input-size" /></b-col>
+                  <b-col>
+                    <b-input v-model="wPequeno.amount" class="input-size" />
+                  </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Industrial</b-col>
-                  <b-col><b-input v-model="wIndustrial.amount" class="input-size" /></b-col>
+                  <b-col>
+                    <b-input v-model="wIndustrial.amount" class="input-size" />
+                  </b-col>
                 </b-row>
               </div>
             </b-col>
             <b-col>
               <div class="red-eggs">
-                <b-col offset="3"><h5>Vermelho</h5></b-col>
+                <b-col offset="3">
+                  <h5>Vermelho</h5>
+                </b-col>
 
                 <b-row>
                   <b-col>Jumbo</b-col>
-                  <b-col><b-input v-model="rJumbo.amount" class="input-size" /></b-col>
+                  <b-col>
+                    <b-input v-model="rJumbo.amount" class="input-size" />
+                  </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Extra</b-col>
-                  <b-col><b-input v-model="rExtra.amount" class="input-size" /></b-col>
+                  <b-col>
+                    <b-input v-model="rExtra.amount" class="input-size" />
+                  </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Grande</b-col>
-                  <b-col><b-input v-model="rGrande.amount" class="input-size" /></b-col>
+                  <b-col>
+                    <b-input v-model="rGrande.amount" class="input-size" />
+                  </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Médio</b-col>
-                  <b-col><b-input v-model="rMedio.amount" class="input-size" /></b-col>
+                  <b-col>
+                    <b-input v-model="rMedio.amount" class="input-size" />
+                  </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Pequeno</b-col>
-                  <b-col><b-input v-model="rPequeno.amount" class="input-size" /></b-col>
+                  <b-col>
+                    <b-input v-model="rPequeno.amount" class="input-size" />
+                  </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Industrial</b-col>
-                  <b-col><b-input v-model="rIndustrial.amount" class="input-size" /></b-col>
+                  <b-col>
+                    <b-input v-model="rIndustrial.amount" class="input-size" />
+                  </b-col>
                 </b-row>
               </div>
             </b-col>
@@ -119,8 +150,8 @@
                 ></b-form-input>
               </b-form-group>
             </b-col>
-            <b-col class="align-data" sm="2"
-              ><b-form-group id="input-group-insurance" label="Seguro:" label-for="input-insurance" class="same">
+            <b-col class="align-data" sm="2">
+              <b-form-group id="input-group-insurance" label="Seguro:" label-for="input-insurance" class="same">
                 <b-form-checkbox v-model="form.hasInsurance" :value="true" :unchecked-value="false"
                   >Sim</b-form-checkbox
                 >
@@ -134,10 +165,12 @@
           </b-row>
           <b-row class="style-inputs">
             <!-- EggTray -->
-            <b-col
-              ><b-row
-                ><b-col offset="4"><h5>Bandejas</h5></b-col></b-row
-              >
+            <b-col>
+              <b-row>
+                <b-col offset="4">
+                  <h5>Bandejas</h5>
+                </b-col>
+              </b-row>
               <b-row class="flex-row">
                 <!-- Egg tray price -->
                 <b-col>
@@ -161,15 +194,19 @@
                       type="number"
                       size="sm"
                     ></b-form-input>
-                  </b-form-group> </b-col></b-row
-            ></b-col>
+                  </b-form-group>
+                </b-col>
+              </b-row>
+            </b-col>
             <!-- Egg box price -->
-            <b-col
-              ><b-row
-                ><b-col offset="4"><h5>Caixas</h5></b-col></b-row
-              >
-              <b-row class="flex-row"
-                ><b-col>
+            <b-col>
+              <b-row>
+                <b-col offset="4">
+                  <h5>Caixas</h5>
+                </b-col>
+              </b-row>
+              <b-row class="flex-row">
+                <b-col>
                   <b-form-group id="input-group-egg-box-price" label="Preço:" label-for="input-egg-box-price">
                     <b-form-input
                       id="input-egg-box-price"
@@ -190,8 +227,10 @@
                       type="text"
                       size="sm"
                     ></b-form-input>
-                  </b-form-group> </b-col></b-row
-            ></b-col>
+                  </b-form-group>
+                </b-col>
+              </b-row>
+            </b-col>
           </b-row>
 
           <div class="form-buttons">
@@ -267,31 +306,37 @@ export default {
         color: 'Branco',
         size: 'Jumbo',
         amount: 0,
+        // discount: this.customer.discount,
       },
       wExtra: {
         color: 'Branco',
         size: 'Extra',
         amount: 0,
+        // discount: this.customer.discount,
       },
       wGrande: {
         color: 'Branco',
         size: 'Grande',
         amount: 0,
+        // discount: this.customer.discount,
       },
       wMedio: {
         color: 'Branco',
         size: 'Médio',
         amount: 0,
+        // discount: this.customer.discount,
       },
       wPequeno: {
         color: 'Branco',
         size: 'Pequeno',
         amount: 0,
+        // discount: this.customer.discount,
       },
       wIndustrial: {
         color: 'Branco',
         size: 'Industrial',
         amount: 0,
+        // discount: this.customer.discount,
       },
 
       customersList: [],
@@ -321,11 +366,15 @@ export default {
       this.form.discount = customer.discount;
       this.form.ruralFundTax = customer.rural_fund_tax;
       this.form.icmsTax = customer.icms_tax;
+      console.log(customer.icms_tax);
     },
     async onSubmit(evt) {
       evt.preventDefault();
       const eggsCargo = [
-        this.wJumbo,
+        (this.wJumbo = {
+          ...this.wJumbo,
+          discount: this.customer.discount,
+        }),
         this.wExtra,
         this.wGrande,
         this.wMedio,
@@ -348,6 +397,7 @@ export default {
         discount: this.customer.discount,
         has_insurance_fee: this.form.hasInsurance,
         customer_id: this.selectedCustomerId,
+        icms_tax: this.form.icmsTax,
         created_by_user_id: localStorage.getItem('userId'),
         updated_by_user_id: null,
         receipt_value: this.form.receiptValue,

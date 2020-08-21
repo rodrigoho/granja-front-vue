@@ -8,104 +8,143 @@
     />
     <b-container>
       <b-col>
-        <div class="eggs">
-          <div class="flex-center">
-            <h3>{{ getSelectedCargoPacking && getSelectedCargoPacking.cargoPacking.customer.name }}</h3>
-          </div>
-          <div>
-            <h5 class="align-address">{{ address }}</h5>
-          </div>
+        <div id="cargo-packing-id-out">
+          <div class="eggs" id="cargo-packing-id">
+            <b-row class="flex-between">
+              <div class="bold">
+                {{ salesDate }}
+              </div>
 
-          <div class="flex opac">
-            <b-row>
-              <!-- <b-row>{{ orderItems }}</b-row> -->
-              <img class="test" src="~@/assets/granja-limpo.png" />
-              <b-col>
-                <eggs-list
-                  :eggsColor="'white'"
-                  :eggsList="whiteEggsList"
-                  :isFromCargoPacking="true"
-                  :cardTitle="'Branco'"
-                  class="bg-transparent"
-                ></eggs-list>
-              </b-col>
-              <b-col>
-                <eggs-list
-                  :eggsColor="'red'"
-                  :eggsList="redEggsList"
-                  :isFromCargoPacking="true"
-                  :cardTitle="'Vermelho'"
-                  class="bg-transparent"
-                ></eggs-list>
-              </b-col>
+              <div class="style-header-title">
+                <h3>{{ getSelectedCargoPacking && getSelectedCargoPacking.cargoPacking.customer.name }}</h3>
+                <label-value v-if="!isPdf" class="mt-10" :values="cargoPackingStatus" />
+              </div>
+              <h5>{{ address }}</h5>
             </b-row>
-            <b-row>
-              <b-col sm="4" class="data">
-                <h5>Dados</h5>
-                <label-value :values="generalData" />
-              </b-col>
-              <b-col sm="4" class="data">
-                <h5>Dados financeiros</h5>
-                <label-value :values="moneyData" />
-                <label-value :values="dueDate" class="due-date" />
-              </b-col>
-              <b-col sm="4" class="data">
-                <h5>Embalagens</h5>
-                <b-row>
+            <div class="flex opac">
+              <b-row>
+                <img class="test" src="~@/assets/granja-romaneio.png" />
+                <div class="eggs-list flex-row justify-between mb-">
                   <b-col>
-                    <b-row>
-                      <b-col></b-col>
-                      <b-col>
-                        <span>Quantidade</span>
-                      </b-col>
-                      <b-col>
-                        <span>Preço</span>
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col>
-                        <span>Bandejas</span>
-                      </b-col>
-                      <b-col>{{ eggPackages.eggTray.eggTrayAmount ? eggPackages.eggTray.eggTrayAmount : '-' }}</b-col>
-                      <b-col>
-                        {{ eggPackages.eggTray.eggTrayPrice > 0 ? `R$ ${eggPackages.eggTray.eggTrayPrice}` : '-' }}
-                      </b-col>
-                    </b-row>
-                    <b-row>
-                      <b-col>
-                        <span>Caixas</span>
-                      </b-col>
-                      <b-col>{{ eggPackages.eggBox.eggBoxAmount ? eggPackages.eggBox.eggBoxAmount : '-' }}</b-col>
-                      <b-col>
-                        {{ eggPackages.eggBox.eggBoxPrice > 0 ? `R$ ${eggPackages.eggBox.eggBoxPrice}` : '-' }}
-                      </b-col>
-                    </b-row>
+                    <cargo-packing-eggs-list
+                      :eggsColor="'white'"
+                      :eggsList="whiteEggsList"
+                      :isFromCargoPacking="true"
+                      :cardTitle="'Branco'"
+                      :isEditing="false"
+                      class="bg-transparent"
+                    />
                   </b-col>
-                </b-row>
-                <b-row>
-                  <b-col offset="2">
-                    <b-row>
-                      <b-col>
-                        <span>Bradesco</span>
+                  <b-col>
+                    <cargo-packing-eggs-list
+                      :eggsColor="'red'"
+                      :eggsList="redEggsList"
+                      :isFromCargoPacking="true"
+                      :cardTitle="'Vermelho'"
+                      :isEditing="false"
+                      class="bg-transparent"
+                    />
+                  </b-col>
+                </div>
+              </b-row>
+              <b-row class="align-data">
+                <b-col sm="4" class="data">
+                  <h5>Dados</h5>
+                  <div class="general-data">
+                    <label-value :values="generalData" />
+                  </div>
+                  <div class="style-packages">
+                    <h6 class="align-packages-title">Embalagens</h6>
+                    <!-- <div class="card-height">
+                    <b-row class="align-title">
+                      <b-col sm="2"></b-col>
+                      <b-col class="align-amount-label bold" sm="1">Qtd</b-col>
+                      <b-col class="align-price-label bold" sm="3">Preço</b-col>
+                    </b-row>
+                    <b-row class="flex-evenly">
+                      <b-col class="bold" sm="2">Bandejas</b-col>
+                      <b-col v-show="!isEditing" class="align-amount" sm="1">{{
+                        eggPackages.eggTray.eggTrayAmount ? eggPackages.eggTray.eggTrayAmount : '-'
+                      }}</b-col>
+                      <b-col v-show="!isEditing" class="align-price" sm="4">{{
+                        eggPackages.eggTray.eggTrayAmount ? eggPackages.eggTray.eggTrayAmount : '-'
+                      }}</b-col>
+                    </b-row>
+                    <b-row class="flex-evenly">
+                      <b-col class="bold" sm="2">Embalagens</b-col>
+                      <b-col v-show="!isEditing" class="align-amount" sm="1">{{
+                        eggPackages.eggTray.eggTrayAmount ? eggPackages.eggTray.eggTrayAmount : '-'
+                      }}</b-col>
+                      <b-col v-show="!isEditing" class="align-price" sm="4">{{
+                        eggPackages.eggTray.eggTrayAmount ? eggPackages.eggTray.eggTrayAmount : '-'
+                      }}</b-col>
+                    </b-row>
+                  </div> -->
+                    <b-row class="align-packages">
+                      <b-col offset="1">
+                        <b-row>
+                          <b-col sm="2"></b-col>
+                          <b-col sm="2" offset="1">
+                            <span>Qtd</span>
+                          </b-col>
+                          <b-col sm="2">
+                            <span>Preço</span>
+                          </b-col>
+                        </b-row>
+                        <b-row>
+                          <b-col sm="2">
+                            <span>Bandejas</span>
+                          </b-col>
+                          <b-col offset="1" sm="2">{{
+                            eggPackages.eggTray.eggTrayAmount ? eggPackages.eggTray.eggTrayAmount : '-'
+                          }}</b-col>
+                          <b-col sm="2">
+                            {{ eggPackages.eggTray.eggTrayPrice > 0 ? `R$ ${eggPackages.eggTray.eggTrayPrice}` : '-' }}
+                          </b-col>
+                        </b-row>
+                        <b-row>
+                          <b-col sm="2">
+                            <span>Caixas</span>
+                          </b-col>
+                          <b-col offset="1" sm="2">{{
+                            eggPackages.eggBox.eggBoxAmount ? eggPackages.eggBox.eggBoxAmount : '-'
+                          }}</b-col>
+                          <b-col sm="2">
+                            {{ eggPackages.eggBox.eggBoxPrice > 0 ? `R$ ${eggPackages.eggBox.eggBoxPrice}` : '-' }}
+                          </b-col>
+                        </b-row>
                       </b-col>
                     </b-row>
-                    <b-row>
-                      <b-col>
+                  </div>
+                </b-col>
+                <b-col sm="4" class="data">
+                  <h5>Dados financeiros</h5>
+                  <div class="money-data">
+                    <label-value :values="moneyData" /> <label-value :values="dueDate" class="due-date" />
+                  </div>
+                </b-col>
+                <b-col sm="4" class="data">
+                  <b-row>
+                    <b-col>
+                      <h5>Bradesco</h5>
+
+                      <div class="bank-data">
                         <label-value :values="bankData" />
-                      </b-col>
-                    </b-row>
-                  </b-col>
-                </b-row>
+                      </div>
+                    </b-col>
+                  </b-row>
+                </b-col>
+              </b-row>
+            </div>
+            <b-row class="align-footer-buttons" v-if="isEditing">
+              <b-col class="buttons">
+                <b-button type="button" variant="danger" @click="handleCancel" size="sm">Cancelar</b-button>
+                <b-button type="submit" variant="primary" @click="handleSubmit" size="sm">Salvar</b-button>
               </b-col>
             </b-row>
           </div>
-          <b-row class="align-footer-buttons" v-if="isEditing">
-            <b-col class="buttons">
-              <b-button type="button" variant="danger" @click="handleCancel" size="sm">Cancelar</b-button>
-              <b-button type="submit" variant="primary" @click="handleSubmit" size="sm">Salvar</b-button>
-            </b-col>
-          </b-row>
         </div>
+        <b-button @click="exportToPDF">Exportar para PDF</b-button>
       </b-col>
     </b-container>
   </div>
@@ -113,23 +152,25 @@
 
 <script>
 import RHeader from '@/components/RHeader.vue';
-import EggsList from '@/components/EggsList.vue';
+import CargoPackingEggsList from '@/components/CargoPackingEggsList.vue';
 import LabelValue from '@/components/LabelValue.vue';
 import { mapActions, mapGetters } from 'vuex';
 import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt';
 import BANK_DATA from '@/constants/BankData.js';
+import html2pdf from 'html2pdf.js';
 
 export default {
   name: 'CargoPackingDetails',
   components: {
     RHeader,
-    EggsList,
+    CargoPackingEggsList,
     LabelValue,
   },
   // props: ['cargoPackingId'],
   data() {
     return {
+      isPdf: false,
       isEditing: false,
       additionalFeePrice: null,
       onlineFee: null,
@@ -138,7 +179,9 @@ export default {
       redEggsList: null,
       whiteEggsList: null,
       generalData: [],
+      cargoPackingStatus: [],
       dueDate: [],
+      salesDate: [],
       moneyData: [],
       eggTraysData: [],
       bankData: BANK_DATA,
@@ -151,6 +194,19 @@ export default {
     ...mapActions(['deleteCustomer', 'loadCustomers', 'setCustomerToEdit', 'loadSelectedCargoPacking']),
     handleSubmit() {
       console.log('salvar');
+    },
+    exportToPDF() {
+      this.isPdf = !this.isPdf;
+      let element = document.getElementById('cargo-packing-id-out');
+      let opt = {
+        marginTop: 1,
+        filename: 'document.pdf',
+        image: { type: 'png', quality: 0.58 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' },
+      };
+
+      html2pdf().set(opt).from(element).save();
+      // this.isPdf = !this.isPdf;
     },
     async handleCargoPackingLoading() {
       const cargoPackingId = localStorage.getItem('selectedCargoPackingId');
@@ -185,6 +241,7 @@ export default {
             size: egg.egg_details.size,
             amount: egg.amount,
             color: egg.egg_details.color,
+            discount: egg.discount,
             price: egg.cur_egg_price,
           };
         });
@@ -195,27 +252,29 @@ export default {
         if (a.price < b.price) {
           return 1;
         }
-        // a must be equal to b
         return 0;
       });
       const cargoPacking = this.getSelectedCargoPacking.cargoPacking;
       const cargoPackingVD = this.getSelectedCargoPacking.cargoVirtualData;
       this.generalData = [
         {
-          label: 'Número da nota: ',
+          label: 'Quantidade total: ',
+          value: cargoPackingVD.totalBoxesAmount,
+        },
+        {
+          label: 'Nota: ',
           value: cargoPacking.receipt_number,
         },
         {
-          label: 'Valor da nota: ',
+          label: 'Valor: ',
           value: `R$ ${cargoPacking.receipt_value}`,
         },
+      ];
+
+      this.cargoPackingStatus = [
         {
           label: 'Status: ',
           value: cargoPacking.is_paid === false ? 'Em aberto' : 'Pago',
-        },
-        {
-          label: 'Quantidade de caixas: ',
-          value: cargoPackingVD.totalBoxesAmount,
         },
       ];
 
@@ -225,33 +284,33 @@ export default {
           value: format(parseISO(cargoPacking.due_to), "d 'de' MMMM", { locale: pt }),
         },
       ];
-
-      this.moneyData = [
-        {
-          label: 'Valor total das caixas: ',
-          value: `R$ ${cargoPackingVD.totalEggsCargoPrice}`,
-        },
-        {
-          label: 'ICMS: ',
-          value: cargoPackingVD.icmsFee !== 0 ? `R$ ${cargoPackingVD.icmsFee}` : '-',
-        },
-        {
-          label: 'Seguro: ',
-          value: cargoPackingVD.insurancePrice === false ? '-' : `R$ ${cargoPackingVD.insurancePrice}`,
-        },
-        {
-          label: 'Valor Embalagens: ',
-          value: this.eggPackages.packagesValue > 0 ? `R$ ${this.eggPackages.packagesValue}` : '-',
-        },
-        {
-          label: 'Fundo rural: ',
-          value: cargoPackingVD.ruralFundFee !== 0 ? `R$ ${cargoPackingVD.ruralFundFee}` : '-',
-        },
-        {
-          label: 'Saldo devedor: ',
-          value: `R$ ${cargoPackingVD.balanceDue}`,
-        },
-      ];
+      (this.salesDate = format(parseISO(cargoPacking.created_at), 'dd/MM/yyyy')),
+        (this.moneyData = [
+          {
+            label: 'Carga: ',
+            value: `R$ ${cargoPackingVD.totalEggsCargoPrice}`,
+          },
+          {
+            label: 'ICMS: ',
+            value: cargoPackingVD.icmsFee !== 0 ? `R$ ${cargoPackingVD.icmsFee}` : '-',
+          },
+          {
+            label: 'Seguro: ',
+            value: cargoPackingVD.insurancePrice === false ? '-' : `R$ ${cargoPackingVD.insurancePrice}`,
+          },
+          {
+            label: 'Embalagens: ',
+            value: this.eggPackages.packagesValue > 0 ? `R$ ${this.eggPackages.packagesValue}` : '-',
+          },
+          {
+            label: 'Fundo rural: ',
+            value: cargoPackingVD.ruralFundFee !== 0 ? `R$ ${cargoPackingVD.ruralFundFee}` : '-',
+          },
+          {
+            label: 'Saldo devedor: ',
+            value: `R$ ${cargoPackingVD.balanceDue}`,
+          },
+        ]);
     },
     async handleEdit() {
       await this.setCustomerToEdit(this.customer);
@@ -313,40 +372,85 @@ export default {
 <style scoped lang="scss">
 .eggs {
   position: relative;
-  min-width: 1080px;
+  width: 1020px;
   padding: 15px 30px 15px;
   border-radius: 4px;
   background: #fff;
   top: 50px;
   margin: 20px auto;
-  align-items: stretch;
+  height: 600px;
   min-height: 295px;
+  border: 1px solid;
 }
 
+.flex-between {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#cargo-packing-id-out {
+  height: 720px;
+}
+
+.eggs-list {
+  position: relative;
+  bottom: 30px;
+}
+
+.bank-data {
+  position: relative;
+  left: 55px;
+  width: 170px;
+}
+
+.money-data {
+  position: relative;
+  left: 25px;
+  width: 250px;
+}
+
+.general-data {
+  position: relative;
+  left: 50px;
+  width: 200px;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
 .data {
   text-align: center;
 }
 
-input[type='number']::-webkit-inner-spin-button,
-input[type='number']::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.align-data {
+  position: relative;
+  bottom: 25px;
+}
+
+.align-packages-title {
+  position: relative;
+  right: 30px;
+  top: 15px;
+}
+
+.align-packages {
+  position: relative;
+  top: 15px;
 }
 
 .bg-transparent {
-  background: rgba(255, 255, 255, 0.1);
   min-height: 300px;
 }
 
 .test {
   position: absolute;
-  opacity: 0.1;
+  opacity: 0.05;
   top: -53px;
-  left: -5px;
+  left: -2px;
 }
 
 .flex {
-  /* background-image: url('../../assets/granja.png'); */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -355,17 +459,40 @@ input[type='number']::-webkit-outer-spin-button {
   }
 }
 
+.flex-row {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: row;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.style-sales-date {
+  width: 230px;
+}
+
+.style-header-title {
+  text-align: center;
+}
+
+.style-packages {
+  position: relative;
+  left: 30px;
+  font-size: 12px;
+}
+
 .flex-center {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  /* justify-content: center; */
+  /* align-items: center; */
 }
 
 .align-address {
   display: flex;
   justify-content: flex-end;
-  position: relative;
-  bottom: 35px;
 }
 
 .bold {
@@ -375,6 +502,8 @@ input[type='number']::-webkit-outer-spin-button {
 .due-date {
   color: red;
   font-weight: bold;
+  position: relative;
+  top: 10px;
 }
 
 .align-footer-buttons {
@@ -387,11 +516,6 @@ input[type='number']::-webkit-outer-spin-button {
   button + button {
     margin-left: 5px;
   }
-}
-
-.align-name-address {
-  display: flex;
-  align-items: center;
 }
 
 .row {

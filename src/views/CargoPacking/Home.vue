@@ -27,7 +27,6 @@
     </b-row>
     <b-container>
       <b-row align-h="center" class="align-cards">
-        <!-- {{ cargoPackingsList }} -->
         <cargo-packing
           v-for="cargoPacking in getCargoPackings.rows"
           :key="cargoPacking.id"
@@ -67,7 +66,7 @@ export default {
       cargoPackingsList: [],
       currentPage: 1,
       perPage: 9,
-      selectedCargoPackingFilter: 3,
+      selectedCargoPackingFilter: 0,
       cargoPackingFilters: [
         {
           value: 0,
@@ -79,11 +78,11 @@ export default {
         },
         {
           value: 2,
-          text: 'Todos',
+          text: 'Análise',
         },
         {
           value: 3,
-          text: 'Análise',
+          text: 'Todos',
         },
       ],
     };
@@ -94,19 +93,19 @@ export default {
   methods: {
     ...mapActions(['loadCargoPackings', 'loadDueCargoPackings', 'loadPaidCargoPackings', 'loadAnalysisCargoPackings']),
     async handleCargoPackingsLoading() {
-      await this.loadAnalysisCargoPackings(this.currentPage);
+      await this.loadDueCargoPackings(this.currentPage);
       this.cargoPackingsList = this.getCargoPackings;
     },
     async paginate(currentPage) {
       await this.loadCargoPackings(currentPage);
     },
     async handleCargoPackingFilter() {
-      if (this.selectedCargoPackingFilter === 1) {
+      if (this.selectedCargoPackingFilter === 0) {
         await this.loadDueCargoPackings(this.currentPage);
-      } else if (this.selectedCargoPackingFilter === 2) {
+      } else if (this.selectedCargoPackingFilter === 1) {
         await this.loadPaidCargoPackings(this.currentPage);
-      } else if (this.selectedCargoPackingFilter === 3) {
-        await this.loadAnalysisCargoPackings();
+      } else if (this.selectedCargoPackingFilter === 2) {
+        await this.loadAnalysisCargoPackings(this.currentPage);
       } else {
         await this.loadCargoPackings(this.currentPage);
       }

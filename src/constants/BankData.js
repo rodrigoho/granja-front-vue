@@ -4,7 +4,7 @@ const BANK_DATA = [
     value: '2102-4',
   },
   {
-    label: 'Conta Corrente: ',
+    label: 'CC: ',
     value: '7.488-8',
   },
   {

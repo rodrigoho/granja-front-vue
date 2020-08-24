@@ -8,7 +8,6 @@
     />
     <b-container fluid>
       <b-card align-h="center" class="align-cards">
-        {{ customer }}
         <b-row class="flex align-bottom">
           <b-col sm="6">
             <b-form-select
@@ -366,7 +365,6 @@ export default {
       this.form.discount = customer.discount;
       this.form.ruralFundTax = customer.rural_fund_tax;
       this.form.icmsTax = customer.icms_tax;
-      console.log(customer.icms_tax);
     },
     async onSubmit(evt) {
       evt.preventDefault();
@@ -387,9 +385,7 @@ export default {
         this.rPequeno,
         this.rIndustrial,
       ];
-      // console.log(a);
 
-      // const { customerName } = this.form;
       const newCargoPacking = {
         eggs_cargo: eggsCargo,
         is_paid: this.form.isPaid,
@@ -402,6 +398,7 @@ export default {
         updated_by_user_id: null,
         receipt_value: this.form.receiptValue,
         receipt_number: this.form.receiptNumber,
+        rural_fund_tax: this.form.ruralFundTax,
         egg_tray_amount: this.form.eggTrayAmount,
         egg_tray_price: this.form.eggTrayPrice,
         egg_retail_box_amount: this.form.eggBoxAmount,
@@ -409,7 +406,6 @@ export default {
       };
       await this.createCargoPacking(newCargoPacking);
       this.$router.push({ name: 'home' });
-      console.log(newCargoPacking);
     },
     onReset(evt) {
       evt.preventDefault();

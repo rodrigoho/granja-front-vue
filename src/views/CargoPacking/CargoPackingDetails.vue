@@ -17,7 +17,7 @@
 
               <div class="style-header-title">
                 <h3>{{ getSelectedCargoPacking && getSelectedCargoPacking.cargoPacking.customer.name }}</h3>
-                <label-value v-if="!isPdf" class="mt-10" :values="cargoPackingStatus" />
+                <div class="style-status"><label-value v-if="!isPdf" class="mt-10" :values="cargoPackingStatus" /></div>
               </div>
               <h5>{{ address }}</h5>
             </b-row>
@@ -55,39 +55,14 @@
                   </div>
                   <div class="style-packages">
                     <h6 class="align-packages-title">Embalagens</h6>
-                    <!-- <div class="card-height">
-                    <b-row class="align-title">
-                      <b-col sm="2"></b-col>
-                      <b-col class="align-amount-label bold" sm="1">Qtd</b-col>
-                      <b-col class="align-price-label bold" sm="3">Preço</b-col>
-                    </b-row>
-                    <b-row class="flex-evenly">
-                      <b-col class="bold" sm="2">Bandejas</b-col>
-                      <b-col v-show="!isEditing" class="align-amount" sm="1">{{
-                        eggPackages.eggTray.eggTrayAmount ? eggPackages.eggTray.eggTrayAmount : '-'
-                      }}</b-col>
-                      <b-col v-show="!isEditing" class="align-price" sm="4">{{
-                        eggPackages.eggTray.eggTrayAmount ? eggPackages.eggTray.eggTrayAmount : '-'
-                      }}</b-col>
-                    </b-row>
-                    <b-row class="flex-evenly">
-                      <b-col class="bold" sm="2">Embalagens</b-col>
-                      <b-col v-show="!isEditing" class="align-amount" sm="1">{{
-                        eggPackages.eggTray.eggTrayAmount ? eggPackages.eggTray.eggTrayAmount : '-'
-                      }}</b-col>
-                      <b-col v-show="!isEditing" class="align-price" sm="4">{{
-                        eggPackages.eggTray.eggTrayAmount ? eggPackages.eggTray.eggTrayAmount : '-'
-                      }}</b-col>
-                    </b-row>
-                  </div> -->
                     <b-row class="align-packages">
                       <b-col offset="1">
                         <b-row>
                           <b-col sm="2"></b-col>
-                          <b-col sm="2" offset="1">
+                          <b-col class="align-qty-package-title" sm="2" offset="1">
                             <span>Qtd</span>
                           </b-col>
-                          <b-col sm="2">
+                          <b-col class="align-price-package-title" sm="1">
                             <span>Preço</span>
                           </b-col>
                         </b-row>
@@ -98,7 +73,7 @@
                           <b-col offset="1" sm="2">{{
                             eggPackages.eggTray.eggTrayAmount ? eggPackages.eggTray.eggTrayAmount : '-'
                           }}</b-col>
-                          <b-col sm="2">
+                          <b-col sm="4">
                             {{ eggPackages.eggTray.eggTrayPrice > 0 ? `R$ ${eggPackages.eggTray.eggTrayPrice}` : '-' }}
                           </b-col>
                         </b-row>
@@ -109,7 +84,7 @@
                           <b-col offset="1" sm="2">{{
                             eggPackages.eggBox.eggBoxAmount ? eggPackages.eggBox.eggBoxAmount : '-'
                           }}</b-col>
-                          <b-col sm="2">
+                          <b-col sm="4">
                             {{ eggPackages.eggBox.eggBoxPrice > 0 ? `R$ ${eggPackages.eggBox.eggBoxPrice}` : '-' }}
                           </b-col>
                         </b-row>
@@ -195,18 +170,17 @@ export default {
     handleSubmit() {
       console.log('salvar');
     },
-    exportToPDF() {
+    async exportToPDF() {
       this.isPdf = !this.isPdf;
       let element = document.getElementById('cargo-packing-id-out');
       let opt = {
-        marginTop: 1,
         filename: 'document.pdf',
         image: { type: 'png', quality: 0.58 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' },
       };
 
-      html2pdf().set(opt).from(element).save();
-      // this.isPdf = !this.isPdf;
+      await html2pdf().set(opt).from(element).save();
+      this.isPdf = !this.isPdf;
     },
     async handleCargoPackingLoading() {
       const cargoPackingId = localStorage.getItem('selectedCargoPackingId');
@@ -350,7 +324,6 @@ export default {
         this.getSelectedCargoPacking && this.getSelectedCargoPacking.cargoPacking.egg_retail_box_price;
 
       const packagesValue = (eggTrayAmount * eggTrayPrice + eggBoxAmount * eggBoxPrice).toFixed(2);
-      console.log(packagesValue);
       return {
         eggTray: { eggTrayAmount, eggTrayPrice },
         eggBox: { eggBoxAmount, eggBoxPrice },
@@ -378,9 +351,19 @@ export default {
   background: #fff;
   top: 50px;
   margin: 20px auto;
-  height: 600px;
+  height: 620px;
   min-height: 295px;
   border: 1px solid;
+}
+
+.align-price-package-title {
+  position: relative;
+  left: 15px;
+}
+
+.align-qty-package-title {
+  position: relative;
+  right: 3px;
 }
 
 .flex-between {
@@ -390,7 +373,7 @@ export default {
 }
 
 #cargo-packing-id-out {
-  height: 720px;
+  height: 700px;
 }
 
 .eggs-list {
@@ -471,6 +454,10 @@ export default {
 
 .style-sales-date {
   width: 230px;
+}
+
+.style-status {
+  width: 150px;
 }
 
 .style-header-title {

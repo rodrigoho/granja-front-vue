@@ -118,7 +118,7 @@ export default {
 
 .align-total-boxes {
   position: relative;
-  /* top: 14px; */
+  top: 14px;
 }
 
 .align-amount-label {

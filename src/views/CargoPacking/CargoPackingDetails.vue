@@ -19,7 +19,9 @@
                 <h3>{{ getSelectedCargoPacking && getSelectedCargoPacking.cargoPacking.customer.name }}</h3>
                 <div class="style-status"><label-value v-if="!isPdf" class="mt-10" :values="cargoPackingStatus" /></div>
               </div>
-              <h5>{{ address }}</h5>
+              <h5>
+                {{ getSelectedCargoPacking && address }}
+              </h5>
             </b-row>
             <div class="flex opac">
               <b-row>
@@ -120,6 +122,7 @@
           </div>
         </div>
         <b-button @click="exportToPDF">Exportar para PDF</b-button>
+        <b-button @click="sendNotification()">Enviar notificação</b-button>
       </b-col>
     </b-container>
   </div>
@@ -134,6 +137,7 @@ import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt';
 import BANK_DATA from '@/constants/BankData.js';
 import html2pdf from 'html2pdf.js';
+import io from 'socket.io-client';
 
 export default {
   name: 'CargoPackingDetails',
@@ -160,10 +164,14 @@ export default {
       moneyData: [],
       eggTraysData: [],
       bankData: BANK_DATA,
+      io: null,
+      notifications: [],
+      teste: null,
     };
   },
   created() {
     this.handleCargoPackingLoading();
+    this.io = io('http://localhost:3333');
   },
   methods: {
     ...mapActions(['deleteCustomer', 'loadCustomers', 'setCustomerToEdit', 'loadSelectedCargoPacking']),
@@ -180,8 +188,25 @@ export default {
       };
 
       await html2pdf().set(opt).from(element).save();
+
       this.isPdf = !this.isPdf;
     },
+
+    redirectToCargoPacking(cargoPackingId) {
+      console.log(cargoPackingId);
+      this.$router.push({
+        name: 'cargoPackingDetails',
+        params: { cargoPackingId },
+      });
+    },
+
+    sendNotification() {
+      this.io.emit('msg', {
+        cargoPacking: this.getSelectedCargoPacking.cargoPacking.id,
+      });
+      this.teste = 1;
+    },
+
     async handleCargoPackingLoading() {
       const cargoPackingId = localStorage.getItem('selectedCargoPackingId');
       await this.loadSelectedCargoPacking(cargoPackingId);
@@ -330,15 +355,40 @@ export default {
         packagesValue,
       };
     },
-    address: () => {
-      const c = JSON.parse(localStorage.getItem('selectedCustomer')).address;
-      const { city, state } = c;
-      let address = `${city}, ${state}`;
-      address = address.replace('undefined, ', '');
-      address = address.replace(', ,', ',');
-      return address;
+    address() {
+      // const c = JSON.parse(localStorage.getItem('selectedCustomer')).address;
+      const { state, city } = this.getSelectedCargoPacking.cargoPacking.customer.address;
+
+      return `${city}, ${state}`;
     },
   },
+
+  // watch: {
+  //   notifications: () => {
+  //     // this.$bvToast.toast(`${this.notifications[0]}`, {
+  //     //   title: 'Verifique os dados',
+  //     //   autoHideDelay: 3000,
+  //     // });
+  //     console.log(this.notifications[0]);
+  //     this.notifications = [];
+  //   },
+  // },
+  // watch: {
+  //   notifications() {
+  //     if (this.teste) {
+  //       this.$bvToast.toast(`${this.notifications[0].cargoPacking}`, {
+  //         title: `Romaneio ${this.notifications[0].cargoPacking} foi atualizado`,
+  //         autoHideDelay: 3000,
+  //       });
+  //       console.log(this.notifications[0]);
+  //       this.notifications = [];
+  //       this.teste = null;
+  //     } else {
+  //       this.showEmojis = false;
+  //       this.filterEmoji = '';
+  //     }
+  //   },
+  // },
 };
 </script>
 

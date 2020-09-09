@@ -44,10 +44,8 @@ export default {
   },
   methods: {
     handleClick() {
-      localStorage.setItem('selectedCargoPackingId', this.cargoPacking.id);
       this.$router.push({
-        name: 'cargoPackingDetails',
-        params: { cargoPackingId: this.cargoPacking.id },
+        path: `cargo-packing-details/${this.cargoPacking.id}`,
       });
     },
   },

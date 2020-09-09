@@ -120,6 +120,7 @@
           </div>
         </div>
         <b-button @click="exportToPDF">Exportar para PDF</b-button>
+        <b-button @click="sendNotification()">Enviar notificação</b-button>
       </b-col>
     </b-container>
   </div>
@@ -134,6 +135,7 @@ import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt';
 import BANK_DATA from '@/constants/BankData.js';
 import html2pdf from 'html2pdf.js';
+import io from 'socket.io-client';
 
 export default {
   name: 'CargoPackingDetails',
@@ -142,14 +144,12 @@ export default {
     CargoPackingEggsList,
     LabelValue,
   },
-  // props: ['cargoPackingId'],
   data() {
     return {
       isPdf: false,
       isEditing: false,
       additionalFeePrice: null,
       onlineFee: null,
-      customer: JSON.parse(localStorage.getItem('selectedCustomer')),
       orderItems: null,
       redEggsList: null,
       whiteEggsList: null,
@@ -164,6 +164,7 @@ export default {
   },
   created() {
     this.handleCargoPackingLoading();
+    this.io = io('http://localhost:3333');
   },
   methods: {
     ...mapActions(['deleteCustomer', 'loadCustomers', 'setCustomerToEdit', 'loadSelectedCargoPacking']),
@@ -183,8 +184,7 @@ export default {
       this.isPdf = !this.isPdf;
     },
     async handleCargoPackingLoading() {
-      const cargoPackingId = localStorage.getItem('selectedCargoPackingId');
-      await this.loadSelectedCargoPacking(cargoPackingId);
+      await this.loadSelectedCargoPacking(this.$route.params.id);
       this.orderItems = this.getSelectedCargoPacking.cargoPacking.order_items;
       this.redEggsList = this.orderItems
         .filter((oI) => oI.egg_details.color === 'Vermelho')
@@ -194,19 +194,11 @@ export default {
             size: egg.egg_details.size,
             amount: egg.amount,
             color: egg.egg_details.color,
-            price: egg.cur_egg_price,
+            price: parseFloat(egg.cur_egg_price),
           };
         });
-      this.redEggsList.sort(function (a, b) {
-        if (a.price > b.price) {
-          return -1;
-        }
-        if (a.price < b.price) {
-          return 1;
-        }
-        // a must be equal to b
-        return 0;
-      });
+      this.redEggsList = this.sortArr(this.redEggsList);
+
       this.whiteEggsList = this.orderItems
         .filter((oI) => oI.egg_details.color === 'Branco')
         .map((egg) => {
@@ -216,18 +208,10 @@ export default {
             amount: egg.amount,
             color: egg.egg_details.color,
             discount: egg.discount,
-            price: egg.cur_egg_price,
+            price: parseFloat(egg.cur_egg_price),
           };
         });
-      this.whiteEggsList.sort(function (a, b) {
-        if (a.price > b.price) {
-          return -1;
-        }
-        if (a.price < b.price) {
-          return 1;
-        }
-        return 0;
-      });
+      this.whiteEggsList = this.sortArr(this.whiteEggsList);
       const cargoPacking = this.getSelectedCargoPacking.cargoPacking;
       const cargoPackingVD = this.getSelectedCargoPacking.cargoVirtualData;
       this.generalData = [
@@ -286,31 +270,41 @@ export default {
           },
         ]);
     },
-    async handleEdit() {
-      await this.setCustomerToEdit(this.customer);
-      this.$router.push({ name: 'newCustomer' });
+    sendNotification() {
+      this.io.emit('msg', {
+        cargoPacking: this.getSelectedCargoPacking.cargoPacking.id,
+      });
     },
-    handleDelete() {
-      this.$bvModal
-        .msgBoxConfirm('Deseja mesmo excluir este cliente?', {
-          centered: true,
-          size: 'sm',
-          buttonSize: 'sm',
-          okTitle: 'Sim',
-          cancelTitle: 'Cancelar',
-        })
-        .then(async (value) => {
-          if (value) {
-            this.deleteCustomer(this.customer.id);
-            await this.loadCustomers();
+    // async handleEdit() {
+    //   await this.setCustomerToEdit(this.customer);
+    //   this.$router.push({ name: 'newCustomer' });
+    // },
+    // handleDelete() {
+    //   this.$bvModal
+    //     .msgBoxConfirm('Deseja mesmo excluir este cliente?', {
+    //       centered: true,
+    //       size: 'sm',
+    //       buttonSize: 'sm',
+    //       okTitle: 'Sim',
+    //       cancelTitle: 'Cancelar',
+    //     })
+    //     .then(async (value) => {
+    //       if (value) {
+    //         this.deleteCustomer(this.customer.id);
+    //         await this.loadCustomers();
 
-            this.$router.push({ name: 'customers' });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          // An error occurred
-        });
+    //         this.$router.push({ name: 'customers' });
+    //       }
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //       // An error occurred
+    //     });
+    // },
+    sortArr(listToSort) {
+      return listToSort.sort((a, b) => {
+        return a.price < b.price ? 1 : a.price > b.price ? -1 : 0;
+      });
     },
   },
   computed: {

@@ -120,6 +120,7 @@
           </div>
         </div>
         <b-button @click="exportToPDF">Exportar para PDF</b-button>
+        <b-button @click="handleEdit()">Editar</b-button>
         <b-button @click="sendNotification()">Enviar notificação</b-button>
       </b-col>
     </b-container>
@@ -275,10 +276,11 @@ export default {
         cargoPacking: this.getSelectedCargoPacking.cargoPacking.id,
       });
     },
-    // async handleEdit() {
-    //   await this.setCustomerToEdit(this.customer);
-    //   this.$router.push({ name: 'newCustomer' });
-    // },
+    async handleEdit() {
+      // await this.setCustomerToEdit(this.customer);
+      console.log(this.$route.params.id);
+      this.$router.push({ path: `/new-cargo-packing/${this.$route.params.id}` });
+    },
     // handleDelete() {
     //   this.$bvModal
     //     .msgBoxConfirm('Deseja mesmo excluir este cliente?', {

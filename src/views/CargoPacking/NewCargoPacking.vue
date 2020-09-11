@@ -36,39 +36,62 @@
                   <h5>Branco</h5>
                 </b-col>
                 <b-row>
+                  <b-col>Tipo</b-col>
+                  <b-col offset="1" sm="3">Qtd</b-col>
+                  <b-col class="align-disc">Desc</b-col>
+                </b-row>
+                <b-row>
                   <b-col>Jumbo</b-col>
-                  <b-col>
+                  <b-col sm="3">
                     <b-input v-model="wJumbo.amount" class="input-size" />
+                  </b-col>
+                  <b-col>
+                    <b-input v-model="wJumbo.discount" class="input-size" />
                   </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Extra</b-col>
-                  <b-col>
+                  <b-col sm="3">
                     <b-input v-model="wExtra.amount" class="input-size" />
+                  </b-col>
+                  <b-col>
+                    <b-input v-model="wExtra.discount" class="input-size" />
                   </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Grande</b-col>
-                  <b-col>
+                  <b-col sm="3">
                     <b-input v-model="wGrande.amount" class="input-size" />
+                  </b-col>
+                  <b-col>
+                    <b-input v-model="wGrande.discount" class="input-size" />
                   </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Médio</b-col>
-                  <b-col>
+                  <b-col sm="3">
                     <b-input v-model="wMedio.amount" class="input-size" />
+                  </b-col>
+                  <b-col>
+                    <b-input v-model="wMedio.discount" class="input-size" />
                   </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Pequeno</b-col>
-                  <b-col>
+                  <b-col sm="3">
                     <b-input v-model="wPequeno.amount" class="input-size" />
+                  </b-col>
+                  <b-col>
+                    <b-input v-model="wPequeno.discount" class="input-size" />
                   </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Industrial</b-col>
-                  <b-col>
+                  <b-col sm="3">
                     <b-input v-model="wIndustrial.amount" class="input-size" />
+                  </b-col>
+                  <b-col>
+                    <b-input v-model="wIndustrial.discount" class="input-size" />
                   </b-col>
                 </b-row>
               </div>
@@ -78,41 +101,63 @@
                 <b-col offset="3">
                   <h5>Vermelho</h5>
                 </b-col>
-
+                <b-row>
+                  <b-col>Tipo</b-col>
+                  <b-col offset="1" sm="3">Qtd</b-col>
+                  <b-col class="align-disc">Desc</b-col>
+                </b-row>
                 <b-row>
                   <b-col>Jumbo</b-col>
-                  <b-col>
+                  <b-col sm="3">
                     <b-input v-model="rJumbo.amount" class="input-size" />
+                  </b-col>
+                  <b-col>
+                    <b-input v-model="rJumbo.discount" class="input-size" />
                   </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Extra</b-col>
-                  <b-col>
+                  <b-col sm="3">
                     <b-input v-model="rExtra.amount" class="input-size" />
+                  </b-col>
+                  <b-col>
+                    <b-input v-model="rExtra.discount" class="input-size" />
                   </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Grande</b-col>
-                  <b-col>
+                  <b-col sm="3">
                     <b-input v-model="rGrande.amount" class="input-size" />
+                  </b-col>
+                  <b-col>
+                    <b-input v-model="rGrande.discount" class="input-size" />
                   </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Médio</b-col>
-                  <b-col>
+                  <b-col sm="3">
                     <b-input v-model="rMedio.amount" class="input-size" />
+                  </b-col>
+                  <b-col>
+                    <b-input v-model="rMedio.discount" class="input-size" />
                   </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Pequeno</b-col>
-                  <b-col>
+                  <b-col sm="3">
                     <b-input v-model="rPequeno.amount" class="input-size" />
+                  </b-col>
+                  <b-col>
+                    <b-input v-model="rPequeno.discount" class="input-size" />
                   </b-col>
                 </b-row>
                 <b-row>
                   <b-col>Industrial</b-col>
-                  <b-col>
+                  <b-col sm="3">
                     <b-input v-model="rIndustrial.amount" class="input-size" />
+                  </b-col>
+                  <b-col>
+                    <b-input v-model="rIndustrial.discount" class="input-size" />
                   </b-col>
                 </b-row>
               </div>
@@ -275,67 +320,73 @@ export default {
         color: 'Vermelho',
         size: 'Jumbo',
         amount: 0,
+        discount: 0,
       },
       rExtra: {
         color: 'Vermelho',
         size: 'Extra',
         amount: 0,
+        discount: 0,
       },
       rGrande: {
         color: 'Vermelho',
         size: 'Grande',
         amount: 0,
+        discount: 0,
       },
       rMedio: {
         color: 'Vermelho',
         size: 'Médio',
         amount: 0,
+        discount: 0,
       },
       rPequeno: {
         color: 'Vermelho',
         size: 'Pequeno',
         amount: 0,
+        discount: 0,
       },
       rIndustrial: {
         color: 'Vermelho',
         size: 'Industrial',
         amount: 0,
+        discount: 0,
       },
       wJumbo: {
         color: 'Branco',
         size: 'Jumbo',
         amount: 0,
-        // discount: this.customer.discount,
+        discount: 0,
       },
       wExtra: {
         color: 'Branco',
         size: 'Extra',
         amount: 0,
-        // discount: this.customer.discount,
+        discount: 0,
       },
       wGrande: {
         color: 'Branco',
         size: 'Grande',
         amount: 0,
-        // discount: this.customer.discount,
+        discount: 0,
       },
       wMedio: {
         color: 'Branco',
         size: 'Médio',
         amount: 0,
-        // discount: this.customer.discount,
+        discount: 0,
       },
       wPequeno: {
         color: 'Branco',
         size: 'Pequeno',
         amount: 0,
-        // discount: this.customer.discount,
+        discount: 0,
       },
       wIndustrial: {
         color: 'Branco',
         size: 'Industrial',
         amount: 0,
-        // discount: this.customer.discount,
+        discount: 0,
       },
 
       customersList: [],
@@ -345,8 +396,9 @@ export default {
       show: true,
     };
   },
-  created() {
-    this.handleCustomersList();
+  mounted() {
+    // const cargoPackingId = this.$route.params.id;
+    this.$route.params.id ? this.handleCargoPackingEdit(this.$route.params.id) : this.handleCustomersList();
   },
   methods: {
     ...mapActions(['loadCustomers', 'loadSelectedCustomer', 'createCargoPacking']),
@@ -356,6 +408,10 @@ export default {
 
       this.customersList = customersMap;
     },
+    async handleCargoPackingEdit(cargoPackingId) {
+      console.log('edição', cargoPackingId);
+    },
+
     async handleCustomerSelect() {
       await this.loadSelectedCustomer(this.selectedCustomerId);
       const customer = this.getSelectedCustomer;
@@ -369,10 +425,7 @@ export default {
     async onSubmit(evt) {
       evt.preventDefault();
       const eggsCargo = [
-        (this.wJumbo = {
-          ...this.wJumbo,
-          discount: this.customer.discount,
-        }),
+        this.wJumbo,
         this.wExtra,
         this.wGrande,
         this.wMedio,
@@ -390,7 +443,6 @@ export default {
         eggs_cargo: eggsCargo,
         is_paid: this.form.isPaid,
         due_to: this.selectedDate,
-        discount: this.customer.discount,
         has_insurance_fee: this.form.hasInsurance,
         customer_id: this.selectedCustomerId,
         icms_tax: this.form.icmsTax,
@@ -404,8 +456,9 @@ export default {
         egg_retail_box_amount: this.form.eggBoxAmount,
         egg_retail_box_price: this.form.eggBoxPrice,
       };
-      await this.createCargoPacking(newCargoPacking);
-      this.$router.push({ name: 'home' });
+      console.log(newCargoPacking);
+      // await this.createCargoPacking(newCargoPacking);
+      // this.$router.push({ name: 'home' });
     },
     onReset(evt) {
       evt.preventDefault();
@@ -467,6 +520,12 @@ export default {
   position: relative;
   left: 15px;
 }
+
+.align-disc {
+  position: relative;
+  right: 8px;
+}
+
 h5 {
   color: red;
 }

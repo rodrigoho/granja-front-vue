@@ -18,6 +18,7 @@ export default new Vuex.Store({
     redEggsList: null,
     additionalFee: null,
     selectedCargoPacking: null,
+    editingCargoPackingDate: null,
   },
   getters: {
     loggedIn(state) {
@@ -30,6 +31,9 @@ export default new Vuex.Store({
     // Cargo Packings
     getCargoPackings(state) {
       return state.cargoPackings;
+    },
+    getEditingCargoPackingDate(state) {
+      return state.editingCargoPackingDate;
     },
 
     getSelectedCargoPacking(state) {
@@ -88,6 +92,9 @@ export default new Vuex.Store({
     // Cargo Packings
     SET_CARGO_PACKINGS(state, payload) {
       state.cargoPackings = payload;
+    },
+    SET_EDITING_CARGO_PACKING_DATE(state, payload) {
+      state.editingCargoPackingDate = payload;
     },
     SET_SELECTED_CARGO_PACKING(state, payload) {
       state.selectedCargoPacking = payload;
@@ -212,6 +219,14 @@ export default new Vuex.Store({
         throw err.response.data.error;
       }
     },
+    loadCargoPackingToEdit: async ({ commit }, payload) => {
+      try {
+        const res = await api.get(`/cargo-packing-edit/${payload}`);
+        commit('SET_SELECTED_CARGO_PACKING', res.data);
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
     loadAnalysisCargoPackings: async ({ commit }) => {
       try {
         const res = await api.get(`analysis-cargo-packing`);
@@ -220,6 +235,9 @@ export default new Vuex.Store({
       } catch (err) {
         throw err.response.data.error;
       }
+    },
+    setEditingCargoPackingDate: ({ commit }, payload) => {
+      commit('SET_EDITING_CARGO_PACKING_DATE', payload);
     },
     // End of Cargo Packings
 

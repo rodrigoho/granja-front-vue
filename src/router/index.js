@@ -31,9 +31,9 @@ const routes = [
     },
   },
   {
-    path: '/new-cargo-packing/:id',
-    name: 'newCargoPackingEdit',
-    component: () => import(/* webpackChunkName: "newCargoPacking" */ '../views/CargoPacking/NewCargoPacking.vue'),
+    path: '/cargo-packing-edit/:id',
+    name: 'cargoPackingEdit',
+    component: () => import(/* webpackChunkName: "cargoPackingEditing" */ '../views/CargoPacking/NewCargoPacking.vue'),
     meta: {
       requiresAuth: true,
     },

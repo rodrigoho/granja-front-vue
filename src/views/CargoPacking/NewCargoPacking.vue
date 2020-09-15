@@ -292,6 +292,7 @@
 import RHeader from '@/components/RHeader.vue';
 import { mapActions, mapGetters } from 'vuex';
 import DatePicker from '@/components/DatePicker.vue';
+// import { parse } from 'date-fns';
 
 export default {
   name: 'NewCargoPacking',
@@ -398,17 +399,28 @@ export default {
   },
   mounted() {
     // const cargoPackingId = this.$route.params.id;
-    this.$route.params.id ? this.handleCargoPackingEdit(this.$route.params.id) : this.handleCustomersList();
+    this.$route.params.id ? this.handleCargoPackingLoading(this.$route.params.id) : this.handleCustomersList();
   },
   methods: {
-    ...mapActions(['loadCustomers', 'loadSelectedCustomer', 'createCargoPacking']),
+    ...mapActions(['loadCustomers', 'loadSelectedCustomer', 'createCargoPacking', 'loadCargoPackingToEdit']),
     async handleCustomersList() {
       await this.loadCustomers();
       const customersMap = [...this.getCustomers.map((c) => ({ value: c.id, text: `${c.name} - ${c.email}` }))];
 
       this.customersList = customersMap;
+      console.log('opa');
     },
-    async handleCargoPackingEdit(cargoPackingId) {
+    async handleCargoPackingLoading(cargoPackingId) {
+      await this.handleCustomersList();
+      await this.loadCargoPackingToEdit(cargoPackingId);
+      const { customer_id: customerId, due_to: dueTo } = this.getSelectedCargoPacking.cargoPacking;
+      const test = this.customersList.find((customer) => customer.value === customerId);
+      console.log(test);
+      this.selectedCustomerId = test.value;
+      this.selectedDate = dueTo;
+      localStorage.setItem('editingCargoPackingDate', dueTo);
+      console.log(this.selectedDate);
+      console.log('selectedCargoPacking', this.getSelectedCargoPacking);
       console.log('edição', cargoPackingId);
     },
 
@@ -476,7 +488,13 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['getCustomers', 'getSelectedCustomer', 'getCargoPackings', 'getRedEggsList']),
+    ...mapGetters([
+      'getCustomers',
+      'getSelectedCustomer',
+      'getCargoPackings',
+      'getRedEggsList',
+      'getSelectedCargoPacking',
+    ]),
   },
 };
 </script>

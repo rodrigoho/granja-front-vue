@@ -19,7 +19,12 @@
                 <h3>{{ getSelectedCargoPacking && getSelectedCargoPacking.cargoPacking.customer.name }}</h3>
                 <div class="style-status"><label-value v-if="!isPdf" class="mt-10" :values="cargoPackingStatus" /></div>
               </div>
-              <h5>{{ address }}</h5>
+              <h5>
+                {{
+                  getSelectedCargoPacking &&
+                  `${getSelectedCargoPacking.cargoPacking.customer.address.city}, ${getSelectedCargoPacking.cargoPacking.customer.address.state}`
+                }}
+              </h5>
             </b-row>
             <div class="flex opac">
               <b-row>
@@ -120,6 +125,7 @@
           </div>
         </div>
         <b-button @click="exportToPDF">Exportar para PDF</b-button>
+        <b-button @click="handleEdit()">Editar</b-button>
         <b-button @click="sendNotification()">Enviar notificação</b-button>
       </b-col>
     </b-container>
@@ -275,10 +281,11 @@ export default {
         cargoPacking: this.getSelectedCargoPacking.cargoPacking.id,
       });
     },
-    // async handleEdit() {
-    //   await this.setCustomerToEdit(this.customer);
-    //   this.$router.push({ name: 'newCustomer' });
-    // },
+    async handleEdit() {
+      // await this.setCustomerToEdit(this.customer);
+      console.log(this.$route.params.id);
+      this.$router.push({ path: `/cargo-packing-edit/${this.$route.params.id}` });
+    },
     // handleDelete() {
     //   this.$bvModal
     //     .msgBoxConfirm('Deseja mesmo excluir este cliente?', {
@@ -324,14 +331,14 @@ export default {
         packagesValue,
       };
     },
-    address: () => {
-      const c = JSON.parse(localStorage.getItem('selectedCustomer')).address;
-      const { city, state } = c;
-      let address = `${city}, ${state}`;
-      address = address.replace('undefined, ', '');
-      address = address.replace(', ,', ',');
-      return address;
-    },
+    // address: () => {
+    //   const c = JSON.parse(localStorage.getItem('selectedCustomer')).address;
+    //   const { city, state } = c;
+    //   let address = `${city}, ${state}`;
+    //   address = address.replace('undefined, ', '');
+    //   address = address.replace(', ,', ',');
+    //   return address;
+    // },
   },
 };
 </script>

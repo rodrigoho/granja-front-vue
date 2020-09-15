@@ -13,16 +13,25 @@
 
 <script>
 export default {
+  name: 'DatePicker',
   data() {
     return {
-      value: '',
+      value: this.teste || '',
       context: null,
     };
+  },
+  mounted() {
+    this.handleSelectedDate();
   },
   methods: {
     onContext(ctx) {
       this.context = ctx;
+      console.log(this.context);
       this.$emit('update:selectedDate', ctx.selectedDate);
+    },
+    handleSelectedDate() {
+      this.value = localStorage.getItem('editingCargoPackingDate');
+      console.log(this.value);
     },
   },
 };

@@ -138,7 +138,7 @@ export default {
 
 .align-price {
   position: relative;
-  left: 30px;
+  left: 40px;
 }
 
 .align-total-price-label {

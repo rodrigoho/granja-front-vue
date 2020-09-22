@@ -292,6 +292,7 @@
 import RHeader from '@/components/RHeader.vue';
 import { mapActions, mapGetters } from 'vuex';
 import DatePicker from '@/components/DatePicker.vue';
+import io from 'socket.io-client';
 // import { parse } from 'date-fns';
 
 export default {
@@ -399,29 +400,104 @@ export default {
   },
   mounted() {
     // const cargoPackingId = this.$route.params.id;
+    this.io = io('http://localhost:3333');
     this.$route.params.id ? this.handleCargoPackingLoading(this.$route.params.id) : this.handleCustomersList();
   },
   methods: {
-    ...mapActions(['loadCustomers', 'loadSelectedCustomer', 'createCargoPacking', 'loadCargoPackingToEdit']),
+    ...mapActions([
+      'loadCustomers',
+      'loadSelectedCustomer',
+      'createCargoPacking',
+      'loadCargoPackingToEdit',
+      'updateCargoPacking',
+    ]),
     async handleCustomersList() {
       await this.loadCustomers();
       const customersMap = [...this.getCustomers.map((c) => ({ value: c.id, text: `${c.name} - ${c.email}` }))];
 
       this.customersList = customersMap;
-      console.log('opa');
+      // console.log('opa');
     },
     async handleCargoPackingLoading(cargoPackingId) {
       await this.handleCustomersList();
       await this.loadCargoPackingToEdit(cargoPackingId);
-      const { customer_id: customerId, due_to: dueTo } = this.getSelectedCargoPacking.cargoPacking;
+      const {
+        customer_id: customerId,
+        due_to: dueTo,
+        order_items: orderItems,
+        receipt_number: receiptNumber,
+        receipt_value: receiptValue,
+        has_insurance_fee: hasInsuranceFee,
+        is_paid: isPaid,
+        egg_retail_box_amount: eggBoxAmount,
+        egg_retail_box_price: eggBoxPrice,
+        egg_tray_amount: eggTrayAmount,
+        egg_tray_price: eggTrayPrice,
+      } = this.getSelectedCargoPacking.cargoPacking;
+      const form = this.form;
       const test = this.customersList.find((customer) => customer.value === customerId);
-      console.log(test);
+      orderItems.forEach((oI) => {
+        const eggColor = oI.egg_details.color;
+        const eggSize = oI.egg_details.size;
+        const amount = oI.amount;
+        const discount = oI.discount;
+        if (eggColor === 'Branco') {
+          if (eggSize === 'Jumbo') {
+            this.wJumbo.amount = amount;
+            this.wJumbo.discount = discount;
+          } else if (eggSize === 'Extra') {
+            this.wExtra.amount = amount;
+            this.wExtra.discount = discount;
+          } else if (eggSize === 'Grande') {
+            this.wGrande.amount = amount;
+            this.wGrande.discount = discount;
+          } else if (eggSize === 'Médio') {
+            this.wMedio.amount = amount;
+            this.wMedio.discount = discount;
+          } else if (eggSize === 'Pequeno') {
+            this.wPequeno.amount = amount;
+            this.wPequeno.discount = discount;
+          } else if (eggSize === 'Industrial') {
+            this.wIndustrial.amount = amount;
+            this.wIndustrial.discount = discount;
+          }
+        } else {
+          if (eggSize === 'Jumbo') {
+            this.rJumbo.amount = amount;
+            this.rJumbo.discount = discount;
+          } else if (eggSize === 'Extra') {
+            this.rExtra.amount = amount;
+            this.rExtra.discount = discount;
+          } else if (eggSize === 'Grande') {
+            this.rGrande.amount = amount;
+            this.rGrande.discount = discount;
+          } else if (eggSize === 'Médio') {
+            this.rMedio.amount = amount;
+            this.rMedio.discount = discount;
+          } else if (eggSize === 'Pequeno') {
+            this.rPequeno.amount = amount;
+            this.rPequeno.discount = discount;
+          } else if (eggSize === 'Industrial') {
+            this.rIndustrial.amount = amount;
+            this.rIndustrial.discount = discount;
+          }
+        }
+      });
+
       this.selectedCustomerId = test.value;
       this.selectedDate = dueTo;
+      form.receiptNumber = receiptNumber;
+      form.receiptValue = receiptValue;
+      form.hasInsurance = hasInsuranceFee;
+      form.isPaid = isPaid;
+      form.eggTrayPrice = eggTrayPrice;
+      form.eggTrayAmount = eggTrayAmount;
+      form.eggBoxPrice = eggBoxPrice;
+      form.eggBoxAmount = eggBoxAmount;
       localStorage.setItem('editingCargoPackingDate', dueTo);
-      console.log(this.selectedDate);
+      // console.log(this.selectedDate);
       console.log('selectedCargoPacking', this.getSelectedCargoPacking);
-      console.log('edição', cargoPackingId);
+      // console.log('edição', cargoPackingId);
     },
 
     async handleCustomerSelect() {
@@ -451,7 +527,7 @@ export default {
         this.rIndustrial,
       ];
 
-      const newCargoPacking = {
+      const cargoPacking = {
         eggs_cargo: eggsCargo,
         is_paid: this.form.isPaid,
         due_to: this.selectedDate,
@@ -468,9 +544,21 @@ export default {
         egg_retail_box_amount: this.form.eggBoxAmount,
         egg_retail_box_price: this.form.eggBoxPrice,
       };
-      console.log(newCargoPacking);
-      // await this.createCargoPacking(newCargoPacking);
-      // this.$router.push({ name: 'home' });
+      console.log(cargoPacking);
+      console.log(this.$route.name);
+      this.$route.name === 'newCargoPacking'
+        ? await this.createCargoPacking(cargoPacking)
+        : this.handleUpdate(cargoPacking);
+      this.$router.push({ name: 'home' });
+    },
+    async handleUpdate(cargoPacking) {
+      await this.updateCargoPacking({
+        cargoPacking: cargoPacking,
+        cargoPackingId: parseInt(this.$route.params.id),
+      });
+      this.io.emit('msg', {
+        cargoPacking: this.getSelectedCargoPacking.cargoPacking.id,
+      });
     },
     onReset(evt) {
       evt.preventDefault();
@@ -506,7 +594,7 @@ export default {
   display: flex;
   background: #fff;
   margin: 50px auto;
-  width: 700px;
+  width: 800px;
 }
 .align-bottom {
   margin-bottom: 15px;

@@ -26,12 +26,10 @@ export default {
   methods: {
     onContext(ctx) {
       this.context = ctx;
-      console.log(this.context);
       this.$emit('update:selectedDate', ctx.selectedDate);
     },
     handleSelectedDate() {
       this.value = localStorage.getItem('editingCargoPackingDate');
-      console.log(this.value);
     },
   },
 };
@@ -44,6 +42,6 @@ export default {
   justify-content: center;
 }
 .teste {
-  width: 250px;
+  width: 310px;
 }
 </style>

@@ -9,9 +9,7 @@
         </b-row>
 
         <div class="flex" @submit="onSubmit" @reset="onReset">
-          <button class="align-button" variant="primary" @click="handleEditClick">
-            Editar
-          </button>
+          <button class="align-button" variant="primary" @click="handleEditClick">Editar</button>
           <b-form @submit="onSubmit" @reset="onReset">
             <b-row cols="2">
               <b-col sm="7">

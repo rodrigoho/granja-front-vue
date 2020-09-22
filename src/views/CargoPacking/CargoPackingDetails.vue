@@ -16,7 +16,7 @@
               </div>
 
               <div class="style-header-title">
-                <h3>{{ getSelectedCargoPacking && getSelectedCargoPacking.cargoPacking.customer.name }}</h3>
+                <h3>{{ getSelectedCargoPacking && customerName }}</h3>
                 <div class="style-status"><label-value v-if="!isPdf" class="mt-10" :values="cargoPackingStatus" /></div>
               </div>
               <h5>
@@ -200,6 +200,7 @@ export default {
             size: egg.egg_details.size,
             amount: egg.amount,
             color: egg.egg_details.color,
+            discount: egg.discount,
             price: parseFloat(egg.cur_egg_price),
           };
         });
@@ -330,6 +331,9 @@ export default {
         eggBox: { eggBoxAmount, eggBoxPrice },
         packagesValue,
       };
+    },
+    customerName() {
+      return this.getSelectedCargoPacking && this.getSelectedCargoPacking.cargoPacking.customer.name;
     },
     // address: () => {
     //   const c = JSON.parse(localStorage.getItem('selectedCustomer')).address;

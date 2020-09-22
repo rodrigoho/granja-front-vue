@@ -11,7 +11,7 @@
         <b-nav-item :to="{ name: 'customers' }">Clientes</b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
-        <b-button @click="handleNotificationsClick" size="sm" variant="primary" style="min-width: 120px;">
+        <b-button @click="handleNotificationsClick" size="sm" variant="primary" style="min-width: 120px">
           Notificações <b-badge variant="light">{{ getNotifications }}</b-badge>
         </b-button>
         <b-nav-item-dropdown :text="getUserName" right>

@@ -6,7 +6,6 @@
           {{ cardTitle }}
         </h3>
       </b-row>
-      <!-- {{ eggs }} -->
       <div class="flex">
         <b-form class="align-body" @submit="onSubmit" @reset="onReset">
           <div class="card-height">
@@ -19,14 +18,11 @@
             <b-row class="flex-evenly" v-for="egg in eggs" :key="egg.id">
               <b-col class="bold" sm="2">{{ egg.size }}</b-col>
               <b-col v-show="!isEditing" class="align-amount" sm="1">{{ egg.amount }}</b-col>
-              <b-col v-show="isEditing" sm="2">
-                <b-input v-model="egg.amount" type="number" class="input-size" step=".01" />
-              </b-col>
-              <b-col v-show="!isEditing" class="align-price" sm="4">R$ {{ egg.price }}</b-col>
-              <b-col v-show="isEditing"
-                ><b-input v-model="egg.price" type="number" class="input-size" step=".01"
-              /></b-col>
-              <b-col class="align-total-price" sm="4">R$ {{ (egg.price * egg.amount).toFixed(2) }}</b-col>
+              <b-col v-show="!isEditing" class="align-price" sm="4">R$ {{ egg.price - egg.discount }}</b-col>
+
+              <b-col class="align-total-price" sm="4"
+                >R$ {{ ((egg.price - egg.discount) * egg.amount).toFixed(2) }}</b-col
+              >
             </b-row>
           </div>
           <b-row class="align-total-boxes"
@@ -94,10 +90,8 @@ export default {
   },
   computed: {
     ...mapGetters(['getAdditionalFee', 'getRedEggsList', 'getWhiteEggsList']),
-    eggs: function () {
-      let test = [];
-      test = this.eggsList;
-      return test;
+    eggs() {
+      return this.eggsList && this.eggsList.filter((egg) => egg.amount);
     },
     boxesAmount() {
       const totalBoxesAmount = this.eggsList && this.eggsList.reduce((acc, egg) => acc + egg.amount, 0);

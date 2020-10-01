@@ -1,0 +1,124 @@
+<template>
+  <div class="new-user">
+    <r-header :title="'Usuário'" :buttonTitle="'Voltar aos usuários'" :toRouteName="'users'" :shouldShowButton="true" />
+    <b-container>
+      <b-row align-h="center">
+        <b-card :header="header" class="login-card">
+          <b-form @submit.prevent="submit">
+            <b-form-group>
+              <b-form-input size="sm" v-model="form.name" type="text" required placeholder="Nome completo" />
+            </b-form-group>
+
+            <b-form-group>
+              <b-form-input size="sm" v-model="form.email" type="email" required placeholder="Email" />
+            </b-form-group>
+
+            <b-form-group v-if="isEditing">
+              <b-form-input size="sm" v-model="form.oldPassword" type="password" placeholder="Senha atual" />
+            </b-form-group>
+
+            <b-form-group>
+              <b-form-input size="sm" v-model="form.password" type="password" placeholder="Senha" />
+            </b-form-group>
+
+            <b-form-group>
+              <b-form-input
+                size="sm"
+                v-model="form.confirmPassword"
+                type="password"
+                placeholder="Digite novamente a senha"
+              />
+            </b-form-group>
+            <span>{{ createUserError }}</span>
+            <b-button class="login-button" type="submit" variant="primary" size="sm">Salvar</b-button>
+          </b-form>
+        </b-card>
+      </b-row>
+    </b-container>
+  </div>
+</template>
+
+<script>
+import { mapActions } from 'vuex';
+import RHeader from '@/components/RHeader.vue';
+
+export default {
+  name: 'newUser',
+  components: {
+    RHeader,
+  },
+  data: () => ({
+    token: '',
+    createUserError: '',
+    form: {
+      id: null,
+      email: '',
+      name: '',
+      loggedUserId: null,
+      isAdmin: null,
+      password: '',
+    },
+  }),
+  mounted() {
+    this.$route.params.id ? this.handleUserLoading(this.$route.params.id) : console.log('não tenho id');
+  },
+  methods: {
+    ...mapActions(['login', 'updateUser', 'loadSelectedUser']),
+    async submit() {
+      try {
+        await this.updateUser({ ...this.form });
+        this.$router.push({ name: 'users' });
+      } catch (err) {
+        this.$toasted.show(`${err}`, {
+          theme: 'outline',
+          duration: 2000,
+          action: [
+            {
+              text: 'Cancelar',
+              onClick: (e, toastObject) => {
+                toastObject.goAway(0);
+              },
+            },
+            {
+              text: 'Ok',
+            },
+          ],
+        });
+        this.createUserError = err.response.data.error;
+      }
+    },
+    async handleUserLoading(userId) {
+      const user = await this.loadSelectedUser(userId);
+      console.log(user);
+      this.form.loggedUserId = parseInt(localStorage.getItem('userId'), 10);
+      this.form.id = parseInt(this.$route.params.id, 10);
+      this.form.isAdmin = localStorage.getItem('is-admin');
+      this.form.email = user.email;
+      this.form.name = user.name;
+      this.form.password = user.password;
+    },
+  },
+  computed: {
+    header() {
+      return this.$route.params.id ? 'Editando Usuário' : 'Novo Usuário';
+    },
+    isEditing() {
+      return !!this.$route.params.id;
+    },
+  },
+};
+</script>
+
+<style scoped lang="scss">
+.login-card {
+  margin-top: 10rem;
+  width: 20rem;
+}
+.login-button {
+  float: right;
+}
+
+span {
+  color: red;
+}
+</style>

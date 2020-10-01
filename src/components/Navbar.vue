@@ -9,13 +9,14 @@
         <b-nav-item :to="{ name: 'home' }">Romaneios</b-nav-item>
         <b-nav-item :to="{ name: 'eggs' }">Ovos</b-nav-item>
         <b-nav-item :to="{ name: 'customers' }">Clientes</b-nav-item>
+        <b-nav-item v-if="getIsAdmin || isAdmin" :to="{ name: 'users' }">Usuários</b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
         <b-button @click="handleNotificationsClick" size="sm" variant="primary" style="min-width: 120px">
           Notificações <b-badge variant="light">{{ getNotifications }}</b-badge>
         </b-button>
         <b-nav-item-dropdown :text="getUserName" right>
-          <b-dropdown-item href="#">Account</b-dropdown-item>
+          <b-dropdown-item @click="handleEdit">Alterar senha</b-dropdown-item>
           <b-dropdown-item @click="handleLogout">Logout</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
@@ -28,7 +29,7 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'Navbar',
-  created() {
+  mounted() {
     this.handleAnalysisLoading();
   },
   methods: {
@@ -36,6 +37,9 @@ export default {
     async handleLogout() {
       await this.logout();
       this.$router.push({ name: 'login' });
+    },
+    async handleEdit() {
+      console.log(localStorage.getItem('userId'));
     },
     async handleAnalysisLoading() {
       await this.loadAnalysisCargoPackings();
@@ -45,7 +49,10 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['getUserName', 'getNotifications']),
+    ...mapGetters(['getUserName', 'getNotifications', 'getIsAdmin']),
+    isAdmin() {
+      return JSON.parse(localStorage.getItem('is-admin'));
+    },
   },
 };
 </script>

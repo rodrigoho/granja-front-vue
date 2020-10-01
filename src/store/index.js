@@ -11,9 +11,12 @@ export default new Vuex.Store({
     token: localStorage.getItem('token') || null,
     cargoPackings: [],
     customers: [],
+    users: [],
+    isAdmin: false,
+    selectedUser: {},
     customerToEdit: null,
     selectedCustomer: {},
-    notifications: [],
+    notifications: 0,
     whiteEggsList: null,
     redEggsList: null,
     additionalFee: null,
@@ -38,6 +41,14 @@ export default new Vuex.Store({
 
     getSelectedCargoPacking(state) {
       return state.selectedCargoPacking;
+    },
+
+    // Users
+    getUsers(state) {
+      return state.users;
+    },
+    getIsAdmin(state) {
+      return state.isAdmin;
     },
 
     // Customers
@@ -103,6 +114,20 @@ export default new Vuex.Store({
       state.notifications = payload;
     },
 
+    // Users
+    SET_USERS_LIST(state, payload) {
+      state.users = payload;
+    },
+    SET_SELECTED_USER(state, payload) {
+      state.selectedUser = payload;
+    },
+    CREATE_USER(state, payload) {
+      state.users.push(payload);
+    },
+    SET_IS_ADMIN(state, payload) {
+      state.isAdmin = payload;
+    },
+    // End of users
     // Customers
     SET_CUSTOMERS_LIST(state, payload) {
       state.customers = payload;
@@ -161,6 +186,10 @@ export default new Vuex.Store({
     login: async ({ commit }, payload) => {
       try {
         const res = await api.post('sessions', payload);
+        const isAdmin = res.data.user.is_admin;
+        console.log(isAdmin);
+        localStorage.setItem('is-admin', isAdmin);
+        commit('SET_IS_ADMIN', isAdmin);
         commit('SET_USER', res.data.user);
         commit('SET_TOKEN', res.data.token);
         return res;
@@ -169,7 +198,8 @@ export default new Vuex.Store({
       }
     },
     logout: ({ commit }) => {
-      localStorage.removeItem('token');
+      localStorage.clear();
+      commit('SET_IS_ADMIN', false);
       commit('LOGOUT');
     },
 
@@ -241,7 +271,6 @@ export default new Vuex.Store({
     loadAnalysisCargoPackings: async ({ commit }) => {
       try {
         const res = await api.get(`analysis-cargo-packing`);
-        commit('SET_NOTIFICATIONS_COUNT', res.data.count);
         commit('SET_CARGO_PACKINGS', res.data);
       } catch (err) {
         throw err.response.data.error;
@@ -251,6 +280,49 @@ export default new Vuex.Store({
       commit('SET_EDITING_CARGO_PACKING_DATE', payload);
     },
     // End of Cargo Packings
+
+    // Users
+    createUser: async ({ commit }, payload) => {
+      try {
+        const res = await api.post('users', payload);
+        commit('CREATE_USER', payload);
+        return res;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+
+    loadUsers: async ({ commit }) => {
+      try {
+        const res = await api.get('users-list');
+        commit('SET_USERS_LIST', res.data);
+        return res;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+
+    loadSelectedUser: async ({ commit }, payload) => {
+      try {
+        const res = await api.get(`user/${payload}`);
+        commit('SET_SELECTED_USER', res.data);
+        return res.data;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+
+    updateUser: async (context, payload) => {
+      try {
+        console.log(payload);
+        const res = await api.put(`user/${payload.id}`, payload);
+        console.log(res);
+        return res;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+    // End of users
 
     // Customers
     loadCustomers: async ({ commit }) => {

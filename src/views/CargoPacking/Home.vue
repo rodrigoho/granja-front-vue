@@ -6,25 +6,23 @@
       :toRouteName="'newCargoPacking'"
       :shouldShowButton="true"
     />
-    <b-row class="align-filter-counter">
-      <!-- <b-col sm="2"> -->
-      <b-form-select
-        id="input-3"
-        class="teste"
-        v-model="selectedCargoPackingFilter"
-        :options="cargoPackingFilters"
-        @change="handleCargoPackingFilter"
-        size="sm"
-      >
-        <template v-slot:first>
-          <b-form-select-option :value="null" disabled>Selecione o Filtro</b-form-select-option>
-        </template>
-      </b-form-select>
-      <!-- </b-col> -->
-      <!-- <b-col offset="1"> -->
-      <span class="style-count">Total de romaneios: {{ getCargoPackings.count }}</span>
-      <!-- </b-col      > -->
-    </b-row>
+    <b-col>
+      <b-row class="align-filter-counter">
+        <b-form-select
+          id="input-3"
+          class="teste"
+          v-model="selectedCargoPackingFilter"
+          :options="cargoPackingFilters"
+          @change="handleCargoPackingFilter"
+          size="sm"
+        >
+          <template v-slot:first>
+            <b-form-select-option :value="null" disabled>Selecione o Filtro</b-form-select-option>
+          </template>
+        </b-form-select>
+        <span class="style-count">Total de romaneios: {{ getCargoPackings.count }}</span>
+      </b-row>
+    </b-col>
     <b-container>
       <b-row align-h="center" class="align-cards">
         <cargo-packing

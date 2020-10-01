@@ -65,6 +65,30 @@ const routes = [
     },
   },
   {
+    path: '/users',
+    name: 'users',
+    component: () => import(/* webpackChunkName: "users" */ '../views/User/Users.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/user-edit/:id',
+    name: 'userEdit',
+    component: () => import(/* webpackChunkName: "userEdit" */ '../views/User/NewUser.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/new-user',
+    name: 'newUser',
+    component: () => import(/* webpackChunkName: "newUser" */ '../views/User/NewUser.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: '/customers',
     name: 'customers',
     component: () => import(/* webpackChunkName: "customers" */ '../views/Customer/Customers.vue'),

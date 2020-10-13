@@ -60,14 +60,28 @@ export default {
     },
   }),
   mounted() {
-    this.$route.params.id ? this.handleUserLoading(this.$route.params.id) : console.log('não tenho id');
+    this.$route.params.id
+      ? this.handleUserLoading(this.$route.params.id)
+      : console.log('não tenho id', this.$route.params.isAdmin);
   },
   methods: {
-    ...mapActions(['login', 'updateUser', 'loadSelectedUser']),
+    ...mapActions(['login', 'updateUser', 'loadSelectedUser', 'createUser']),
     async submit() {
       try {
-        await this.updateUser({ ...this.form });
-        this.$router.push({ name: 'users' });
+        // if (this.$route.params.id) {
+        //   await this.updateUser({ ...this.form });
+        // } else {
+        console.log('opa');
+        const newUser = {
+          name: this.form.name,
+          email: this.form.email,
+          password: this.form.password,
+          is_admin: this.$route.params.isAdmin,
+        };
+        console.log('after opa');
+        await this.createUser(newUser);
+        // }
+        this.$router.push({ name: 'login' });
       } catch (err) {
         this.$toasted.show(`${err}`, {
           theme: 'outline',
@@ -84,7 +98,6 @@ export default {
             },
           ],
         });
-        this.createUserError = err.response.data.error;
       }
     },
     async handleUserLoading(userId) {

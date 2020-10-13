@@ -11,6 +11,15 @@
             <b-form-input size="sm" v-model="form.password" type="password" placeholder="Digite sua senha" />
           </b-form-group>
           <span>{{ loginError }}</span>
+          <b-button
+            v-if="usersList && !usersList.count"
+            class="new-user-button"
+            type="button"
+            variant="primary"
+            size="sm"
+            @click="handleNewUser"
+            >Novo usuário</b-button
+          >
           <b-button class="login-button" type="submit" variant="primary" size="sm">Entrar</b-button>
         </b-form>
       </b-card>
@@ -29,10 +38,19 @@ export default {
       email: '',
       password: '',
     },
+    usersList: null,
   }),
-  created() {},
+  created() {
+    this.handleLoadUsers();
+  },
   methods: {
-    ...mapActions(['login']),
+    ...mapActions(['login', 'loadUsers']),
+    async handleLoadUsers() {
+      this.usersList = await this.loadUsers();
+    },
+    handleNewUser() {
+      this.$router.push({ name: 'newUser', params: { isAdmin: true } });
+    },
     async submit() {
       try {
         await this.login(this.form);

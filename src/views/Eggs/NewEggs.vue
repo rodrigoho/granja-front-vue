@@ -68,12 +68,16 @@ export default {
       rightNumber: 0,
     };
   },
+  created() {
+    this.selectedUserId = localStorage.getItem('userId');
+  },
   methods: {
     ...mapActions(['createEgg', 'loadEggsList', 'createAdditionalFee']),
     async handleEggsList(eggsList) {
       const newAdditionalFee = {
         current_fee_price: parseFloat(this.additionalFee),
         online_fee: `R$ ${this.leftNumber} a R$ ${this.rightNumber}`,
+        last_edited_by_user_id: this.selectedUserId,
       };
       await this.createAdditionalFee(newAdditionalFee);
       eggsList.map(async (e) => {

@@ -11,6 +11,8 @@ export default new Vuex.Store({
     token: localStorage.getItem('token') || null,
     cargoPackings: [],
     customers: [],
+    intermediaryCustomers: [],
+    getNonRelatedCustomersList: [],
     users: [],
     isAdmin: false,
     selectedUser: {},
@@ -51,6 +53,11 @@ export default new Vuex.Store({
       return state.isAdmin;
     },
 
+    // Intermediary Customers
+    getIntermediaryCustomers(state) {
+      return state.intermediaryCustomers;
+    },
+
     // Customers
     getCustomers(state) {
       return state.customers;
@@ -60,6 +67,9 @@ export default new Vuex.Store({
     },
     getCustomerToEdit(state) {
       return state.customerToEdit;
+    },
+    getNonRelatedCustomersList(state) {
+      return state.getNonRelatedCustomersList;
     },
     // End of Customers
 
@@ -128,9 +138,21 @@ export default new Vuex.Store({
       state.isAdmin = payload;
     },
     // End of users
+
+    // Intermediary Customers
+    CREATE_INTERMEDIARY_CUSTOMER(state, payload) {
+      state.intermediaryCustomers.push(payload);
+    },
+    SET_INTERMEDIARY_CUSTOMERS_LIST(state, payload) {
+      state.intermediaryCustomers = payload;
+    },
+
     // Customers
     SET_CUSTOMERS_LIST(state, payload) {
       state.customers = payload;
+    },
+    SET_NON_RELATED_CUSTOMERS_LIST(state, payload) {
+      state.getNonRelatedCustomersList = payload;
     },
     SET_SELECTED_CUSTOMER(state, payload) {
       state.selectedCustomer = payload;
@@ -187,7 +209,6 @@ export default new Vuex.Store({
       try {
         const res = await api.post('sessions', payload);
         const isAdmin = res.data.user.is_admin;
-        console.log(isAdmin);
         localStorage.setItem('is-admin', isAdmin);
         commit('SET_IS_ADMIN', isAdmin);
         commit('SET_USER', res.data.user);
@@ -242,7 +263,6 @@ export default new Vuex.Store({
       }
     },
     updateCargoPacking: async ({ dispatch }, payload) => {
-      console.log(payload);
       try {
         const res = await api.put(`cargo-packing/${payload.cargoPackingId}`, payload.cargoPacking);
         await dispatch('loadCargoPackings', 1);
@@ -285,6 +305,7 @@ export default new Vuex.Store({
     createUser: async ({ commit }, payload) => {
       try {
         const res = await api.post('users', payload);
+        console.log(payload);
         commit('CREATE_USER', payload);
         return res;
       } catch (err) {
@@ -295,8 +316,9 @@ export default new Vuex.Store({
     loadUsers: async ({ commit }) => {
       try {
         const res = await api.get('users-list');
+        console.log(res.data);
         commit('SET_USERS_LIST', res.data);
-        return res;
+        return res.data;
       } catch (err) {
         throw err.response.data.error;
       }
@@ -314,15 +336,43 @@ export default new Vuex.Store({
 
     updateUser: async (context, payload) => {
       try {
-        console.log(payload);
         const res = await api.put(`user/${payload.id}`, payload);
-        console.log(res);
         return res;
       } catch (err) {
         throw err.response.data.error;
       }
     },
     // End of users
+
+    // Intermediary Customers
+    createIntermediaryCustomer: async ({ commit }, payload) => {
+      try {
+        const res = await api.post('intermediary-customer', payload);
+        commit('CREATE_INTERMEDIARY_CUSTOMER', payload);
+        return res;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+    loadIntermediaryCustomers: async ({ commit }) => {
+      try {
+        const res = await api.get('intermediary-customers');
+        commit('SET_INTERMEDIARY_CUSTOMERS_LIST', res.data);
+        return res;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+    loadNonRelatedCustomers: async ({ commit }) => {
+      try {
+        const res = await api.get('non-related-customers');
+        commit('SET_NON_RELATED_CUSTOMERS_LIST', res.data);
+
+        return res.data;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
 
     // Customers
     loadCustomers: async ({ commit }) => {

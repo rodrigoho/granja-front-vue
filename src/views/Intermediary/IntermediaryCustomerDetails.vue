@@ -3,7 +3,7 @@
     <r-header
       :title="'Cliente'"
       :buttonTitle="'Voltar aos clientes'"
-      :toRouteName="'customers'"
+      :toRouteName="'intermediaryCustomers'"
       :shouldShowButton="true"
     />
     <b-container>

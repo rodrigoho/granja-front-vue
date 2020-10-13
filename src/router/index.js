@@ -84,9 +84,6 @@ const routes = [
     path: '/new-user',
     name: 'newUser',
     component: () => import(/* webpackChunkName: "newUser" */ '../views/User/NewUser.vue'),
-    meta: {
-      requiresAuth: true,
-    },
   },
   {
     path: '/customers',
@@ -108,6 +105,26 @@ const routes = [
     path: '/customers/customer-details',
     name: 'customerDetails',
     component: () => import(/* webpackChunkName: "customerDetails" */ '../views/Customer/CustomerDetails.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+    props: true,
+  },
+  {
+    path: '/intermediary/new-intermediary-customer',
+    name: 'newIntermediaryCustomer',
+    component: () =>
+      import(/* webpackChunkName: "newIntermediaryCustomer" */ '../views/Intermediary/NewIntermediaryCustomer.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+    props: true,
+  },
+  {
+    path: '/intermediary/intermediary-customers',
+    name: 'intermediaryCustomers',
+    component: () =>
+      import(/* webpackChunkName: "intermediaryCustomers" */ '../views/Intermediary/IntermediaryCustomers.vue'),
     meta: {
       requiresAuth: true,
     },

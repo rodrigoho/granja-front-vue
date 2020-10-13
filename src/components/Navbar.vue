@@ -9,6 +9,7 @@
         <b-nav-item :to="{ name: 'home' }">Romaneios</b-nav-item>
         <b-nav-item :to="{ name: 'eggs' }">Ovos</b-nav-item>
         <b-nav-item :to="{ name: 'customers' }">Clientes</b-nav-item>
+        <b-nav-item :to="{ name: 'intermediaryCustomers' }">Intermediários</b-nav-item>
         <b-nav-item v-if="getIsAdmin || isAdmin" :to="{ name: 'users' }">Usuários</b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">

@@ -1,8 +1,8 @@
 <template>
   <div>
     <b-col>
-      <div class="customer">
-        <label-value :values="customerData" />
+      <div class="intermediary-customer">
+        <label-value :values="intermediaryCustomerData" />
         <button type="button" @click="handleClick">Detalhes</button>
       </div>
     </b-col>
@@ -13,29 +13,29 @@
 import LabelValue from '@/components/LabelValue.vue';
 
 export default {
-  name: 'Customer',
-  props: ['customer'],
+  name: 'IntermediaryCustomer',
+  props: ['intermediaryCustomer'],
   components: {
     LabelValue,
   },
   data() {
     return {
-      customerData: [
+      intermediaryCustomerData: [
         {
           label: 'Nome:',
-          value: this.customer.name,
+          value: this.intermediaryCustomer.name,
         },
         {
           label: 'Telefone:',
-          value: this.customer.phone,
+          value: this.intermediaryCustomer.phone,
         },
       ],
     };
   },
   methods: {
     handleClick() {
-      localStorage.setItem('selectedCustomer', JSON.stringify(this.customer));
-      this.$router.push({ name: 'customerDetails' });
+      localStorage.setItem('selectedIntermediaryCustomer', JSON.stringify(this.intermediaryCustomer));
+      this.$router.push({ name: 'intermediaryCustomerDetails' });
     },
   },
   computed: {},
@@ -43,7 +43,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.customer {
+.intermediary-customer {
   width: 300px;
   padding: 15px 20px 15px;
   border-radius: 4px;

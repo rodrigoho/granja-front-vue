@@ -68,20 +68,21 @@ export default {
     ...mapActions(['login', 'updateUser', 'loadSelectedUser', 'createUser']),
     async submit() {
       try {
-        // if (this.$route.params.id) {
-        //   await this.updateUser({ ...this.form });
-        // } else {
-        console.log('opa');
-        const newUser = {
-          name: this.form.name,
-          email: this.form.email,
-          password: this.form.password,
-          is_admin: this.$route.params.isAdmin,
-        };
-        console.log('after opa');
-        await this.createUser(newUser);
-        // }
-        this.$router.push({ name: 'login' });
+        if (this.$route.params.id) {
+          await this.updateUser({ ...this.form });
+        } else {
+          console.log('opa');
+          const newUser = {
+            name: this.form.name,
+            email: this.form.email,
+            password: this.form.password,
+            is_admin: this.$route.params.isAdmin,
+          };
+          console.log('after opa');
+          await this.createUser(newUser);
+          // }
+          this.$router.push({ name: 'login' });
+        }
       } catch (err) {
         this.$toasted.show(`${err}`, {
           theme: 'outline',

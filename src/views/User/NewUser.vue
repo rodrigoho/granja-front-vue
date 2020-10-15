@@ -6,11 +6,25 @@
         <b-card :header="header" class="login-card">
           <b-form @submit.prevent="submit">
             <b-form-group>
-              <b-form-input size="sm" v-model="form.name" type="text" required placeholder="Nome completo" />
+              <b-form-input
+                size="sm"
+                v-model="form.name"
+                :disabled="isEditing"
+                type="text"
+                required
+                placeholder="Nome completo"
+              />
             </b-form-group>
 
             <b-form-group>
-              <b-form-input size="sm" v-model="form.email" type="email" required placeholder="Email" />
+              <b-form-input
+                size="sm"
+                v-model="form.email"
+                :disabled="isEditing"
+                type="email"
+                required
+                placeholder="Email"
+              />
             </b-form-group>
 
             <b-form-group v-if="isEditing">
@@ -70,6 +84,7 @@ export default {
       try {
         if (this.$route.params.id) {
           await this.updateUser({ ...this.form });
+          this.$router.push({ name: 'users' });
         } else {
           console.log('opa');
           const newUser = {

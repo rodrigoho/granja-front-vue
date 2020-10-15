@@ -305,7 +305,6 @@ export default new Vuex.Store({
     createUser: async ({ commit }, payload) => {
       try {
         const res = await api.post('users', payload);
-        console.log(payload);
         commit('CREATE_USER', payload);
         return res;
       } catch (err) {

@@ -504,11 +504,24 @@ export default {
       await this.loadSelectedCustomer(this.selectedCustomerId);
       const customer = this.getSelectedCustomer;
       this.customer = customer;
+      const discount = customer.discount;
       this.form.customerName = customer.name;
       this.form.customerEmail = customer.email;
       this.form.discount = customer.discount;
       this.form.ruralFundTax = customer.rural_fund_tax;
       this.form.icmsTax = customer.icms_tax;
+      this.wJumbo.discount = discount;
+      this.wExtra.discount = discount;
+      this.wGrande.discount = discount;
+      this.wMedio.discount = discount;
+      this.wPequeno.discount = discount;
+      this.wIndustrial.discount = discount;
+      this.rJumbo.discount = discount;
+      this.rExtra.discount = discount;
+      this.rGrande.discount = discount;
+      this.rMedio.discount = discount;
+      this.rPequeno.discount = discount;
+      this.rIndustrial.discount = discount;
     },
     async onSubmit(evt) {
       evt.preventDefault();
@@ -534,7 +547,7 @@ export default {
         has_insurance_fee: this.form.hasInsurance,
         customer_id: this.selectedCustomerId,
         icms_tax: this.form.icmsTax,
-        created_by_user_id: localStorage.getItem('userId'),
+        created_by_user_id: parseInt(localStorage.getItem('userId')),
         updated_by_user_id: null,
         receipt_value: this.form.receiptValue,
         receipt_number: this.form.receiptNumber,
@@ -544,8 +557,7 @@ export default {
         egg_retail_box_amount: this.form.eggBoxAmount,
         egg_retail_box_price: this.form.eggBoxPrice,
       };
-      console.log(cargoPacking);
-      console.log(this.$route.name);
+
       this.$route.name === 'newCargoPacking'
         ? await this.createCargoPacking(cargoPacking)
         : this.handleUpdate(cargoPacking);

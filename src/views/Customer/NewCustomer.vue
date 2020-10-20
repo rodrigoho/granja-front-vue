@@ -27,15 +27,15 @@
               </b-form-group>
             </b-col>
 
-            <!-- Customer email -->
+            <!-- Customer Fantasy name -->
             <b-col>
-              <b-form-group id="input-group-email" label="Email:" label-for="input-email">
+              <b-form-group id="input-group-fantasy-name" label="Nome fantasia:" label-for="input-fantasy-name">
                 <b-form-input
-                  id="input-email"
-                  v-model="form.customerEmail"
-                  type="email"
+                  id="input-fantasy-name"
+                  v-model="form.customerFantasyName"
+                  required
                   size="sm"
-                  placeholder="Digite o email"
+                  placeholder="Digite o nome fantasia"
                 ></b-form-input>
               </b-form-group>
             </b-col>
@@ -55,6 +55,19 @@
                   required
                   size="sm"
                   placeholder="Digite o telefone"
+                ></b-form-input>
+              </b-form-group>
+            </b-col>
+
+            <!-- Customer email -->
+            <b-col>
+              <b-form-group id="input-group-email" label="Email:" label-for="input-email">
+                <b-form-input
+                  id="input-email"
+                  v-model="form.customerEmail"
+                  type="email"
+                  size="sm"
+                  placeholder="Digite o email"
                 ></b-form-input>
               </b-form-group>
             </b-col>
@@ -296,6 +309,7 @@ export default {
       form: {
         id: null,
         customerName: '',
+        customerFantasyName: '',
         customerEmail: '',
         customerPhone: '',
         customerCnpj: '',
@@ -326,6 +340,7 @@ export default {
         email,
         icms_tax,
         name,
+        fantasy_name,
         phone,
         rural_fund_tax,
         zip_code,
@@ -333,6 +348,7 @@ export default {
       } = this.getCustomerToEdit;
       this.form.id = id;
       this.form.customerName = name;
+      this.form.customerFantasyName = fantasy_name;
       this.form.customerEmail = email;
       this.form.customerPhone = phone;
       this.form.customerCnpj = cnpj;
@@ -368,6 +384,7 @@ export default {
       const customerData = {
         id: customer.id,
         name: customer.customerName,
+        fantasy_name: customer.fantasyName,
         cnpj: customer.customerCnpj,
         phone: customer.customerPhone,
         email: customer.customerEmail,

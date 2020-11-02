@@ -2,6 +2,7 @@
   <div>
     <b-col>
       <div class="cargo-packing">
+        <label-value v-if="cargoPacking.intermediary" :values="intermediaryData" />
         <label-value :values="cargoPackingData" />
         <button type="button" @click="handleClick">Detalhes</button>
       </div>
@@ -49,13 +50,23 @@ export default {
       });
     },
   },
-  computed: {},
+  computed: {
+    intermediaryData() {
+      const test = [
+        {
+          label: 'Intermediário:',
+          value: this.cargoPacking.intermediary ? this.cargoPacking.intermediary.name : '',
+        },
+      ];
+      return test;
+    },
+  },
 };
 </script>
 
 <style scoped lang="scss">
 .cargo-packing {
-  width: 300px;
+  width: 350px;
   padding: 15px 20px 15px;
   border-radius: 4px;
   background: #fff;
@@ -63,7 +74,7 @@ export default {
 
   button {
     position: relative;
-    left: 195px;
+    left: 245px;
     margin-top: 10px;
     align-self: center;
     height: 30px;

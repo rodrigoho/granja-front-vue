@@ -35,7 +35,8 @@ export default {
   methods: {
     handleClick() {
       localStorage.setItem('selectedIntermediaryCustomer', JSON.stringify(this.intermediaryCustomer));
-      this.$router.push({ name: 'intermediaryCustomerDetails' });
+      // this.$router.push({ name: 'intermediaryDetails' });
+      this.$router.push({ path: `/intermediary/intermediary-details/${this.intermediaryCustomer.id}` });
     },
   },
   computed: {},

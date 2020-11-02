@@ -11,14 +11,38 @@ export default new Vuex.Store({
     token: localStorage.getItem('token') || null,
     cargoPackings: [],
     customers: [],
-    intermediaryCustomers: [],
+    intermediaries: [],
     getNonRelatedCustomersList: [],
     users: [],
     isAdmin: false,
     selectedUser: {},
     customerToEdit: null,
     selectedCustomer: {},
-    notifications: 0,
+    selectedIntermediary: {},
+    notifications: [
+      {
+        id: 1,
+        cargo_packing_id: 8,
+        customer_name: 'João',
+        message: 'Romaneio editado',
+        user_id: 1,
+        user: {
+          name: 'Satie',
+        },
+        users_to_notify: [1, 2, 3],
+        receipt_number: 555,
+        // users_to_notify: [{ id: 1 }, { id: 2 }, { id: 3 }],
+      },
+      {
+        id: 2,
+        customer_name: 'Carrefour',
+        message: `Romaneio editado`,
+        user_id: 1,
+        receipt_number: 3,
+        users_to_notify: [2, 3],
+        // users_to_notify: [{ id: 1 }, { id: 2 }, { id: 3 }],
+      },
+    ],
     whiteEggsList: null,
     redEggsList: null,
     additionalFee: null,
@@ -54,8 +78,11 @@ export default new Vuex.Store({
     },
 
     // Intermediary Customers
-    getIntermediaryCustomers(state) {
-      return state.intermediaryCustomers;
+    getIntermediaries(state) {
+      return state.intermediaries;
+    },
+    getSelectedIntermediary(state) {
+      return state.selectedIntermediary;
     },
 
     // Customers
@@ -140,11 +167,14 @@ export default new Vuex.Store({
     // End of users
 
     // Intermediary Customers
-    CREATE_INTERMEDIARY_CUSTOMER(state, payload) {
-      state.intermediaryCustomers.push(payload);
+    CREATE_INTERMEDIARY(state, payload) {
+      state.intermediaries.push(payload);
     },
-    SET_INTERMEDIARY_CUSTOMERS_LIST(state, payload) {
-      state.intermediaryCustomers = payload;
+    SET_INTERMEDIARIES_LIST(state, payload) {
+      state.intermediaries = payload;
+    },
+    SET_SELECTED_INTERMEDIARY(state, payload) {
+      state.selectedIntermediary = payload;
     },
 
     // Customers
@@ -346,17 +376,28 @@ export default new Vuex.Store({
     // Intermediary Customers
     createIntermediaryCustomer: async ({ commit }, payload) => {
       try {
-        const res = await api.post('intermediary-customer', payload);
-        commit('CREATE_INTERMEDIARY_CUSTOMER', payload);
+        const res = await api.post('intermediaries', payload);
+        commit('CREATE_INTERMEDIARY', payload);
         return res;
       } catch (err) {
         throw err.response.data.error;
       }
     },
-    loadIntermediaryCustomers: async ({ commit }) => {
+    loadIntermediaries: async ({ commit }) => {
       try {
-        const res = await api.get('intermediary-customers');
-        commit('SET_INTERMEDIARY_CUSTOMERS_LIST', res.data);
+        const res = await api.get('intermediaries');
+        commit('SET_INTERMEDIARIES_LIST', res.data);
+        console.log(res.data);
+        return res.data;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+    loadSelectedIntermediary: async ({ commit }, payload) => {
+      try {
+        const res = await api.get(`intermediary/${payload}`);
+        console.log(res.data);
+        commit('SET_SELECTED_INTERMEDIARY', res.data);
         return res;
       } catch (err) {
         throw err.response.data.error;
@@ -368,6 +409,14 @@ export default new Vuex.Store({
         commit('SET_NON_RELATED_CUSTOMERS_LIST', res.data);
 
         return res.data;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+    updateIntermediary: async (context, payload) => {
+      try {
+        const res = await api.put(`intermediary/${payload.id}`, payload);
+        return res;
       } catch (err) {
         throw err.response.data.error;
       }

@@ -122,13 +122,30 @@ const routes = [
   },
   {
     path: '/intermediary/intermediary-customers',
-    name: 'intermediaryCustomers',
-    component: () =>
-      import(/* webpackChunkName: "intermediaryCustomers" */ '../views/Intermediary/IntermediaryCustomers.vue'),
+    name: 'intermediaries',
+    component: () => import(/* webpackChunkName: "intermediaries" */ '../views/Intermediary/IntermediaryCustomers.vue'),
     meta: {
       requiresAuth: true,
     },
     props: true,
+  },
+  {
+    path: '/intermediary/intermediary-details/:id',
+    name: 'intermediaryDetails',
+    component: () => import(/* webpackChunkName: "intermediaries" */ '../views/Intermediary/IntermediaryDetails.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+    props: true,
+  },
+  {
+    path: '/intermediary/new-intermediary/:id',
+    name: 'intermediaryEdit',
+    component: () =>
+      import(/* webpackChunkName: "cargoPackingEditing" */ '../views/Intermediary/NewIntermediaryCustomer.vue'),
+    meta: {
+      requiresAuth: true,
+    },
   },
 ];
 

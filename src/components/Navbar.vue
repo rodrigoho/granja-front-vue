@@ -72,20 +72,9 @@ export default {
     handleNotificationClick(notification) {
       const sameRoute = this.$route.path.split('/')[1] === 'cargo-packing-details';
       const removeIndex = notification.users_to_notify.findIndex((i) => i === this.userId);
-      console.log(removeIndex);
-      // let updatedUsersToNotify = {
-      //   users_to_notify: notification.users_to_notify.splice(removeIndex, 1),
-      // };
+
       notification.users_to_notify.splice(removeIndex, 1);
-      // console.log(opa);
-      console.log(notification);
-      // let teste = notification.users_to_notify.splice(removeIndex, 1);
-      // console.log('usuarios a notificar', teste);
-      console.log('id da notification', notification.id);
       this.handleNotificationReading(notification);
-
-      // console.log(notification, updatedUsersToNotify);
-
       if (sameRoute) {
         return this.$router.push({
           name: `home`,
@@ -112,15 +101,14 @@ export default {
     notificationsList() {
       const userId = localStorage.getItem('userId');
       const t = this.getNotifications;
-      const arrayDeTeste = [];
+      const filteredArray = [];
       t.forEach((n) => {
         if (n.users_to_notify.includes(parseInt(userId))) {
-          console.log(n.users_to_notify);
-          arrayDeTeste.push(n);
+          filteredArray.push(n);
         }
       });
 
-      return arrayDeTeste;
+      return filteredArray;
     },
     userId() {
       return JSON.parse(localStorage.getItem('userId'));

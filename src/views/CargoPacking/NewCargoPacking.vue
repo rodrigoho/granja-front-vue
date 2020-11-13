@@ -440,7 +440,6 @@ export default {
 
       this.customersList = customersMap;
       this.intermediariesList = intermediariesMap;
-      // console.log('opa');
     },
     async handleCargoPackingLoading(cargoPackingId) {
       await this.handleListLoading();
@@ -519,9 +518,6 @@ export default {
       form.eggBoxPrice = eggBoxPrice;
       form.eggBoxAmount = eggBoxAmount;
       localStorage.setItem('editingCargoPackingDate', dueTo);
-      // console.log(this.selectedDate);
-      console.log('selectedCargoPacking', this.getSelectedCargoPacking);
-      // console.log('edição', cargoPackingId);
     },
 
     async handleCustomerSelect() {

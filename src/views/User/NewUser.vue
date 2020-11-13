@@ -86,16 +86,13 @@ export default {
           await this.updateUser({ ...this.form });
           this.$router.push({ name: 'users' });
         } else {
-          console.log('opa');
           const newUser = {
             name: this.form.name,
             email: this.form.email,
             password: this.form.password,
             is_admin: this.$route.params.isAdmin,
           };
-          console.log('after opa');
           await this.createUser(newUser);
-          // }
           this.$router.push({ name: 'login' });
         }
       } catch (err) {
@@ -118,7 +115,6 @@ export default {
     },
     async handleUserLoading(userId) {
       const user = await this.loadSelectedUser(userId);
-      console.log(user);
       this.form.loggedUserId = parseInt(localStorage.getItem('userId'), 10);
       this.form.id = parseInt(this.$route.params.id, 10);
       this.form.isAdmin = localStorage.getItem('is-admin');

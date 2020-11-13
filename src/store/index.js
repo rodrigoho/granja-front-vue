@@ -331,7 +331,6 @@ export default new Vuex.Store({
     loadUsers: async ({ commit }) => {
       try {
         const res = await api.get('users-list');
-        console.log(res.data);
         commit('SET_USERS_LIST', res.data);
         return res.data;
       } catch (err) {
@@ -373,7 +372,6 @@ export default new Vuex.Store({
       try {
         const res = await api.get('intermediaries');
         commit('SET_INTERMEDIARIES_LIST', res.data);
-        console.log(res.data);
         return res.data;
       } catch (err) {
         throw err.response.data.error;
@@ -382,7 +380,6 @@ export default new Vuex.Store({
     loadSelectedIntermediary: async ({ commit }, payload) => {
       try {
         const res = await api.get(`intermediary/${payload}`);
-        console.log(res.data);
         commit('SET_SELECTED_INTERMEDIARY', res.data);
         return res;
       } catch (err) {
@@ -542,17 +539,10 @@ export default new Vuex.Store({
 
     handleNotificationReading: async ({ dispatch }, payload) => {
       try {
-        console.log('carai');
         const { id, users_to_notify } = payload;
-        const teste = {
-          users_to_notify: users_to_notify,
-        };
-        console.log('notification id', id);
-        console.log('teste', teste);
         const res = await api.put(`notifications/${id}`, {
           users_to_notify: users_to_notify,
         });
-        console.log(res.data);
         dispatch('loadNotifications');
 
         return res.data;

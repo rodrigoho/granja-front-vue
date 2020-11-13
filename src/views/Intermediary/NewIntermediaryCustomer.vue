@@ -175,9 +175,7 @@ export default {
   },
   mounted() {
     if (this.$route.params.id) {
-      console.log(this.getIntermediaries);
       const test = this.getIntermediaries.find((i) => i.id == this.$route.params.id);
-      console.log(test);
       const { id, email, name, phone, state, city } = test;
       this.form.id = id;
       this.form.intermediaryName = name;
@@ -202,9 +200,7 @@ export default {
     ]),
     handleCustomerClick(customer) {
       const removeIndex = this.addedCustomers.findIndex((c) => c.text === customer.text);
-      console.log(removeIndex);
       const customerToRemove = this.addedCustomers.splice(removeIndex, 1);
-      console.log(customerToRemove[0]);
       this.nonRelatedCustomersList.push(customerToRemove[0]);
     },
     async handleCustomerSelect(selectedCustomerName) {
@@ -249,7 +245,6 @@ export default {
         customers: this.customersToAdd,
       };
 
-      console.log(intermediaryCustomerData);
       try {
         if (this.intermediaryEditing) {
           await this.updateIntermediary(intermediaryCustomerData);

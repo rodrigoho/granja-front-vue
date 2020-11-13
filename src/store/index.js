@@ -19,30 +19,7 @@ export default new Vuex.Store({
     customerToEdit: null,
     selectedCustomer: {},
     selectedIntermediary: {},
-    notifications: [
-      {
-        id: 1,
-        cargo_packing_id: 8,
-        customer_name: 'João',
-        message: 'Romaneio editado',
-        user_id: 1,
-        user: {
-          name: 'Satie',
-        },
-        users_to_notify: [1, 2, 3],
-        receipt_number: 555,
-        // users_to_notify: [{ id: 1 }, { id: 2 }, { id: 3 }],
-      },
-      {
-        id: 2,
-        customer_name: 'Carrefour',
-        message: `Romaneio editado`,
-        user_id: 1,
-        receipt_number: 3,
-        users_to_notify: [2, 3],
-        // users_to_notify: [{ id: 1 }, { id: 2 }, { id: 3 }],
-      },
-    ],
+    notifications: [],
     whiteEggsList: null,
     redEggsList: null,
     additionalFee: null,
@@ -225,6 +202,15 @@ export default new Vuex.Store({
     SET_ADDITIONAL_FEE(state, payload) {
       state.additionalFee = payload;
     },
+    // Eggs
+
+    // Notifications
+
+    SET_NOTIFICATIONS_LIST(state, payload) {
+      state.notifications = payload;
+    },
+
+    // Notifications
 
     LOGOUT(state) {
       localStorage.removeItem('token');
@@ -541,6 +527,41 @@ export default new Vuex.Store({
         throw err.response.data.error;
       }
     },
+    // Eggs
+
+    // Notifications
+
+    loadNotifications: async ({ commit }) => {
+      try {
+        const res = await api.get('notifications');
+        commit('SET_NOTIFICATIONS_LIST', res.data);
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+
+    handleNotificationReading: async ({ dispatch }, payload) => {
+      try {
+        console.log('carai');
+        const { id, users_to_notify } = payload;
+        const teste = {
+          users_to_notify: users_to_notify,
+        };
+        console.log('notification id', id);
+        console.log('teste', teste);
+        const res = await api.put(`notifications/${id}`, {
+          users_to_notify: users_to_notify,
+        });
+        console.log(res.data);
+        dispatch('loadNotifications');
+
+        return res.data;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+
+    // Notifications
   },
   modules: {},
 });

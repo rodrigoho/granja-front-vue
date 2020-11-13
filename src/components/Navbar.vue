@@ -35,9 +35,9 @@
             class="style-notifications"
             v-for="notification in notificationsList"
             :key="notification.id"
-            @click="handleNotificationClick(notification.cargo_packing_id)"
+            @click="handleNotificationClick(notification)"
             >{{
-              `${notification.message} por ${notification.user.name}, cliente: ${notification.customer_name}, nota: ${notification.receipt_number}`
+              `${notification.message} por ${notification.user.name}, cliente: ${notification.customer.name}, nota: ${notification.cargo_packing.receipt_number}`
             }}</b-dropdown-item
           >
         </b-dropdown>
@@ -61,20 +61,38 @@ export default {
   },
   mounted() {
     this.handleAnalysisLoading();
+    this.loadNotifications();
   },
   methods: {
-    ...mapActions(['logout', 'loadAnalysisCargoPackings']),
+    ...mapActions(['logout', 'loadAnalysisCargoPackings', 'loadNotifications', 'handleNotificationReading']),
     async handleLogout() {
       await this.logout();
       this.$router.push({ name: 'login' });
     },
-    handleNotificationClick(cargoPackingId) {
+    handleNotificationClick(notification) {
       const sameRoute = this.$route.path.split('/')[1] === 'cargo-packing-details';
+      const removeIndex = notification.users_to_notify.findIndex((i) => i === this.userId);
+      console.log(removeIndex);
+      // let updatedUsersToNotify = {
+      //   users_to_notify: notification.users_to_notify.splice(removeIndex, 1),
+      // };
+      notification.users_to_notify.splice(removeIndex, 1);
+      // console.log(opa);
+      console.log(notification);
+      // let teste = notification.users_to_notify.splice(removeIndex, 1);
+      // console.log('usuarios a notificar', teste);
+      console.log('id da notification', notification.id);
+      this.handleNotificationReading(notification);
+
+      // console.log(notification, updatedUsersToNotify);
+
       if (sameRoute) {
-        return this.$router.push({ name: `home`, params: { toRoute: `/cargo-packing-details/${cargoPackingId}` } });
+        return this.$router.push({
+          name: `home`,
+          params: { toRoute: `/cargo-packing-details/${notification.cargo_packing.id}` },
+        });
       }
-      console.log('NAO');
-      this.$router.push({ path: `/cargo-packing-details/${cargoPackingId}` });
+      this.$router.push({ path: `/cargo-packing-details/${notification.cargo_packing.id}` });
     },
     async handleEdit() {
       console.log(localStorage.getItem('userId'));
@@ -96,17 +114,16 @@ export default {
       const t = this.getNotifications;
       const arrayDeTeste = [];
       t.forEach((n) => {
-        console.log(JSON.stringify(n));
-        console.log(n.users_to_notify);
-        console.log(n.users_to_notify.includes(parseInt(userId)));
         if (n.users_to_notify.includes(parseInt(userId))) {
-          console.log(n);
+          console.log(n.users_to_notify);
           arrayDeTeste.push(n);
         }
       });
-      console.log(userId, arrayDeTeste);
 
       return arrayDeTeste;
+    },
+    userId() {
+      return JSON.parse(localStorage.getItem('userId'));
     },
   },
 };

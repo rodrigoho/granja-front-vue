@@ -11,14 +11,15 @@ export default new Vuex.Store({
     token: localStorage.getItem('token') || null,
     cargoPackings: [],
     customers: [],
-    intermediaryCustomers: [],
+    intermediaries: [],
     getNonRelatedCustomersList: [],
     users: [],
     isAdmin: false,
     selectedUser: {},
     customerToEdit: null,
     selectedCustomer: {},
-    notifications: 0,
+    selectedIntermediary: {},
+    notifications: [],
     whiteEggsList: null,
     redEggsList: null,
     additionalFee: null,
@@ -54,8 +55,11 @@ export default new Vuex.Store({
     },
 
     // Intermediary Customers
-    getIntermediaryCustomers(state) {
-      return state.intermediaryCustomers;
+    getIntermediaries(state) {
+      return state.intermediaries;
+    },
+    getSelectedIntermediary(state) {
+      return state.selectedIntermediary;
     },
 
     // Customers
@@ -140,11 +144,14 @@ export default new Vuex.Store({
     // End of users
 
     // Intermediary Customers
-    CREATE_INTERMEDIARY_CUSTOMER(state, payload) {
-      state.intermediaryCustomers.push(payload);
+    CREATE_INTERMEDIARY(state, payload) {
+      state.intermediaries.push(payload);
     },
-    SET_INTERMEDIARY_CUSTOMERS_LIST(state, payload) {
-      state.intermediaryCustomers = payload;
+    SET_INTERMEDIARIES_LIST(state, payload) {
+      state.intermediaries = payload;
+    },
+    SET_SELECTED_INTERMEDIARY(state, payload) {
+      state.selectedIntermediary = payload;
     },
 
     // Customers
@@ -195,6 +202,15 @@ export default new Vuex.Store({
     SET_ADDITIONAL_FEE(state, payload) {
       state.additionalFee = payload;
     },
+    // Eggs
+
+    // Notifications
+
+    SET_NOTIFICATIONS_LIST(state, payload) {
+      state.notifications = payload;
+    },
+
+    // Notifications
 
     LOGOUT(state) {
       localStorage.removeItem('token');
@@ -346,17 +362,28 @@ export default new Vuex.Store({
     // Intermediary Customers
     createIntermediaryCustomer: async ({ commit }, payload) => {
       try {
-        const res = await api.post('intermediary-customer', payload);
-        commit('CREATE_INTERMEDIARY_CUSTOMER', payload);
+        const res = await api.post('intermediaries', payload);
+        commit('CREATE_INTERMEDIARY', payload);
         return res;
       } catch (err) {
         throw err.response.data.error;
       }
     },
-    loadIntermediaryCustomers: async ({ commit }) => {
+    loadIntermediaries: async ({ commit }) => {
       try {
-        const res = await api.get('intermediary-customers');
-        commit('SET_INTERMEDIARY_CUSTOMERS_LIST', res.data);
+        const res = await api.get('intermediaries');
+        commit('SET_INTERMEDIARIES_LIST', res.data);
+        console.log(res.data);
+        return res.data;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+    loadSelectedIntermediary: async ({ commit }, payload) => {
+      try {
+        const res = await api.get(`intermediary/${payload}`);
+        console.log(res.data);
+        commit('SET_SELECTED_INTERMEDIARY', res.data);
         return res;
       } catch (err) {
         throw err.response.data.error;
@@ -368,6 +395,14 @@ export default new Vuex.Store({
         commit('SET_NON_RELATED_CUSTOMERS_LIST', res.data);
 
         return res.data;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+    updateIntermediary: async (context, payload) => {
+      try {
+        const res = await api.put(`intermediary/${payload.id}`, payload);
+        return res;
       } catch (err) {
         throw err.response.data.error;
       }
@@ -492,6 +527,41 @@ export default new Vuex.Store({
         throw err.response.data.error;
       }
     },
+    // Eggs
+
+    // Notifications
+
+    loadNotifications: async ({ commit }) => {
+      try {
+        const res = await api.get('notifications');
+        commit('SET_NOTIFICATIONS_LIST', res.data);
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+
+    handleNotificationReading: async ({ dispatch }, payload) => {
+      try {
+        console.log('carai');
+        const { id, users_to_notify } = payload;
+        const teste = {
+          users_to_notify: users_to_notify,
+        };
+        console.log('notification id', id);
+        console.log('teste', teste);
+        const res = await api.put(`notifications/${id}`, {
+          users_to_notify: users_to_notify,
+        });
+        console.log(res.data);
+        dispatch('loadNotifications');
+
+        return res.data;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+
+    // Notifications
   },
   modules: {},
 });

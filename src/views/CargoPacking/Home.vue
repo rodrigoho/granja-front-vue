@@ -86,6 +86,9 @@ export default {
     };
   },
   created() {
+    if (this.$route.params.toRoute) {
+      this.$router.push(this.$route.params.toRoute);
+    }
     this.handleCargoPackingsLoading();
   },
   methods: {

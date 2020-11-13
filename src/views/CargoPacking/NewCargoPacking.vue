@@ -12,6 +12,22 @@
           <b-col sm="6">
             <b-form-select
               id="input-3"
+              v-model="selectedIntermediaryId"
+              :options="intermediariesList"
+              @change="handleIntermediarySelect"
+              size="sm"
+              class="align-customer-select"
+            >
+              <template v-slot:first>
+                <b-form-select-option :value="null" disabled>Selecione o intermediário</b-form-select-option>
+              </template>
+            </b-form-select>
+          </b-col>
+        </b-row>
+        <b-row class="flex align-bottom">
+          <b-col sm="6">
+            <b-form-select
+              id="input-3"
               v-model="selectedCustomerId"
               :options="customersList"
               @change="handleCustomerSelect"
@@ -390,9 +406,10 @@ export default {
         amount: 0,
         discount: 0,
       },
-
       customersList: [],
+      intermediariesList: [],
       customer: null,
+      selectedIntermediaryId: null,
       selectedCustomerId: null,
       selectedDate: null,
       show: true,
@@ -401,25 +418,32 @@ export default {
   mounted() {
     // const cargoPackingId = this.$route.params.id;
     this.io = io('http://localhost:3333');
-    this.$route.params.id ? this.handleCargoPackingLoading(this.$route.params.id) : this.handleCustomersList();
+    this.$route.params.id ? this.handleCargoPackingLoading(this.$route.params.id) : this.handleListLoading();
   },
   methods: {
     ...mapActions([
       'loadCustomers',
       'loadSelectedCustomer',
+      'loadSelectedIntermediary',
       'createCargoPacking',
       'loadCargoPackingToEdit',
       'updateCargoPacking',
+      'loadIntermediaries',
     ]),
-    async handleCustomersList() {
+    async handleListLoading() {
       await this.loadCustomers();
+      await this.loadIntermediaries();
       const customersMap = [...this.getCustomers.map((c) => ({ value: c.id, text: `${c.name} - ${c.email}` }))];
+      const intermediariesMap = [
+        ...this.getIntermediaries.map((c) => ({ value: c.id, text: `${c.name} - ${c.email}` })),
+      ];
 
       this.customersList = customersMap;
+      this.intermediariesList = intermediariesMap;
       // console.log('opa');
     },
     async handleCargoPackingLoading(cargoPackingId) {
-      await this.handleCustomersList();
+      await this.handleListLoading();
       await this.loadCargoPackingToEdit(cargoPackingId);
       const {
         customer_id: customerId,
@@ -523,6 +547,10 @@ export default {
       this.rPequeno.discount = discount;
       this.rIndustrial.discount = discount;
     },
+    async handleIntermediarySelect(intermediaryId) {
+      console.log(intermediaryId);
+      await this.loadSelectedIntermediary(intermediaryId);
+    },
     async onSubmit(evt) {
       evt.preventDefault();
       const eggsCargo = [
@@ -546,6 +574,7 @@ export default {
         due_to: this.selectedDate,
         has_insurance_fee: this.form.hasInsurance,
         customer_id: this.selectedCustomerId,
+        intermediary_id: this.selectedIntermediaryId,
         icms_tax: this.form.icmsTax,
         created_by_user_id: parseInt(localStorage.getItem('userId')),
         updated_by_user_id: null,
@@ -594,6 +623,7 @@ export default {
       'getCargoPackings',
       'getRedEggsList',
       'getSelectedCargoPacking',
+      'getIntermediaries',
     ]),
   },
 };

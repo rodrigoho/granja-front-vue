@@ -384,7 +384,7 @@ export default {
       const customerData = {
         id: customer.id,
         name: customer.customerName,
-        fantasy_name: customer.fantasyName,
+        fantasy_name: customer.customerFantasyName,
         cnpj: customer.customerCnpj,
         phone: customer.customerPhone,
         email: customer.customerEmail,

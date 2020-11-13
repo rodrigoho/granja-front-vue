@@ -9,7 +9,7 @@
     <b-container>
       <b-row align-h="center" class="align-cards">
         <intermediary-customer
-          v-for="(intermediaryCustomer, idx) in getIntermediaryCustomers"
+          v-for="(intermediaryCustomer, idx) in getIntermediaries"
           :key="idx"
           :intermediaryCustomer="intermediaryCustomer"
         />
@@ -32,13 +32,13 @@ export default {
     IntermediaryCustomer,
   },
   created() {
-    this.loadIntermediaryCustomers();
+    this.loadIntermediaries();
   },
   methods: {
-    ...mapActions(['loadIntermediaryCustomers']),
+    ...mapActions(['loadIntermediaries']),
   },
   computed: {
-    ...mapGetters(['getIntermediaryCustomers']),
+    ...mapGetters(['getIntermediaries']),
   },
 };
 </script>

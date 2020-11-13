@@ -1,22 +1,18 @@
 <template>
-  <div class="customer-details">
+  <div class="intermediary-details">
     <r-header
-      :title="'Cliente'"
-      :buttonTitle="'Voltar aos clientes'"
-      :toRouteName="'intermediaryCustomers'"
+      :title="'Intermediário'"
+      :buttonTitle="'Voltar aos intermediários'"
+      :toRouteName="'intermediaries'"
       :shouldShowButton="true"
     />
     <b-container>
       <b-card align-h="center" class="align-cards">
         <template v-slot:header>
-          <h4 class="mb-0">{{ customer.name }}</h4>
+          <h4 class="mb-0">{{ getSelectedIntermediary.name }}</h4>
         </template>
-        <b-row cols="2">
+        <b-row>
           <b-col><label-value :values="customerData" /></b-col>
-          <b-col
-            ><div><strong>Endereço:</strong></div>
-            {{ address }}</b-col
-          >
         </b-row>
         <template v-slot:footer>
           <div class="footer">
@@ -32,23 +28,30 @@
 <script>
 import RHeader from '@/components/RHeader.vue';
 import LabelValue from '@/components/LabelValue.vue';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 export default {
-  name: 'CustomerDetails',
+  name: 'IntermediaryDetails',
   components: {
     RHeader,
     LabelValue,
   },
   data() {
     return {
-      customer: JSON.parse(localStorage.getItem('selectedCustomer')),
+      selectedIntermediary: {},
     };
   },
+  created() {
+    this.handleIntermediaryLoading(this.$route.params.id);
+  },
   methods: {
-    ...mapActions(['deleteCustomer', 'loadCustomers', 'setCustomerToEdit']),
+    ...mapActions(['deleteIntermediary', 'loadSelectedIntermediary', 'setIntermediaryToEdit']),
     async handleEdit() {
-      await this.setCustomerToEdit(this.customer);
-      this.$router.push({ name: 'newCustomer' });
+      // await this.setIntermediaryToEdit(this.customer);
+      this.$router.push({ path: `/intermediary/new-intermediary/${this.$route.params.id}` });
+    },
+    async handleIntermediaryLoading(intermediaryId) {
+      await this.loadSelectedIntermediary(intermediaryId);
+      this.selectedIntermediary = this.getSelectedIntermediary;
     },
     handleDelete() {
       this.$bvModal
@@ -61,8 +64,8 @@ export default {
         })
         .then(async (value) => {
           if (value) {
-            this.deleteCustomer(this.customer.id);
-            await this.loadCustomers();
+            this.deleteIntermediary(this.selectedIntermediary.id);
+            await this.loadIntermediaries();
 
             this.$router.push({ name: 'customers' });
           }
@@ -74,16 +77,13 @@ export default {
     },
   },
   computed: {
-    customerData: () => {
-      const c = JSON.parse(localStorage.getItem('selectedCustomer'));
+    ...mapGetters(['getSelectedIntermediary']),
+    customerData() {
+      const c = this.getSelectedIntermediary;
       return [
         {
           label: 'Nome',
           value: c.name,
-        },
-        {
-          label: 'CNPJ',
-          value: c.cnpj ? c.cnpj : '-',
         },
         {
           label: 'Telefone',
@@ -94,30 +94,14 @@ export default {
           value: c.email ? c.email : '-',
         },
         {
-          label: 'Desconto',
-          value: c.discount,
+          label: 'Cidade',
+          value: c.city ? c.city : '-',
         },
         {
-          label: 'Taxa ovo vermelho',
-          value: c.red_egg_tax,
-        },
-        {
-          label: 'Fundo Rural',
-          value: c.rural_fund_tax,
-        },
-        {
-          label: 'ICMS',
-          value: c.icms_tax,
+          label: 'Estado',
+          value: c.state ? c.state : '-',
         },
       ];
-    },
-    address: () => {
-      const c = JSON.parse(localStorage.getItem('selectedCustomer')).address;
-      const { public_area: publicArea, complement, neighborhood, city, state, number } = c;
-      let address = `${publicArea}, ${complement}, ${number}, ${neighborhood}, ${city}, ${state}`;
-      address = address.replace('undefined, ', '');
-      address = address.replace(', ,', ',');
-      return address;
     },
   },
 };
@@ -130,7 +114,7 @@ export default {
   display: flex;
   background: #fff;
   margin: 50px auto;
-  width: 700px;
+  width: 400px;
 }
 .row {
   padding: 0 5px;

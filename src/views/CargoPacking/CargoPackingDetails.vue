@@ -9,14 +9,17 @@
     <b-container>
       <b-col>
         <div id="cargo-packing-id-out">
-          <div class="eggs" id="cargo-packing-id">
+          <div class="eggs" :class="{ 'border-to-pdf': isPdf }" id="cargo-packing-id">
             <b-row class="flex-between">
               <div class="bold">
                 {{ salesDate }}
               </div>
 
               <div class="style-header-title">
-                <h3>{{ getSelectedCargoPacking && customerName }}</h3>
+                <div class="flex-row">
+                  <h3>{{ getSelectedCargoPacking && customerName }}</h3>
+                  <h3 v-if="intermediaryName">{{ intermediaryName }}</h3>
+                </div>
                 <div class="style-status"><label-value v-if="!isPdf" class="mt-10" :values="cargoPackingStatus" /></div>
               </div>
               <h5>
@@ -113,6 +116,8 @@
                       </div>
                     </b-col>
                   </b-row>
+                  <br />
+                  <h4>Mario Hideki Ikeda</h4>
                 </b-col>
               </b-row>
             </div>
@@ -124,9 +129,12 @@
             </b-row>
           </div>
         </div>
-        <b-button @click="exportToPDF">Exportar para PDF</b-button>
-        <b-button @click="handleEdit()">Editar</b-button>
-        <b-button @click="sendNotification()">Enviar notificação</b-button>
+        <div class="toolbar">
+          <div class="teste">
+            <b-button @click="exportToPDF">Exportar para PDF</b-button>
+            <b-button @click="handleEdit()">Editar</b-button>
+          </div>
+        </div>
       </b-col>
     </b-container>
   </div>
@@ -283,8 +291,6 @@ export default {
       });
     },
     async handleEdit() {
-      // await this.setCustomerToEdit(this.customer);
-      console.log(this.$route.params.id);
       this.$router.push({ path: `/cargo-packing-edit/${this.$route.params.id}` });
     },
     // handleDelete() {
@@ -333,16 +339,15 @@ export default {
       };
     },
     customerName() {
-      return this.getSelectedCargoPacking && this.getSelectedCargoPacking.cargoPacking.customer.name;
+      return this.getSelectedCargoPacking && `${this.getSelectedCargoPacking.cargoPacking.customer.name}`;
     },
-    // address: () => {
-    //   const c = JSON.parse(localStorage.getItem('selectedCustomer')).address;
-    //   const { city, state } = c;
-    //   let address = `${city}, ${state}`;
-    //   address = address.replace('undefined, ', '');
-    //   address = address.replace(', ,', ',');
-    //   return address;
-    // },
+    intermediaryName() {
+      return (
+        this.getSelectedCargoPacking &&
+        this.getSelectedCargoPacking.cargoPacking.intermediary &&
+        `/ ${this.getSelectedCargoPacking.cargoPacking.intermediary.name}`
+      );
+    },
   },
 };
 </script>
@@ -358,7 +363,15 @@ export default {
   margin: 20px auto;
   height: 620px;
   min-height: 295px;
+}
+
+.border-to-pdf {
   border: 1px solid;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
 }
 
 .align-price-package-title {
@@ -436,6 +449,35 @@ export default {
   opacity: 0.05;
   top: -53px;
   left: -2px;
+}
+
+.toolbar {
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.9);
+  width: 220px;
+  height: 220px;
+  position: relative;
+  right: 220px;
+  bottom: 650px;
+  display: flex;
+  justify-content: center;
+}
+
+.teste {
+  position: relative;
+  top: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  button {
+    background: #007bff;
+    &:hover {
+      background: darken(#007bff, 5%);
+    }
+  }
+  button + button {
+    margin-top: 5px;
+  }
 }
 
 .flex {

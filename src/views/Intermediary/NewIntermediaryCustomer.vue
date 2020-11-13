@@ -3,7 +3,7 @@
     <r-header
       :title="'Intermediário'"
       :buttonTitle="'Voltar aos intermediários'"
-      :toRouteName="'intermediaryCustomers'"
+      :toRouteName="'intermediaries'"
       :shouldShowButton="true"
     />
     <b-container fluid>
@@ -61,7 +61,7 @@
                   </b-form-group>
                 </b-col>
 
-                <!-- Customers select -->
+                <!-- Customers select
                 <b-col sm="5" class="align-state-select">
                   <b-form-group
                     id="input-group-customers"
@@ -87,7 +87,7 @@
                       >
                     </b-form-select>
                   </b-form-group>
-                </b-col>
+                </b-col> -->
               </b-row>
 
               <b-row cols="2" class="flex">
@@ -123,12 +123,12 @@
               <div class="form-buttons">
                 <b-button type="reset" variant="danger" size="sm">Limpar</b-button>
                 <b-button type="submit" variant="primary" size="sm">Salvar</b-button>
-                <b-button v-if="customerEditing" @click="handleCancel" type="button" size="sm">Cancelar</b-button>
+                <b-button v-if="intermediaryEditing" @click="handleCancel" type="button" size="sm">Cancelar</b-button>
               </div>
             </b-form>
           </b-card>
         </b-col>
-        <b-col v-if="addedCustomers.length">
+        <!-- <b-col v-if="addedCustomers.length">
           <b-card align-h="center" class="align-cards">
             <h3>Clientes à vincular</h3>
             <span v-for="customer in addedCustomers" :key="customer.value"
@@ -136,7 +136,7 @@
               {{ customer.text }}</span
             >
           </b-card>
-        </b-col>
+        </b-col> -->
       </b-row>
     </b-container>
   </div>
@@ -164,7 +164,7 @@ export default {
         intermediaryCity: '',
       },
       nonRelatedCustomersList: [],
-      customerEditing: false,
+      intermediaryEditing: false,
       customerId: null,
       states: STATES_LIST,
       selectedUserId: null,
@@ -173,19 +173,22 @@ export default {
       addedCustomers: [],
     };
   },
-  created() {
-    if (this.getCustomerToEdit) {
-      const { id, email, name, phone, state, city } = this.getCustomerToEdit;
+  mounted() {
+    if (this.$route.params.id) {
+      console.log(this.getIntermediaries);
+      const test = this.getIntermediaries.find((i) => i.id == this.$route.params.id);
+      console.log(test);
+      const { id, email, name, phone, state, city } = test;
       this.form.id = id;
       this.form.intermediaryName = name;
       this.form.intermediaryEmail = email;
       this.form.intermediaryPhone = phone;
       this.form.intermediaryState = state;
       this.form.intermediaryCity = city;
-      this.customerEditing = true;
+      this.intermediaryEditing = true;
     }
-    this.setCustomerToEdit(null);
-    this.handleNonRelatedCustomersLoading();
+    // this.setCustomerToEdit(null);
+    // this.handleNonRelatedCustomersLoading();
   },
   methods: {
     ...mapActions([
@@ -194,7 +197,8 @@ export default {
       'createIntermediaryCustomer',
       'setCustomerToEdit',
       'editCustomer',
-      'loadIntermediaryCustomers',
+      'loadIntermediaries',
+      'updateIntermediary',
     ]),
     handleCustomerClick(customer) {
       const removeIndex = this.addedCustomers.findIndex((c) => c.text === customer.text);
@@ -230,12 +234,13 @@ export default {
       this.nonRelatedCustomersList = nonRelatedCustomersMap;
     },
     handleCancel() {
-      this.$router.push({ name: 'customerDetails' });
+      this.$router.push({ name: 'intermediaryDetails' });
     },
     async onSubmit(evt) {
       evt.preventDefault();
       const intermediaryCustomer = this.form;
       const intermediaryCustomerData = {
+        id: intermediaryCustomer.id,
         name: intermediaryCustomer.intermediaryName,
         phone: intermediaryCustomer.intermediaryPhone,
         email: intermediaryCustomer.intermediaryEmail,
@@ -246,13 +251,13 @@ export default {
 
       console.log(intermediaryCustomerData);
       try {
-        // if (this.customerEditing) {
-        //   await this.editIntermediaryCustomer(intermediaryCustomerData);
-        // } else {
-        await this.createIntermediaryCustomer(intermediaryCustomerData);
-        // }
-        await this.loadIntermediaryCustomers();
-        this.$router.push({ name: 'intermediaryCustomers' });
+        if (this.intermediaryEditing) {
+          await this.updateIntermediary(intermediaryCustomerData);
+        } else {
+          await this.createIntermediaryCustomer(intermediaryCustomerData);
+        }
+        await this.loadIntermediaries();
+        this.$router.push({ name: 'intermediaries' });
       } catch (err) {
         this.$bvToast.toast(`${err}`, {
           title: 'Verifique os dados',
@@ -282,7 +287,14 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['getCustomers', 'getSelectedCustomer', 'getCustomerToEdit', 'getNonRelatedCustomersList']),
+    ...mapGetters([
+      'getSelectedIntermediary',
+      'getIntermediaries',
+      'getCustomers',
+      'getSelectedCustomer',
+      'getIntermediaryToEdit',
+      'getNonRelatedCustomersList',
+    ]),
   },
 };
 </script>

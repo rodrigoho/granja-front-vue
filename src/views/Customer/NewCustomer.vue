@@ -110,26 +110,6 @@
               </b-form-group>
             </b-col>
 
-            <!-- Customer Additional Fee -->
-            <b-col>
-              <b-form-group
-                id="input-group-additional-fee"
-                label="Adicional:"
-                label-for="input-additional-fee"
-                description="Taxa Ovo vermelho"
-              >
-                <b-form-input
-                  id="input-additional-fee"
-                  type="number"
-                  v-model="form.customerAdditionalFee"
-                  step="0.1"
-                  required
-                  placeholder="0"
-                  size="sm"
-                ></b-form-input>
-              </b-form-group>
-            </b-col>
-
             <!-- Customer Rural fund discount -->
             <b-col>
               <b-form-group
@@ -314,7 +294,6 @@ export default {
         customerPhone: '',
         customerCnpj: '',
         customerDiscount: 0,
-        customerAdditionalFee: 0.0,
         customerRuralFund: 0.0,
         customerIcms: 0.0,
         customerZipcode: '',
@@ -390,7 +369,6 @@ export default {
         email: customer.customerEmail,
         discount: customer.customerDiscount,
         rural_fund_tax: customer.customerRuralFund,
-        red_egg_tax: customer.customerAdditionalFee,
         icms_tax: customer.customerIcms,
         zip_code: customer.customerZipcode,
         address: {

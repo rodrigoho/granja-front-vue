@@ -536,12 +536,12 @@ export default {
       this.wMedio.discount = discount;
       this.wPequeno.discount = discount;
       this.wIndustrial.discount = discount;
-      this.rJumbo.discount = discount;
-      this.rExtra.discount = discount;
-      this.rGrande.discount = discount;
-      this.rMedio.discount = discount;
-      this.rPequeno.discount = discount;
-      this.rIndustrial.discount = discount;
+      // this.rJumbo.discount = discount;
+      // this.rExtra.discount = discount;
+      // this.rGrande.discount = discount;
+      // this.rMedio.discount = discount;
+      // this.rPequeno.discount = discount;
+      // this.rIndustrial.discount = discount;
     },
     async handleIntermediarySelect(intermediaryId) {
       console.log(intermediaryId);

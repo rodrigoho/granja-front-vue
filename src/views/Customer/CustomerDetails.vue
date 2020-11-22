@@ -98,10 +98,6 @@ export default {
           value: c.discount,
         },
         {
-          label: 'Taxa ovo vermelho',
-          value: c.red_egg_tax,
-        },
-        {
           label: 'Fundo Rural',
           value: c.rural_fund_tax,
         },

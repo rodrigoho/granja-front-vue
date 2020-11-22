@@ -281,7 +281,7 @@ export default {
           },
           {
             label: 'Saldo devedor: ',
-            value: `R$ ${cargoPackingVD.balanceDue}`,
+            value: `R$ ${cargoPackingVD.balanceDue.toFixed(2)}`,
           },
         ]);
     },

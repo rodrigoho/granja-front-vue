@@ -11,7 +11,7 @@
         <r-card :cardTitle="'Taxa Adicional'" />
       </b-row>
       <b-row align-h="center" class="align-cards">
-        <eggs-list :eggsColor="'white'" :cardTitle="'Branco'" class="bg-white" />
+        <eggs-list :eggsColor="'white'" :cardTitle="'Branco'" :isEditable="true" class="bg-white" />
         <eggs-list :eggsColor="'red'" :cardTitle="'Vermelho'" class="bg-white" />
       </b-row>
     </b-container>

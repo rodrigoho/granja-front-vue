@@ -20,6 +20,7 @@ export default new Vuex.Store({
     selectedCustomer: {},
     selectedIntermediary: {},
     notifications: [],
+    eggsList: [],
     whiteEggsList: null,
     redEggsList: null,
     additionalFee: null,
@@ -87,6 +88,9 @@ export default new Vuex.Store({
     },
     getAdditionalFee(state) {
       return state.additionalFee;
+    },
+    getEggsList(state) {
+      return state.eggsList;
     },
 
     // User
@@ -183,6 +187,9 @@ export default new Vuex.Store({
 
     SET_WHITE_EGGS_LIST(state, payload) {
       state.whiteEggsList = payload;
+    },
+    SET_EGGS_LIST(state, payload) {
+      state.eggsList = payload;
     },
 
     UPDATE_WHITE_EGG(state, payload) {
@@ -476,6 +483,27 @@ export default new Vuex.Store({
         throw err.response.data.error;
       }
     },
+    loadEggsListComplete: async ({ commit }) => {
+      try {
+        const eggsList = await api.get('eggs');
+        commit('SET_EGGS_LIST', eggsList.data);
+        return eggsList.data;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+
+    loadSelectedEggsPrices: async ({ commit }, payload) => {
+      try {
+        console.log(payload);
+        const res = await api.post(`eggs-prices-selected`, payload);
+        console.log(res.data);
+        commit('SET_EGGS_LIST', res.data);
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+
     updateEgg: async ({ commit, state }, payload) => {
       try {
         const whiteEgg = { id: payload.id, price: payload.price, size: payload.size };
@@ -487,8 +515,9 @@ export default new Vuex.Store({
           price: payload.price + parseInt(state.additionalFee.current_fee_price),
           size: payload.size,
         };
-        const resWhite = await api.put('eggs', whiteEgg);
-        const resRed = await api.put('eggs', redEgg);
+        console.log(payload);
+        const resWhite = await api.put(`eggs/${payload.id}`, whiteEgg);
+        const resRed = await api.put(`eggs/${currentRedEgg.id}`, redEgg);
         commit('UPDATE_WHITE_EGG', whiteEgg);
         commit('UPDATE_RED_EGG', redEgg);
         return [resWhite, resRed];
@@ -525,6 +554,20 @@ export default new Vuex.Store({
       }
     },
     // Eggs
+
+    //
+
+    loadEggPrices: async ({ commit }, payload) => {
+      try {
+        const eggsList = await api.get('eggs-prices', payload);
+        commit('SET_EGGS_LIST', eggsList.data);
+        return eggsList.data;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+
+    //
 
     // Notifications
 

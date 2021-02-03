@@ -12,11 +12,13 @@
 </template>
 
 <script>
+import { format } from 'date-fns';
+
 export default {
   name: 'DatePickerEggs',
   data() {
     return {
-      value: this.teste || '',
+      value: null,
       context: null,
     };
   },
@@ -26,10 +28,23 @@ export default {
   methods: {
     onContext(ctx) {
       this.context = ctx;
+      // console.log(ctx, this.context);
+      // console.log('value\n===\n', this.value, '\n===\n\n');
+      // const b = ctx.selectedDate;
+      // const u = parseISO(this.value);
+      // const c = format(ctx.activeDate, 'dd/MM/yyyy');
+      if (typeof this.value === 'string') {
+        console.log('TAMO PROGREDINDO', ctx.selectedDate);
+        const formattedSelectedDate = format(ctx.selectedDate, 'dd/MM/yyyy');
+        const formattedDateTimestamp = ctx.selectedDate;
+        this.$emit('uepa', { formattedSelectedDate, formattedDateTimestamp });
+      }
+      // console.log('', b, '\n', u, b === u);
+      // console.log(this.value);
       this.$emit('update:selectedDateEggs', ctx.selectedDate);
     },
     handleSelectedDate() {
-      this.value = localStorage.getItem('editingCargoPackingDate');
+      this.value = new Date();
     },
   },
 };

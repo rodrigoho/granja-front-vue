@@ -16,7 +16,7 @@ export default {
   name: 'DatePicker',
   data() {
     return {
-      value: this.teste || '',
+      value: null,
       context: null,
     };
   },
@@ -29,7 +29,10 @@ export default {
       this.$emit('update:selectedDate', ctx.selectedDate);
     },
     handleSelectedDate() {
-      this.value = localStorage.getItem('editingCargoPackingDate');
+      if (this.$route.params.id) this.value = localStorage.getItem('editingCargoPackingDate');
+      else {
+        this.value = new Date();
+      }
     },
   },
 };

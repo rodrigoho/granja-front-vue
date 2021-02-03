@@ -51,8 +51,8 @@
                 <b-form-input
                   id="input-phone"
                   type="text"
+                  v-mask="'(##) #####-####'"
                   v-model="form.customerPhone"
-                  required
                   size="sm"
                   placeholder="Digite o telefone"
                 ></b-form-input>
@@ -78,6 +78,7 @@
                 <b-form-input
                   id="input-cnpj"
                   v-model="form.customerCnpj"
+                  v-mask="'##.###.###.####/##'"
                   type="text"
                   size="sm"
                   placeholder="Digite o CNPJ"
@@ -101,7 +102,7 @@
               >
                 <b-form-input
                   id="input-discount"
-                  type="number"
+                  type="text"
                   v-model="form.customerDiscount"
                   required
                   placeholder="0"
@@ -120,9 +121,8 @@
               >
                 <b-form-input
                   id="input-rural-fund"
-                  type="number"
+                  type="text"
                   v-model="form.customerRuralFund"
-                  step="0.1"
                   required
                   size="sm"
                   placeholder="0"
@@ -136,9 +136,8 @@
                 <b-form-input
                   id="input-icms"
                   v-model="form.customerIcms"
-                  type="number"
+                  type="text"
                   required
-                  step="0.1"
                   size="sm"
                   placeholder="0"
                 ></b-form-input>
@@ -163,6 +162,7 @@
                   id="input-zipcode"
                   type="text"
                   v-model="form.customerZipcode"
+                  v-mask="'#####-###'"
                   placeholder="Digite o CEP"
                   size="sm"
                   required
@@ -280,7 +280,7 @@ import axios from 'axios';
 import STATES_LIST from '@/constants/NewCustomer';
 
 export default {
-  name: 'NewCargoPacking',
+  name: 'NewCustomer',
   components: {
     RHeader,
   },
@@ -310,8 +310,18 @@ export default {
       selectedUserId: null,
     };
   },
-  created() {
-    if (this.getCustomerToEdit) {
+  mounted() {
+    if (this.$route.params.id) this.handleCustomerLoading(this.$route.params.id);
+    // this.setCustomerToEdit(null);
+  },
+  methods: {
+    ...mapActions(['loadCustomers', 'loadSelectedCustomer', 'createCustomer', 'setCustomerToEdit', 'updateCustomer']),
+    handleCancel() {
+      this.$router.push({ name: 'customerDetails' });
+    },
+    async handleCustomerLoading(customerId) {
+      await this.loadSelectedCustomer(customerId);
+
       const {
         id,
         cnpj,
@@ -324,16 +334,16 @@ export default {
         rural_fund_tax,
         zip_code,
         address,
-      } = this.getCustomerToEdit;
+      } = this.getSelectedCustomer;
       this.form.id = id;
       this.form.customerName = name;
       this.form.customerFantasyName = fantasy_name;
       this.form.customerEmail = email;
       this.form.customerPhone = phone;
       this.form.customerCnpj = cnpj;
-      this.form.customerDiscount = discount;
-      this.form.customerRuralFund = rural_fund_tax;
-      this.form.customerIcms = icms_tax;
+      this.form.customerDiscount = parseFloat(discount).toFixed(2);
+      this.form.customerRuralFund = parseFloat(rural_fund_tax).toFixed(2);
+      this.form.customerIcms = parseFloat(icms_tax).toFixed(2);
       this.form.customerZipcode = zip_code;
       this.form.customerState = address.state;
       this.form.customerAddrCity = address.city;
@@ -342,13 +352,6 @@ export default {
       this.form.customerAddressComplement = address.complement;
       this.form.customerAddressNumber = address.number;
       this.customerEditing = true;
-    }
-    this.setCustomerToEdit(null);
-  },
-  methods: {
-    ...mapActions(['loadCustomers', 'loadSelectedCustomer', 'createCustomer', 'setCustomerToEdit', 'editCustomer']),
-    handleCancel() {
-      this.$router.push({ name: 'customerDetails' });
     },
     async handleZipcode() {
       const response = await axios.get(`https://viacep.com.br/ws/${this.form.customerZipcode}/json`);
@@ -356,6 +359,9 @@ export default {
       this.form.customerAddrCity = response.data.localidade;
       this.form.customerAddressLine = response.data.logradouro;
       this.form.customerAddrNeighborhood = response.data.bairro;
+    },
+    formatNumber(numberToFormat) {
+      return numberToFormat > 0 ? numberToFormat.replace(',', '.') : numberToFormat;
     },
     async onSubmit(evt) {
       evt.preventDefault();
@@ -367,9 +373,9 @@ export default {
         cnpj: customer.customerCnpj,
         phone: customer.customerPhone,
         email: customer.customerEmail,
-        discount: customer.customerDiscount,
-        rural_fund_tax: customer.customerRuralFund,
-        icms_tax: customer.customerIcms,
+        discount: this.formatNumber(customer.customerDiscount),
+        rural_fund_tax: this.formatNumber(customer.customerRuralFund),
+        icms_tax: this.formatNumber(customer.customerIcms),
         zip_code: customer.customerZipcode,
         address: {
           public_area: customer.customerAddressLine,
@@ -380,21 +386,24 @@ export default {
           state: customer.customerState,
         },
       };
-      try {
-        if (this.customerEditing) {
-          await this.editCustomer(customerData);
-        } else {
-          await this.createCustomer(customerData);
-        }
-        await this.loadCustomers();
-        this.$router.push({ name: 'customers' });
-      } catch (err) {
-        this.$bvToast.toast(`${err}`, {
-          title: 'Verifique os dados',
-          autoHideDelay: 5000,
-          variant: 'danger',
-        });
+      // try {
+      if (this.$route.name === 'newCustomer') {
+        const res = await this.createCustomer(customerData);
+        this.$router.push({ path: `/customers/customer-details/${res.data.id}` });
+      } else {
+        this.handleUpdate(customerData);
+        this.$router.push({ path: `/customers/customer-details/${this.$route.params.id}` });
       }
+      // }
+      // catch (err) {
+      //   this.$bvToast.toast(`${err}`, {
+      //     title: 'Verifique os dados',
+      //     autoHideDelay: 5000,
+      //     variant: 'danger',
+      //   });
+    },
+    async handleUpdate(customerData) {
+      await this.updateCustomer(customerData);
     },
     onReset(evt) {
       evt.preventDefault();

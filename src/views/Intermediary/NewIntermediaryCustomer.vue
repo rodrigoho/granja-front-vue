@@ -53,41 +53,13 @@
                     <b-form-input
                       id="input-phone"
                       type="text"
+                      v-mask="'(##) #####-####'"
                       v-model="form.intermediaryPhone"
-                      required
                       size="sm"
                       placeholder="Digite o telefone"
                     ></b-form-input>
                   </b-form-group>
                 </b-col>
-
-                <!-- Customers select
-                <b-col sm="5" class="align-state-select">
-                  <b-form-group
-                    id="input-group-customers"
-                    label="Clientes:"
-                    label-for="input-customers"
-                    class="align-input"
-                  >
-                    <b-form-select
-                      id="input-customers"
-                      size="sm"
-                      v-model="selectedCustomer"
-                      @change="handleCustomerSelect"
-                    >
-                      <template v-slot:first>
-                        <b-form-select-option :value="null" disabled>Selecione</b-form-select-option>
-                      </template>
-                      <b-form-select-option
-                        v-for="(customer, idx) in nonRelatedCustomersList"
-                        :value="customer.text"
-                        :key="idx"
-                        required
-                        >{{ customer.text }}</b-form-select-option
-                      >
-                    </b-form-select>
-                  </b-form-group>
-                </b-col> -->
               </b-row>
 
               <b-row cols="2" class="flex">
@@ -113,6 +85,7 @@
                       v-model="form.intermediaryCity"
                       type="text"
                       size="sm"
+                      required
                       placeholder="Digite a Cidade"
                     ></b-form-input>
                   </b-form-group>
@@ -128,22 +101,12 @@
             </b-form>
           </b-card>
         </b-col>
-        <!-- <b-col v-if="addedCustomers.length">
-          <b-card align-h="center" class="align-cards">
-            <h3>Clientes à vincular</h3>
-            <span v-for="customer in addedCustomers" :key="customer.value"
-              ><br /><font-awesome-icon icon="window-close" class="hover-icon" @click="handleCustomerClick(customer)" />
-              {{ customer.text }}</span
-            >
-          </b-card>
-        </b-col> -->
       </b-row>
     </b-container>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
 import RHeader from '@/components/RHeader.vue';
 import { mapActions, mapGetters } from 'vuex';
 import STATES_LIST from '@/constants/NewCustomer';
@@ -185,8 +148,6 @@ export default {
       this.form.intermediaryCity = city;
       this.intermediaryEditing = true;
     }
-    // this.setCustomerToEdit(null);
-    // this.handleNonRelatedCustomersLoading();
   },
   methods: {
     ...mapActions([
@@ -210,15 +171,6 @@ export default {
       this.addedCustomers.push(customerToRelate[0]);
       this.customersToAdd.push(customerToRelate[0].value);
       this.selectedCustomer = null;
-
-      // state.customers.splice(removeIndex, 1);
-      // const customer = this.getSelectedCustomer;
-      // this.customer = customer;
-      // this.form.customerName = customer.name;
-      // this.form.customerEmail = customer.email;
-      // this.form.discount = customer.discount;
-      // this.form.ruralFundTax = customer.rural_fund_tax;
-      // this.form.icmsTax = customer.icms_tax;
     },
     async handleNonRelatedCustomersLoading() {
       await this.loadNonRelatedCustomers();

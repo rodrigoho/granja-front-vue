@@ -7,48 +7,69 @@
       :shouldShowButton="true"
     />
     <b-container>
-      <b-card align-h="center" class="align-cards">
-        <template v-slot:header>
-          <h4 class="mb-0">{{ customer.name }}</h4>
-        </template>
-        <b-row cols="2">
-          <b-col><label-value :values="customerData" /></b-col>
-          <b-col
-            ><div><strong>Endereço:</strong></div>
-            {{ address }}</b-col
-          >
-        </b-row>
-        <template v-slot:footer>
-          <div class="footer">
-            <b-button size="sm" variant="primary" @click="handleEdit">Editar</b-button>
-            <!-- <b-button size="sm" variant="danger" @click="handleDelete">Remover</b-button> -->
-          </div>
-        </template>
-      </b-card>
+      <b-row class="flex-cargo-packing" align-h="start">
+        <div class="align-toolbar">
+          <b-col cols="3">
+            <div class="toolbar">
+              <div class="teste">
+                <b-button @click="handleEdit">Editar</b-button>
+                <b-button @click="handleDelete">Deletar</b-button>
+              </div>
+            </div>
+          </b-col>
+        </div>
+
+        <div>
+          <b-col cols="5">
+            <div>
+              <b-card class="style-eggs-details">
+                <b-row v-for="(cD, idx) in customerData" :key="idx" class="align-data">
+                  <b-col cols="5" class="bold">{{ cD.label }}</b-col
+                  ><b-col cols="7">{{ cD.value }}</b-col>
+                </b-row>
+                <b-row class="align-footer-buttons" v-if="isEditing">
+                  <b-col class="buttons">
+                    <b-button type="button" variant="danger" size="sm">Cancelar</b-button>
+                    <b-button type="submit" variant="primary" size="sm">Salvar</b-button>
+                  </b-col>
+                </b-row>
+              </b-card>
+            </div>
+          </b-col>
+        </div>
+      </b-row>
     </b-container>
   </div>
 </template>
 
 <script>
 import RHeader from '@/components/RHeader.vue';
-import LabelValue from '@/components/LabelValue.vue';
-import { mapActions } from 'vuex';
+// import LabelValue from '@/components/LabelValue.vue';
+import { mapActions, mapGetters } from 'vuex';
 export default {
   name: 'CustomerDetails',
   components: {
     RHeader,
-    LabelValue,
+    // LabelValue,
   },
   data() {
     return {
-      customer: JSON.parse(localStorage.getItem('selectedCustomer')),
+      isEditing: false,
+      // customer: JSON.parse(localStorage.getItem('selectedCustomer')),
     };
   },
+  created() {
+    console.log('uepa');
+    this.handleCustomerLoading();
+  },
   methods: {
-    ...mapActions(['deleteCustomer', 'loadCustomers', 'setCustomerToEdit']),
+    ...mapActions(['deleteCustomer', 'loadCustomers', 'setCustomerToEdit', 'loadSelectedCustomer']),
     async handleEdit() {
-      await this.setCustomerToEdit(this.customer);
-      this.$router.push({ name: 'newCustomer' });
+      // await this.setCustomerToEdit(this.customer);
+      this.$router.push({ path: `/customers/edit/${this.$route.params.id}` });
+    },
+    async handleCustomerLoading() {
+      await this.loadSelectedCustomer(this.$route.params.id);
     },
     handleDelete() {
       this.$bvModal
@@ -61,7 +82,7 @@ export default {
         })
         .then(async (value) => {
           if (value) {
-            this.deleteCustomer(this.customer.id);
+            this.deleteCustomer(this.$route.params.id);
             await this.loadCustomers();
 
             this.$router.push({ name: 'customers' });
@@ -74,8 +95,9 @@ export default {
     },
   },
   computed: {
-    customerData: () => {
-      const c = JSON.parse(localStorage.getItem('selectedCustomer'));
+    ...mapGetters(['getSelectedCustomer']),
+    customerData: function () {
+      const c = this.getSelectedCustomer;
       return [
         {
           label: 'Nome',
@@ -87,7 +109,7 @@ export default {
         },
         {
           label: 'Telefone',
-          value: c.phone,
+          value: c.phone ? c.phone : '-',
         },
         {
           label: 'Email',
@@ -95,22 +117,29 @@ export default {
         },
         {
           label: 'Desconto',
-          value: c.discount,
+          value: `R$ ${parseFloat(c.discount).toFixed(2)}`,
         },
         {
           label: 'Fundo Rural',
-          value: c.rural_fund_tax,
+          value: `R$ ${parseFloat(c.rural_fund_tax).toFixed(2)}`,
         },
         {
           label: 'ICMS',
-          value: c.icms_tax,
+          value: `R$ ${parseFloat(c.icms_tax).toFixed(2)}`,
+        },
+        {
+          label: 'Endereço',
+          value: this.address,
         },
       ];
     },
-    address: () => {
-      const c = JSON.parse(localStorage.getItem('selectedCustomer')).address;
-      const { public_area: publicArea, complement, neighborhood, city, state, number } = c;
-      let address = `${publicArea}, ${complement}, ${number}, ${neighborhood}, ${city}, ${state}`;
+    address() {
+      // const addressObj = this.getSelectedCustomer.address;
+      // const { public_area, complement, neighborhood, city, state, number } = addressObj;
+      let address = '';
+      if (this.getSelectedCustomer.address) {
+        address = `${this.getSelectedCustomer.address.public_area}, ${this.getSelectedCustomer.address.complement}, ${this.getSelectedCustomer.address.number}, ${this.getSelectedCustomer.address.neighborhood}, ${this.getSelectedCustomer.address.city}, ${this.getSelectedCustomer.address.state}`;
+      }
       address = address.replace('undefined, ', '');
       address = address.replace(', ,', ',');
       return address;
@@ -128,12 +157,79 @@ export default {
   margin: 50px auto;
   width: 700px;
 }
+
+.style-eggs-details {
+  position: relative;
+  display: flex;
+  background: #fff;
+  margin: 50px auto;
+  width: 500px;
+}
+
+.align-toolbar {
+  position: relative;
+  top: 50px;
+  margin-bottom: 20px;
+}
+
+.align-data {
+  min-width: 450px;
+}
+
+.toolbar {
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+
+  width: 190px;
+  height: 100px;
+  margin-right: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.flex-cargo-packing {
+  position: relative;
+  left: 80px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.teste {
+  position: relative;
+  top: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 160px;
+  button {
+    background: #007bff;
+    &:hover {
+      background: darken(#007bff, 5%);
+    }
+  }
+  button + button {
+    margin-top: 5px;
+  }
+}
+
+.eggs {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.95);
+
+  padding: 15px;
+  /* height: 295px; */
+  min-height: 295px;
+  min-width: 500px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
 .row {
   padding: 0 5px;
-}
-.footer {
-  button + button {
-    margin-left: 10px;
-  }
 }
 </style>

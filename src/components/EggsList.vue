@@ -113,6 +113,14 @@ export default {
     handleCancel() {
       this.isEditing = false;
     },
+    sortArr(listToSort) {
+      return listToSort.sort((a, b) => {
+        return b.id < a.id ? 1 : b.id > a.id ? -1 : 0;
+      });
+    },
+    // sortedEggsList() {
+    //   return this.sortArr(this.getEggsList);
+    // },
   },
   computed: {
     ...mapGetters(['getAdditionalFee', 'getRedEggsList', 'getWhiteEggsList', 'getEggsList']),
@@ -128,15 +136,13 @@ export default {
     //   return test;
     // },
     eggs: function () {
-      console.log(this.getEggsList);
-      console.log(this.eggsColor);
       if (this.eggsColor === 'red') {
-        const a = this.getEggsList.filter((egg) => egg.color === 'Vermelho');
-        this.getEggsList.forEach((e) => console.log(e));
-        console.log(a);
-        return this.getEggsList.filter((egg) => egg.color === 'Vermelho');
+        // const a = this.getEggsList.filter((egg) => egg.color === 'Vermelho');
+        // this.getEggsList.forEach((e) => console.log(e));
+        // console.log(a);
+        return this.sortArr(this.getEggsList.filter((egg) => egg.color === 'Vermelho'));
       } else {
-        return this.getEggsList.filter((egg) => egg.color === 'Branco');
+        return this.sortArr(this.getEggsList.filter((egg) => egg.color === 'Branco'));
       }
     },
   },

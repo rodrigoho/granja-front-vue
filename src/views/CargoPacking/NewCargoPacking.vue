@@ -519,7 +519,7 @@ export default {
   methods: {
     ...mapActions([
       'loadAdditionalFee',
-      'loadCustomers',
+      'loadAllCustomers',
       'loadSelectedCustomer',
       'loadSelectedIntermediary',
       'createCargoPacking',
@@ -579,9 +579,9 @@ export default {
       }
     },
     async handleListLoading() {
-      await this.loadCustomers();
+      await this.loadAllCustomers();
       await this.loadIntermediaries();
-      const customersMap = [...this.getCustomers.rows.map((c) => ({ value: c.id, text: `${c.name} - ${c.email}` }))];
+      const customersMap = [...this.getAllCustomers.map((c) => ({ value: c.id, text: `${c.name} - ${c.email}` }))];
       const intermediariesMap = [
         ...this.getIntermediaries.rows.map((c) => ({ value: c.id, text: `${c.name} - ${c.email}` })),
       ];
@@ -733,7 +733,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'getCustomers',
+      'getAllCustomers',
       'getSelectedCustomer',
       'getCargoPackings',
       'getRedEggsList',

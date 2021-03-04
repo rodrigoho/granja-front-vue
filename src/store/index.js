@@ -11,7 +11,9 @@ export default new Vuex.Store({
     token: localStorage.getItem('token') || null,
     cargoPackings: [],
     customers: [],
+    allCustomers: [],
     intermediaries: [],
+    allIntermediaries: [],
     getNonRelatedCustomersList: [],
     users: [],
     isAdmin: false,
@@ -59,6 +61,9 @@ export default new Vuex.Store({
     getIntermediaries(state) {
       return state.intermediaries;
     },
+    getAllIntermediaries(state) {
+      return state.allIntermediaries;
+    },
     getSelectedIntermediary(state) {
       return state.selectedIntermediary;
     },
@@ -66,6 +71,9 @@ export default new Vuex.Store({
     // Customers
     getCustomers(state) {
       return state.customers;
+    },
+    getAllCustomers(state) {
+      return state.allCustomers;
     },
     getSelectedCustomer(state) {
       return state.selectedCustomer;
@@ -158,6 +166,9 @@ export default new Vuex.Store({
     SET_INTERMEDIARIES_LIST(state, payload) {
       state.intermediaries = payload;
     },
+    SET_ALL_INTERMEDIARIES_LIST(state, payload) {
+      state.allIntermediaries = payload;
+    },
     SET_SELECTED_INTERMEDIARY(state, payload) {
       state.selectedIntermediary = payload;
     },
@@ -169,6 +180,9 @@ export default new Vuex.Store({
     // Customers
     SET_CUSTOMERS_LIST(state, payload) {
       state.customers = payload;
+    },
+    SET_ALL_CUSTOMERS_LIST(state, payload) {
+      state.allCustomers = payload;
     },
     SET_NON_RELATED_CUSTOMERS_LIST(state, payload) {
       state.getNonRelatedCustomersList = payload;
@@ -405,6 +419,15 @@ export default new Vuex.Store({
         throw err.response.data.error;
       }
     },
+    loadAllIntermediaries: async ({ commit }) => {
+      try {
+        const res = await api.get('intermediaries');
+        commit('SET_ALL_INTERMEDIARIES_LIST', res.data);
+        return res.data;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
     loadSelectedIntermediary: async ({ commit }, payload) => {
       try {
         const res = await api.get(`intermediary/${payload}`);
@@ -449,6 +472,15 @@ export default new Vuex.Store({
       try {
         const res = await api.get(`customers?page=${page}`);
         commit('SET_CUSTOMERS_LIST', res.data);
+        return res;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+    loadAllCustomers: async ({ commit }) => {
+      try {
+        const res = await api.get('customers-all');
+        commit('SET_ALL_CUSTOMERS_LIST', res.data);
         return res;
       } catch (err) {
         throw err.response.data.error;

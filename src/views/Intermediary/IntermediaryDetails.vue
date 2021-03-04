@@ -69,6 +69,7 @@ export default {
     return {
       selectedIntermediary: {},
       isEditing: false,
+      currentPage: 1,
     };
   },
   created() {
@@ -101,7 +102,7 @@ export default {
         .then(async (value) => {
           if (value) {
             this.deleteIntermediaryCustomer(this.$route.params.id);
-            await this.loadIntermediaries();
+            await this.loadIntermediaries(this.currentPage);
 
             this.$router.push({ name: 'intermediaries' });
           }

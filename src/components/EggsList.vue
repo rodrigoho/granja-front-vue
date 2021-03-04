@@ -83,7 +83,6 @@ export default {
     async handleEggsListLoading() {
       await this.loadEggsList();
       await this.loadEggsListComplete();
-      // console.log(this.getEggsList);
     },
     handleEditClick() {
       this.isEditing = !this.isEditing;
@@ -96,7 +95,6 @@ export default {
           size: e.size,
           price: parseFloat(e.price),
         };
-        console.log(updatedEgg.id, updatedEgg);
         this.updateEgg(updatedEgg);
       });
       await this.loadEggsList();
@@ -118,28 +116,11 @@ export default {
         return b.id < a.id ? 1 : b.id > a.id ? -1 : 0;
       });
     },
-    // sortedEggsList() {
-    //   return this.sortArr(this.getEggsList);
-    // },
   },
   computed: {
     ...mapGetters(['getAdditionalFee', 'getRedEggsList', 'getWhiteEggsList', 'getEggsList']),
-    // eggs2: function () {
-    //   let test = [];
-    //   if (!this.isFromCargoPacking && this.eggsColor === 'white') {
-    //     test = this.getWhiteEggsList;
-    //   } else if (!this.isFromCargoPacking && this.eggsColor === 'red') {
-    //     test = this.getRedEggsList;
-    //   } else {
-    //     test = this.eggList;
-    //   }
-    //   return test;
-    // },
     eggs: function () {
       if (this.eggsColor === 'red') {
-        // const a = this.getEggsList.filter((egg) => egg.color === 'Vermelho');
-        // this.getEggsList.forEach((e) => console.log(e));
-        // console.log(a);
         return this.sortArr(this.getEggsList.filter((egg) => egg.color === 'Vermelho'));
       } else {
         return this.sortArr(this.getEggsList.filter((egg) => egg.color === 'Branco'));

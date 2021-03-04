@@ -55,11 +55,11 @@ export default {
   data() {
     return {
       isEditing: false,
+      currentPage: 1,
       // customer: JSON.parse(localStorage.getItem('selectedCustomer')),
     };
   },
   created() {
-    console.log('uepa');
     this.handleCustomerLoading();
   },
   methods: {
@@ -83,7 +83,7 @@ export default {
         .then(async (value) => {
           if (value) {
             this.deleteCustomer(this.$route.params.id);
-            await this.loadCustomers();
+            await this.loadCustomers(this.currentPage);
 
             this.$router.push({ name: 'customers' });
           }

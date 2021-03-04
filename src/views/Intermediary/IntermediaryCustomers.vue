@@ -18,7 +18,6 @@
     <b-container>
       <b-row align-h="center" class="align-cards">
         <b-table
-          @sort-changed="sortingChanged"
           :items="items"
           :fields="fields"
           :current-page="currentPage"
@@ -93,17 +92,17 @@ export default {
     };
   },
   created() {
-    this.loadIntermediaries();
+    this.loadIntermediaries(this.currentPage);
   },
   methods: {
     ...mapActions(['loadIntermediaries']),
-    sortingChanged(ctx) {
-      const { currentPage: curPage } = ctx;
-      this.loadCustomers({ curPage });
-      console.log(ctx);
-    },
+    // sortingChanged(ctx) {
+    //   const { currentPage: curPage } = ctx;
+    //   this.loadIntermediaries({ curPage });
+    //   console.log(ctx);
+    // },
     async paginate(curPage) {
-      await this.loadCustomers(curPage);
+      await this.loadIntermediaries(curPage);
     },
     handleDetailsClick(intermediaryCustomerId) {
       this.$router.push({

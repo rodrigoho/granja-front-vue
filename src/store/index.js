@@ -132,8 +132,8 @@ export default new Vuex.Store({
       state.notifications = payload;
     },
     DELETE_CARGO_PACKING(state, payload) {
-      const removeIndex = state.cargoPackings.findIndex((c) => c.id === payload);
-      state.cargoPackings.splice(removeIndex, 1);
+      const removeIndex = state.cargoPackings.rows.findIndex((c) => c.id === payload);
+      state.cargoPackings.rows.splice(removeIndex, 1);
     },
 
     // Users
@@ -162,8 +162,8 @@ export default new Vuex.Store({
       state.selectedIntermediary = payload;
     },
     DELETE_INTERMEDIARY_CUSTOMER(state, payload) {
-      const removeIndex = state.intermediaries.findIndex((c) => c.id === payload);
-      state.intermediaries.splice(removeIndex, 1);
+      const removeIndex = state.intermediaries.rows.findIndex((c) => c.id === payload);
+      state.intermediaries.rows.splice(removeIndex, 1);
     },
 
     // Customers
@@ -180,8 +180,8 @@ export default new Vuex.Store({
       state.customers.push(payload);
     },
     DELETE_CUSTOMER(state, payload) {
-      const removeIndex = state.customers.findIndex((c) => c.id === payload);
-      state.customers.splice(removeIndex, 1);
+      const removeIndex = state.customers.rows.findIndex((c) => c.id === payload);
+      state.customers.rows.splice(removeIndex, 1);
     },
     SET_CUSTOMER_TO_EDIT(state, payload) {
       state.customerToEdit = payload;
@@ -302,7 +302,7 @@ export default new Vuex.Store({
         commit('DELETE_CARGO_PACKING', payload);
         return res;
       } catch (err) {
-        console.log(err.response.data.error);
+        console.log(err);
         throw err.response.data.error;
       }
     },
@@ -387,18 +387,18 @@ export default new Vuex.Store({
     // End of users
 
     // Intermediary Customers
-    createIntermediaryCustomer: async ({ commit }, payload) => {
+    createIntermediaryCustomer: async ({ dispatch }, payload) => {
       try {
         const res = await api.post('intermediaries', payload);
-        commit('CREATE_INTERMEDIARY', payload);
+        await dispatch('loadIntermediaries');
         return res;
       } catch (err) {
         throw err.response.data.error;
       }
     },
-    loadIntermediaries: async ({ commit }) => {
+    loadIntermediaries: async ({ commit }, page = 1) => {
       try {
-        const res = await api.get('intermediaries');
+        const res = await api.get(`intermediaries?page=${page}`);
         commit('SET_INTERMEDIARIES_LIST', res.data);
         return res.data;
       } catch (err) {
@@ -445,9 +445,9 @@ export default new Vuex.Store({
     },
 
     // Customers
-    loadCustomers: async ({ commit }) => {
+    loadCustomers: async ({ commit }, page = 1) => {
       try {
-        const res = await api.get('customers');
+        const res = await api.get(`customers?page=${page}`);
         commit('SET_CUSTOMERS_LIST', res.data);
         return res;
       } catch (err) {
@@ -466,11 +466,7 @@ export default new Vuex.Store({
     },
     createCustomer: async ({ dispatch }, payload) => {
       try {
-        console.log('payload\n', payload);
         const res = await api.post('customers', payload);
-        console.log('res\n', res);
-
-        // commit('CREATE_CUSTOMER', payload);
         await dispatch('loadCustomers');
         return res;
       } catch (err) {

@@ -540,7 +540,6 @@ export default {
       if (payload) {
         this.form.icmsTax = this.customer.icms_tax;
         this.form.hasICMS = true;
-        console.log(this.form.icmsTax);
       } else {
         this.form.icmsTax = 0;
       }
@@ -549,7 +548,6 @@ export default {
       if (payload) {
         this.form.ruralFundTax = this.customer.rural_fund_tax;
         this.form.hasRuralFund = true;
-        console.log(this.form.ruralFundTax);
       } else {
         this.form.ruralFundTax = 0;
       }
@@ -613,7 +611,6 @@ export default {
       const test = this.customersList.find((customer) => customer.value === customerId);
       orderItems.forEach((oI) => {
         const indexToUpdate = this.eggsCargo.findIndex((egg) => egg.eggId === oI.egg_details.id);
-        console.log(indexToUpdate, oI);
         const amount = oI.amount;
         const discount = oI.discount;
         this.eggsCargo[indexToUpdate] = {
@@ -652,8 +649,6 @@ export default {
       this.form.customerEmail = customer.email;
       this.form.discount = customer.discount;
       this.form.ruralFundTax = customer.rural_fund_tax;
-      console.log('discount', discount);
-      // this.form.icmsTax = customer.icms_tax;
       this.eggsCargo[0].discount = discount;
       this.eggsCargo[1].discount = discount;
       this.eggsCargo[2].discount = discount;
@@ -675,7 +670,6 @@ export default {
     },
 
     async handleIntermediarySelect(intermediaryId) {
-      console.log(intermediaryId);
       await this.loadSelectedIntermediary(intermediaryId);
     },
     async onSubmit(evt) {

@@ -197,20 +197,20 @@ export default {
         customers: this.customersToAdd,
       };
 
-      try {
-        if (this.intermediaryEditing) {
-          await this.updateIntermediary(intermediaryCustomerData);
-        } else {
-          await this.createIntermediaryCustomer(intermediaryCustomerData);
-        }
-        await this.loadIntermediaries();
-        this.$router.push({ name: 'intermediaries' });
-      } catch (err) {
-        this.$bvToast.toast(`${err}`, {
-          title: 'Verifique os dados',
-          autoHideDelay: 5000,
-          variant: 'danger',
-        });
+      // try {
+      if (this.$route.name === 'newIntermediaryCustomer') {
+        const res = await this.createIntermediaryCustomer(intermediaryCustomerData);
+        this.$router.push({ path: `/intermediary/intermediary-details/${res.data.id}` });
+      } else {
+        await this.updateIntermediary(intermediaryCustomerData);
+        this.$router.push({ path: `/intermediary/intermediary-details/${this.$route.params.id}` });
+        // }
+        // } catch (err) {
+        //   this.$bvToast.toast(`${err}`, {
+        //     title: 'Verifique os dados',
+        //     autoHideDelay: 5000,
+        //     variant: 'danger',
+        //   });
       }
     },
     onReset(evt) {
@@ -239,7 +239,6 @@ export default {
       'getIntermediaries',
       'getCustomers',
       'getSelectedCustomer',
-      'getIntermediaryToEdit',
       'getNonRelatedCustomersList',
     ]),
   },

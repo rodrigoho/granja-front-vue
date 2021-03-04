@@ -75,9 +75,6 @@ export default {
   },
   methods: {
     ...mapActions(['updateRedEgg', 'loadEggsList', 'loadAdditionalFee', 'updateAdditionalFee']),
-    // clickValue(payload) {
-    //   console.log(payload.price, payload.id);
-    // },
     async handleAdditionalFeeLoading() {
       await this.loadAdditionalFee();
       if (this.getAdditionalFee) {
@@ -91,7 +88,6 @@ export default {
         this.onlineFee = onlineFee;
         this.leftNumber = minFee;
         this.rightNumber = maxFee;
-        console.log(this.getAdditionalFee);
       }
     },
     handleEditClick() {
@@ -115,28 +111,14 @@ export default {
       this.updateAdditionalFee(updatedAdditionalFee);
       this.onlineFee = newOnlineFee;
       this.updateRegEggs(additionalFee);
-      // this.redEggsList.map((egg) => {
-      //   const whiteEgg = this.getEggsList.find((wEgg) => wEgg.color === 'Branco' && wEgg.size === egg.size);
-      //   const objectToSend = {
-      //     egg,
-      //     additionalFee: this.additionalFeePrice,
-      //     whiteEggPrice: whiteEgg.price,
-      //   };
-      //   this.updateRedEgg(objectToSend);
-      // });
-
       this.isEditing = false;
     },
     onReset(evt) {
       evt.preventDefault();
-      // Reset our form values
     },
   },
   computed: {
     ...mapGetters(['getAdditionalFee', 'getEggsList']),
-    // redEggsList() {
-    //   return this.getEggsList.filter((egg) => egg.color === 'Vermelho');
-    // },
   },
 };
 </script>

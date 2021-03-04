@@ -163,7 +163,6 @@ export default {
       });
     },
     formattedDate(dateToFormat) {
-      console.log(dateToFormat);
       if (dateToFormat.custom_date_timestamp) {
         return format(parseISO(dateToFormat.custom_date_timestamp), 'dd/MM/yyyy');
       } else return format(parseISO(dateToFormat.created_at), 'dd/MM/yyyy');
@@ -180,7 +179,6 @@ export default {
       const { currentPage: curPage, sortDesc: isSortDesc, sortBy: columnToSort } = ctx;
       const sortDirection = isSortDesc ? 'DESC' : 'ASC';
       this.loadDueCargoPackings({ curPage, sortDirection, columnToSort });
-      console.log(ctx);
     },
   },
   computed: {

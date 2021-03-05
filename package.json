@@ -19,6 +19,7 @@
     "date-fns": "^2.14.0",
     "html2pdf.js": "^0.9.2",
     "socket.io-client": "^2.3.0",
+    "v-mask": "^2.2.4",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vue-toasted": "^1.1.28",

@@ -1,8 +1,8 @@
 <template>
   <div class="flex">
-    <label for="example-datepicker">Vencimento</label>
+    <label for="date-picker-eggs">Data</label>
     <b-form-datepicker
-      id="example-datepicker"
+      id="date-picker-eggs"
       v-model="value"
       class="mb-2 teste"
       @context="onContext"
@@ -12,8 +12,10 @@
 </template>
 
 <script>
+import { format } from 'date-fns';
+
 export default {
-  name: 'DatePicker',
+  name: 'DatePickerEggs',
   data() {
     return {
       value: null,
@@ -26,13 +28,15 @@ export default {
   methods: {
     onContext(ctx) {
       this.context = ctx;
-      this.$emit('update:selectedDate', ctx.selectedDate);
+      if (typeof this.value === 'string') {
+        const formattedSelectedDate = format(ctx.selectedDate, 'dd/MM/yyyy');
+        const formattedDateTimestamp = ctx.selectedDate;
+        this.$emit('uepa', { formattedSelectedDate, formattedDateTimestamp });
+      }
+      this.$emit('update:selectedDateEggs', ctx.selectedDate);
     },
     handleSelectedDate() {
-      if (this.$route.params.id) this.value = localStorage.getItem('editingCargoPackingDate');
-      else {
-        this.value = new Date();
-      }
+      this.value = new Date();
     },
   },
 };

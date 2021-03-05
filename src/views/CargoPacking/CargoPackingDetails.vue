@@ -106,7 +106,7 @@
                     <label-value :values="moneyData" /> <label-value :values="dueDate" class="due-date" />
                   </div>
                 </b-col>
-                <b-col sm="4" class="data">
+                <b-col sm="4" class="data" v-if="!isBillet">
                   <b-row>
                     <b-col>
                       <h5>Bradesco</h5>
@@ -117,6 +117,9 @@
                     </b-col>
                   </b-row>
                   <br />
+                  <h4>Mario Hideki Ikeda</h4>
+                </b-col>
+                <b-col sm="4" class="align-name" v-else>
                   <h4>Mario Hideki Ikeda</h4>
                 </b-col>
               </b-row>
@@ -133,6 +136,7 @@
           <div class="teste">
             <b-button @click="exportToPDF">Exportar para PDF</b-button>
             <b-button @click="handleEdit()">Editar</b-button>
+            <b-button @click="handleDelete()">Deletar</b-button>
           </div>
         </div>
       </b-col>
@@ -174,6 +178,7 @@ export default {
       moneyData: [],
       eggTraysData: [],
       bankData: BANK_DATA,
+      isBillet: false,
     };
   },
   created() {
@@ -181,7 +186,7 @@ export default {
     this.io = io('http://localhost:3333');
   },
   methods: {
-    ...mapActions(['deleteCustomer', 'loadCustomers', 'setCustomerToEdit', 'loadSelectedCargoPacking']),
+    ...mapActions(['deleteCargoPacking', 'loadCargoPackings', 'setCustomerToEdit', 'loadSelectedCargoPacking']),
     handleSubmit() {
       console.log('salvar');
     },
@@ -199,6 +204,7 @@ export default {
     },
     async handleCargoPackingLoading() {
       await this.loadSelectedCargoPacking(this.$route.params.id);
+      this.isBillet = this.getSelectedCargoPacking.cargoPacking.is_billet;
       this.orderItems = this.getSelectedCargoPacking.cargoPacking.order_items;
       this.redEggsList = this.orderItems
         .filter((oI) => oI.egg_details.color === 'Vermelho')
@@ -236,11 +242,11 @@ export default {
         },
         {
           label: 'Nota: ',
-          value: cargoPacking.receipt_number,
+          value: cargoPacking.receipt_number ? cargoPacking.receipt_number : '-',
         },
         {
           label: 'Valor: ',
-          value: `R$ ${cargoPacking.receipt_value}`,
+          value: cargoPacking.receipt_value ? `R$ ${cargoPacking.receipt_value}` : '-',
         },
       ];
 
@@ -257,33 +263,35 @@ export default {
           value: format(parseISO(cargoPacking.due_to), "d 'de' MMMM", { locale: pt }),
         },
       ];
-      (this.salesDate = format(parseISO(cargoPacking.created_at), 'dd/MM/yyyy')),
-        (this.moneyData = [
-          {
-            label: 'Carga: ',
-            value: `R$ ${cargoPackingVD.totalEggsCargoPrice}`,
-          },
-          {
-            label: 'ICMS: ',
-            value: cargoPackingVD.icmsFee !== 0 ? `R$ ${cargoPackingVD.icmsFee}` : '-',
-          },
-          {
-            label: 'Seguro: ',
-            value: cargoPackingVD.insurancePrice === false ? '-' : `R$ ${cargoPackingVD.insurancePrice}`,
-          },
-          {
-            label: 'Embalagens: ',
-            value: this.eggPackages.packagesValue > 0 ? `R$ ${this.eggPackages.packagesValue}` : '-',
-          },
-          {
-            label: 'Fundo rural: ',
-            value: cargoPackingVD.ruralFundFee !== 0 ? `R$ ${cargoPackingVD.ruralFundFee}` : '-',
-          },
-          {
-            label: 'Saldo devedor: ',
-            value: `R$ ${cargoPackingVD.balanceDue.toFixed(2)}`,
-          },
-        ]);
+      this.salesDate = cargoPacking.custom_date
+        ? cargoPacking.custom_date
+        : format(parseISO(cargoPacking.created_at), 'dd/MM/yyyy');
+      this.moneyData = [
+        {
+          label: 'Carga: ',
+          value: `R$ ${cargoPackingVD.totalEggsCargoPrice}`,
+        },
+        {
+          label: 'ICMS: ',
+          value: cargoPackingVD.icmsFee !== 0 ? `R$ ${cargoPackingVD.icmsFee}` : '-',
+        },
+        {
+          label: 'Seguro: ',
+          value: cargoPackingVD.insurancePrice === false ? '-' : `R$ ${cargoPackingVD.insurancePrice}`,
+        },
+        {
+          label: 'Embalagens: ',
+          value: this.eggPackages.packagesValue > 0 ? `R$ ${this.eggPackages.packagesValue}` : '-',
+        },
+        {
+          label: 'Fundo rural: ',
+          value: cargoPackingVD.ruralFundFee !== 0 ? `R$ ${cargoPackingVD.ruralFundFee}` : '-',
+        },
+        {
+          label: 'Saldo devedor: ',
+          value: `R$ ${cargoPackingVD.balanceDue.toFixed(2) - cargoPackingVD.paidAmount}`,
+        },
+      ];
     },
     sendNotification() {
       this.io.emit('msg', {
@@ -293,28 +301,28 @@ export default {
     async handleEdit() {
       this.$router.push({ path: `/cargo-packing-edit/${this.$route.params.id}` });
     },
-    // handleDelete() {
-    //   this.$bvModal
-    //     .msgBoxConfirm('Deseja mesmo excluir este cliente?', {
-    //       centered: true,
-    //       size: 'sm',
-    //       buttonSize: 'sm',
-    //       okTitle: 'Sim',
-    //       cancelTitle: 'Cancelar',
-    //     })
-    //     .then(async (value) => {
-    //       if (value) {
-    //         this.deleteCustomer(this.customer.id);
-    //         await this.loadCustomers();
+    handleDelete() {
+      this.$bvModal
+        .msgBoxConfirm('Deseja mesmo excluir este Romaneio?', {
+          centered: true,
+          size: 'sm',
+          buttonSize: 'sm',
+          okTitle: 'Sim',
+          cancelTitle: 'Cancelar',
+        })
+        .then(async (value) => {
+          if (value) {
+            this.deleteCargoPacking(this.$route.params.id);
+            await this.loadCargoPackings(1);
 
-    //         this.$router.push({ name: 'customers' });
-    //       }
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //       // An error occurred
-    //     });
-    // },
+            this.$router.push({ name: 'home' });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          // An error occurred
+        });
+    },
     sortArr(listToSort) {
       return listToSort.sort((a, b) => {
         return a.price < b.price ? 1 : a.price > b.price ? -1 : 0;
@@ -339,7 +347,10 @@ export default {
       };
     },
     customerName() {
-      return this.getSelectedCargoPacking && `${this.getSelectedCargoPacking.cargoPacking.customer.name}`;
+      return (
+        this.getSelectedCargoPacking.cargoPacking.customer &&
+        `${this.getSelectedCargoPacking.cargoPacking.customer.name}`
+      );
     },
     intermediaryName() {
       return (
@@ -422,6 +433,11 @@ export default {
 }
 .data {
   text-align: center;
+}
+
+.align-name {
+  display: flex;
+  align-self: center;
 }
 
 .align-data {

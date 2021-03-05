@@ -9299,7 +9299,7 @@ selfsigned@^1.10.7:
   resolved "https://registry.yarnpkg.com/selfsigned/-/selfsigned-1.10.7.tgz#da5819fd049d5574f28e88a9bcc6dbc6e6f3906b"
   integrity sha512-8M3wBCzeWIJnQfl43IKwOmC4H/RAp50S8DF60znzjW5GVqTcSe2vWclt7hmYVPkKPlHWOu5EaWOMZ2Y6W8ZXTA==
   dependencies:
-    node-forge "0.10.0"
+    node-forge "0.9.0"
 
 "semver@2 || 3 || 4 || 5", semver@^5.4.1, semver@^5.5, semver@^5.5.0, semver@^5.5.1, semver@^5.6.0:
   version "5.7.1"
@@ -10568,6 +10568,11 @@ uuid@^3.3.2, uuid@^3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
+
+v-mask@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/v-mask/-/v-mask-2.2.4.tgz#d7452982c8774478c0475f771e8d1367cb2b04e0"
+  integrity sha512-d78Rhpz/cCwLsSJ50UJ+volzylU6Iq3O4La1Aj3WTYCM0txfL9chgnCC6FHwNKqfHHtMEjdDh7gmpnsPz6tO6A==
 
 v8-compile-cache@^2.0.3:
   version "2.1.1"

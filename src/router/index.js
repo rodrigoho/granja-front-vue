@@ -102,7 +102,15 @@ const routes = [
     },
   },
   {
-    path: '/customers/customer-details',
+    path: '/customers/edit/:id',
+    name: 'customerEdit',
+    component: () => import(/* webpackChunkName: "customerEditing" */ '../views/Customer/NewCustomer.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/customers/customer-details/:id',
     name: 'customerDetails',
     component: () => import(/* webpackChunkName: "customerDetails" */ '../views/Customer/CustomerDetails.vue'),
     meta: {

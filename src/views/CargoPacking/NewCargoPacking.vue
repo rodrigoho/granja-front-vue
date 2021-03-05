@@ -7,315 +7,401 @@
       :shouldShowButton="true"
     />
     <b-container fluid>
-      <b-card align-h="center" class="align-cards">
-        <b-row class="flex align-bottom">
-          <b-col sm="6">
-            <b-form-select
-              id="input-3"
-              v-model="selectedIntermediaryId"
-              :options="intermediariesList"
-              @change="handleIntermediarySelect"
-              size="sm"
-              class="align-customer-select"
-            >
-              <template v-slot:first>
-                <b-form-select-option :value="null" disabled>Selecione o intermediário</b-form-select-option>
-              </template>
-            </b-form-select>
-          </b-col>
-        </b-row>
-        <b-row class="flex align-bottom">
-          <b-col sm="6">
-            <b-form-select
-              id="input-3"
-              v-model="selectedCustomerId"
-              :options="customersList"
-              @change="handleCustomerSelect"
-              size="sm"
-              class="align-customer-select"
-            >
-              <template v-slot:first>
-                <b-form-select-option :value="null" disabled>Selecione o cliente</b-form-select-option>
-              </template>
-            </b-form-select>
-          </b-col>
-          <b-col>
-            <date-picker :selectedDate.sync="selectedDate" class="align-due-date" />
-          </b-col>
-        </b-row>
-        <!-- Eggs -->
-        <div class="eggs">
-          <b-row>
-            <b-col offset="1">
-              <div class="white-eggs">
-                <b-col offset="3">
-                  <h5>Branco</h5>
+      <b-row class="flex-cargo-packing">
+        <div cols="5" offset="1">
+          <b-card align-h="center" class="align-cards">
+            <div class="align-customer-select">
+              <b-row class="flex align-bottom">
+                <b-col sm="6">
+                  <b-form-select
+                    id="input-3"
+                    v-model="selectedIntermediaryId"
+                    :options="intermediariesList"
+                    @change="handleIntermediarySelect"
+                    size="sm"
+                  >
+                    <template v-slot:first>
+                      <b-form-select-option :value="null" disabled>Selecione o intermediário</b-form-select-option>
+                    </template>
+                  </b-form-select>
                 </b-col>
-                <b-row>
-                  <b-col>Tipo</b-col>
-                  <b-col offset="1" sm="3">Qtd</b-col>
-                  <b-col class="align-disc">Desc</b-col>
-                </b-row>
-                <b-row>
-                  <b-col>Jumbo</b-col>
-                  <b-col sm="3">
-                    <b-input v-model="wJumbo.amount" class="input-size" />
-                  </b-col>
-                  <b-col>
-                    <b-input v-model="wJumbo.discount" class="input-size" />
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col>Extra</b-col>
-                  <b-col sm="3">
-                    <b-input v-model="wExtra.amount" class="input-size" />
-                  </b-col>
-                  <b-col>
-                    <b-input v-model="wExtra.discount" class="input-size" />
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col>Grande</b-col>
-                  <b-col sm="3">
-                    <b-input v-model="wGrande.amount" class="input-size" />
-                  </b-col>
-                  <b-col>
-                    <b-input v-model="wGrande.discount" class="input-size" />
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col>Médio</b-col>
-                  <b-col sm="3">
-                    <b-input v-model="wMedio.amount" class="input-size" />
-                  </b-col>
-                  <b-col>
-                    <b-input v-model="wMedio.discount" class="input-size" />
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col>Pequeno</b-col>
-                  <b-col sm="3">
-                    <b-input v-model="wPequeno.amount" class="input-size" />
-                  </b-col>
-                  <b-col>
-                    <b-input v-model="wPequeno.discount" class="input-size" />
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col>Industrial</b-col>
-                  <b-col sm="3">
-                    <b-input v-model="wIndustrial.amount" class="input-size" />
-                  </b-col>
-                  <b-col>
-                    <b-input v-model="wIndustrial.discount" class="input-size" />
-                  </b-col>
-                </b-row>
-              </div>
-            </b-col>
-            <b-col>
-              <div class="red-eggs">
-                <b-col offset="3">
-                  <h5>Vermelho</h5>
+              </b-row>
+              <b-row class="flex align-bottom">
+                <b-col sm="6">
+                  <b-form-select
+                    id="input-3"
+                    v-model="selectedCustomerId"
+                    :options="customersList"
+                    @change="handleCustomerSelect"
+                    size="sm"
+                  >
+                    <template v-slot:first>
+                      <b-form-select-option :value="null" disabled>Selecione o cliente</b-form-select-option>
+                    </template>
+                  </b-form-select>
                 </b-col>
-                <b-row>
-                  <b-col>Tipo</b-col>
-                  <b-col offset="1" sm="3">Qtd</b-col>
-                  <b-col class="align-disc">Desc</b-col>
-                </b-row>
-                <b-row>
-                  <b-col>Jumbo</b-col>
-                  <b-col sm="3">
-                    <b-input v-model="rJumbo.amount" class="input-size" />
-                  </b-col>
-                  <b-col>
-                    <b-input v-model="rJumbo.discount" class="input-size" />
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col>Extra</b-col>
-                  <b-col sm="3">
-                    <b-input v-model="rExtra.amount" class="input-size" />
-                  </b-col>
-                  <b-col>
-                    <b-input v-model="rExtra.discount" class="input-size" />
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col>Grande</b-col>
-                  <b-col sm="3">
-                    <b-input v-model="rGrande.amount" class="input-size" />
-                  </b-col>
-                  <b-col>
-                    <b-input v-model="rGrande.discount" class="input-size" />
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col>Médio</b-col>
-                  <b-col sm="3">
-                    <b-input v-model="rMedio.amount" class="input-size" />
-                  </b-col>
-                  <b-col>
-                    <b-input v-model="rMedio.discount" class="input-size" />
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col>Pequeno</b-col>
-                  <b-col sm="3">
-                    <b-input v-model="rPequeno.amount" class="input-size" />
-                  </b-col>
-                  <b-col>
-                    <b-input v-model="rPequeno.discount" class="input-size" />
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col>Industrial</b-col>
-                  <b-col sm="3">
-                    <b-input v-model="rIndustrial.amount" class="input-size" />
-                  </b-col>
-                  <b-col>
-                    <b-input v-model="rIndustrial.discount" class="input-size" />
-                  </b-col>
-                </b-row>
+                <b-col>
+                  <date-picker :selectedDate.sync="selectedDateCP" class="align-due-date-header" />
+                </b-col>
+              </b-row>
+            </div>
+            <!-- Eggs -->
+            <div class="eggs">
+              <b-row>
+                <b-col offset="1">
+                  <div class="white-eggs" :key="this.form.customerName">
+                    <b-col offset="3">
+                      <h5>Branco</h5>
+                    </b-col>
+                    <b-row>
+                      <b-col>Tipo</b-col>
+                      <b-col offset="1" sm="3">Qtd</b-col>
+                      <b-col class="align-disc">Desc</b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>Jumbo</b-col>
+                      <b-col sm="3">
+                        <b-input type="number" v-model="eggsCargo[0].amount" class="input-size" />
+                      </b-col>
+                      <b-col>
+                        <b-input v-model="eggsCargo[0].discount" class="input-size" />
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>Extra</b-col>
+                      <b-col sm="3">
+                        <b-input v-model="eggsCargo[1].amount" class="input-size" />
+                      </b-col>
+                      <b-col>
+                        <b-input v-model="eggsCargo[1].discount" class="input-size" />
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>Grande</b-col>
+                      <b-col sm="3">
+                        <b-input type="number" v-model="eggsCargo[2].amount" class="input-size" />
+                      </b-col>
+                      <b-col>
+                        <b-input v-model="eggsCargo[2].discount" class="input-size" />
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>Médio</b-col>
+                      <b-col sm="3">
+                        <b-input type="number" v-model="eggsCargo[3].amount" class="input-size" />
+                      </b-col>
+                      <b-col>
+                        <b-input v-model="eggsCargo[3].discount" class="input-size" />
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>Pequeno</b-col>
+                      <b-col sm="3">
+                        <b-input type="number" v-model="eggsCargo[4].amount" class="input-size" />
+                      </b-col>
+                      <b-col>
+                        <b-input v-model="eggsCargo[4].discount" class="input-size" />
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>Industrial</b-col>
+                      <b-col sm="3">
+                        <b-input type="number" v-model="eggsCargo[5].amount" class="input-size" />
+                      </b-col>
+                      <b-col>
+                        <b-input v-model="eggsCargo[5].discount" class="input-size" />
+                      </b-col>
+                    </b-row>
+                  </div>
+                </b-col>
+                <b-col>
+                  <div class="red-eggs">
+                    <b-col offset="3">
+                      <h5>Vermelho</h5>
+                    </b-col>
+                    <b-row>
+                      <b-col>Tipo</b-col>
+                      <b-col offset="1" sm="3">Qtd</b-col>
+                      <b-col class="align-disc">Desc</b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>Jumbo</b-col>
+                      <b-col sm="3">
+                        <b-input type="number" v-model="eggsCargo[6].amount" class="input-size" />
+                      </b-col>
+                      <b-col>
+                        <b-input v-model="eggsCargo[6].discount" class="input-size" />
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>Extra</b-col>
+                      <b-col sm="3">
+                        <b-input type="number" v-model="eggsCargo[7].amount" class="input-size" />
+                      </b-col>
+                      <b-col>
+                        <b-input v-model="eggsCargo[7].discount" class="input-size" />
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>Grande</b-col>
+                      <b-col sm="3">
+                        <b-input type="number" v-model="eggsCargo[8].amount" class="input-size" />
+                      </b-col>
+                      <b-col>
+                        <b-input v-model="eggsCargo[8].discount" class="input-size" />
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>Médio</b-col>
+                      <b-col sm="3">
+                        <b-input type="number" v-model="eggsCargo[9].amount" class="input-size" />
+                      </b-col>
+                      <b-col>
+                        <b-input v-model="eggsCargo[9].discount" class="input-size" />
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>Pequeno</b-col>
+                      <b-col sm="3">
+                        <b-input type="number" v-model="eggsCargo[10].amount" class="input-size" />
+                      </b-col>
+                      <b-col>
+                        <b-input v-model="eggsCargo[10].discount" class="input-size" />
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>Industrial</b-col>
+                      <b-col sm="3">
+                        <b-input type="number" v-model="eggsCargo[11].amount" class="input-size" />
+                      </b-col>
+                      <b-col>
+                        <b-input v-model="eggsCargo[11].discount" class="input-size" />
+                      </b-col>
+                    </b-row>
+                  </div>
+                </b-col>
+              </b-row>
+            </div>
+            <!-- CargoPacking form -->
+            <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+              <b-row class="style-inputs">
+                <!-- Receipt number -->
+                <b-col>
+                  <b-form-group
+                    id="input-group-receipt-number"
+                    label="Numero da nota:"
+                    label-for="input-receipt-number"
+                  >
+                    <b-form-input
+                      id="input-receipt-number"
+                      type="number"
+                      v-model="form.receiptNumber"
+                      size="sm"
+                      placeholder="Digite o numero"
+                    ></b-form-input>
+                  </b-form-group>
+                </b-col>
+
+                <!-- Receipt value -->
+                <b-col>
+                  <b-form-group id="input-group-receipt-value" label="Valor da nota:" label-for="input-receipt-value">
+                    <b-form-input
+                      id="input-receipt-value"
+                      v-model="form.receiptValue"
+                      type="number"
+                      size="sm"
+                      placeholder="Digite o valor"
+                    ></b-form-input>
+                  </b-form-group>
+                </b-col>
+
+                <b-col>
+                  <b-form-group id="input-group-paid-amount" label="Valor pago:" label-for="input-paid-amount">
+                    <b-form-input
+                      id="input-paid-amount"
+                      v-model="form.paidAmount"
+                      type="number"
+                      size="sm"
+                      placeholder="Digite o valor"
+                    ></b-form-input>
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row class="style-inputs">
+                <b-col class="align-data" sm="2">
+                  <b-form-group id="input-group-insurance" label-for="input-insurance">
+                    <b-form-checkbox v-model="form.hasInsurance" :value="true" :unchecked-value="false"
+                      >Seguro</b-form-checkbox
+                    >
+                  </b-form-group>
+                </b-col>
+                <b-col sm="2">
+                  <b-form-group id="input-group-paid" label-for="input-paid">
+                    <b-form-checkbox v-model="form.isPaid" :value="true" :unchecked-value="false">Pago</b-form-checkbox>
+                  </b-form-group>
+                </b-col>
+                <b-col sm="2">
+                  <b-form-group id="input-group-icms" label-for="input-icms">
+                    <b-form-checkbox
+                      v-model="form.hasICMS"
+                      @change="handleIcmsClick"
+                      :value="true"
+                      :unchecked-value="false"
+                      >ICMS</b-form-checkbox
+                    >
+                  </b-form-group>
+                </b-col>
+                <b-col sm="2">
+                  <b-form-group id="input-group-rural-fund" label-for="input-rural-fund">
+                    <b-form-checkbox
+                      v-model="form.hasRuralFund"
+                      @change="handleRuralFundClick"
+                      :value="true"
+                      :unchecked-value="false"
+                      >F. Rural</b-form-checkbox
+                    >
+                  </b-form-group>
+                </b-col>
+                <b-col sm="2">
+                  <b-form-group id="input-is-billet" label-for="input-is-billet">
+                    <b-form-checkbox v-model="form.isBillet" :value="true" :unchecked-value="false"
+                      >Boleto</b-form-checkbox
+                    >
+                  </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row class="style-inputs">
+                <!-- EggTray -->
+                <b-col>
+                  <b-row>
+                    <b-col offset="4">
+                      <h5>Bandejas</h5>
+                    </b-col>
+                  </b-row>
+                  <b-row class="flex-row">
+                    <!-- Egg tray price -->
+                    <b-col>
+                      <b-form-group id="input-group-egg-tray-price" label="Preço:" label-for="input-egg-tray-price">
+                        <b-form-input
+                          id="input-egg-tray-price"
+                          type="number"
+                          step="0.01"
+                          v-model="form.eggTrayPrice"
+                          size="sm"
+                        ></b-form-input>
+                      </b-form-group>
+                    </b-col>
+
+                    <!-- Egg tray amount -->
+                    <b-col>
+                      <b-form-group
+                        id="input-group-egg-tray-amount"
+                        label="Quantidade:"
+                        label-for="input-egg-tray-amount"
+                      >
+                        <b-form-input
+                          id="input-egg-tray-amount"
+                          v-model="form.eggTrayAmount"
+                          type="number"
+                          size="sm"
+                        ></b-form-input>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                </b-col>
+                <!-- Egg box price -->
+                <b-col>
+                  <b-row>
+                    <b-col offset="4">
+                      <h5>Caixas</h5>
+                    </b-col>
+                  </b-row>
+                  <b-row class="flex-row">
+                    <b-col>
+                      <b-form-group id="input-group-egg-box-price" label="Preço:" label-for="input-egg-box-price">
+                        <b-form-input
+                          id="input-egg-box-price"
+                          type="number"
+                          v-model="form.eggBoxPrice"
+                          step="0.01"
+                          size="sm"
+                        ></b-form-input>
+                      </b-form-group>
+                    </b-col>
+
+                    <!-- Customer CNPJ -->
+                    <b-col>
+                      <b-form-group
+                        id="input-group-egg-box-amount"
+                        label="Quantidade:"
+                        label-for="input-egg-box-amount"
+                      >
+                        <b-form-input
+                          id="input-egg-box-amount"
+                          v-model="form.eggBoxAmount"
+                          type="text"
+                          size="sm"
+                        ></b-form-input>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                </b-col>
+              </b-row>
+
+              <div class="form-buttons">
+                <b-button type="reset" variant="danger" size="sm">Limpar</b-button>
+                <b-button type="submit" variant="primary" size="sm">Salvar</b-button>
               </div>
-            </b-col>
-          </b-row>
+            </b-form>
+          </b-card>
         </div>
-        <!-- CargoPacking form -->
-        <b-form @submit="onSubmit" @reset="onReset" v-if="show">
-          <b-row class="style-inputs">
-            <!-- Receipt number -->
-            <b-col>
-              <b-form-group id="input-group-receipt-number" label="Numero da nota:" label-for="input-receipt-number">
-                <b-form-input
-                  id="input-receipt-number"
-                  type="number"
-                  v-model="form.receiptNumber"
-                  required
-                  size="sm"
-                  placeholder="Digite o numero da nota"
-                ></b-form-input>
-              </b-form-group>
-            </b-col>
+        <div>
+          <b-card class="style-eggs-details">
+            <b-row>
+              <date-picker-eggs @uepa="handleEggPricesSelect" :selectedDateEggs.sync="selectedDateEggs" />
+              <eggs-list :opa="'opa'" :eggsColor="'white'" :cardTitle="'Branco'" :isEditable="false" class="bg-white" />
 
-            <!-- Receipt value -->
-            <b-col>
-              <b-form-group id="input-group-receipt-value" label="Valor da nota:" label-for="input-receipt-value">
-                <b-form-input
-                  id="input-receipt-value"
-                  v-model="form.receiptValue"
-                  type="number"
-                  required
-                  size="sm"
-                  placeholder="Digite o valor da nota"
-                ></b-form-input>
-              </b-form-group>
-            </b-col>
-            <b-col class="align-data" sm="2">
-              <b-form-group id="input-group-insurance" label="Seguro:" label-for="input-insurance" class="same">
-                <b-form-checkbox v-model="form.hasInsurance" :value="true" :unchecked-value="false"
-                  >Sim</b-form-checkbox
+              <div class="style-red-egg-tax">
+                <b-form-group id="input-group-receipt-value" label="Taxa ovo vermelho:" label-for="input-receipt-value">
+                  <b-form-input
+                    id="input-receipt-value"
+                    v-model="form.redEggsTax"
+                    type="number"
+                    size="sm"
+                    placeholder="Digite o valor"
+                  ></b-form-input>
+                </b-form-group>
+                <b-button variant="primary" @click="handleRedEggsTaxEdit" size="sm" class="style-save-red-egg-tax"
+                  >Salvar</b-button
                 >
-              </b-form-group>
-            </b-col>
-            <b-col sm="2">
-              <b-form-group id="input-group-paid" label="Pago:" label-for="input-paid" class="same">
-                <b-form-checkbox v-model="form.isPaid" :value="true" :unchecked-value="false">Sim</b-form-checkbox>
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <b-row class="style-inputs">
-            <!-- EggTray -->
-            <b-col>
-              <b-row>
-                <b-col offset="4">
-                  <h5>Bandejas</h5>
-                </b-col>
-              </b-row>
-              <b-row class="flex-row">
-                <!-- Egg tray price -->
-                <b-col>
-                  <b-form-group id="input-group-egg-tray-price" label="Preço:" label-for="input-egg-tray-price">
-                    <b-form-input
-                      id="input-egg-tray-price"
-                      type="number"
-                      step="0.01"
-                      v-model="form.eggTrayPrice"
-                      size="sm"
-                    ></b-form-input>
-                  </b-form-group>
-                </b-col>
-
-                <!-- Egg tray amount -->
-                <b-col>
-                  <b-form-group id="input-group-egg-tray-amount" label="Quantidade:" label-for="input-egg-tray-amount">
-                    <b-form-input
-                      id="input-egg-tray-amount"
-                      v-model="form.eggTrayAmount"
-                      type="number"
-                      size="sm"
-                    ></b-form-input>
-                  </b-form-group>
-                </b-col>
-              </b-row>
-            </b-col>
-            <!-- Egg box price -->
-            <b-col>
-              <b-row>
-                <b-col offset="4">
-                  <h5>Caixas</h5>
-                </b-col>
-              </b-row>
-              <b-row class="flex-row">
-                <b-col>
-                  <b-form-group id="input-group-egg-box-price" label="Preço:" label-for="input-egg-box-price">
-                    <b-form-input
-                      id="input-egg-box-price"
-                      type="number"
-                      v-model="form.eggBoxPrice"
-                      step="0.01"
-                      size="sm"
-                    ></b-form-input>
-                  </b-form-group>
-                </b-col>
-
-                <!-- Customer CNPJ -->
-                <b-col>
-                  <b-form-group id="input-group-egg-box-amount" label="Quantidade:" label-for="input-egg-box-amount">
-                    <b-form-input
-                      id="input-egg-box-amount"
-                      v-model="form.eggBoxAmount"
-                      type="text"
-                      size="sm"
-                    ></b-form-input>
-                  </b-form-group>
-                </b-col>
-              </b-row>
-            </b-col>
-          </b-row>
-
-          <div class="form-buttons">
-            <b-button type="reset" variant="danger" size="sm">Limpar</b-button>
-            <b-button type="submit" variant="primary" size="sm">Salvar</b-button>
-          </div>
-        </b-form>
-      </b-card>
+              </div>
+              <eggs-list :eggsColor="'red'" :cardTitle="'Vermelho'" class="bg-white" />
+            </b-row>
+          </b-card>
+        </div>
+      </b-row>
     </b-container>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
 import RHeader from '@/components/RHeader.vue';
 import { mapActions, mapGetters } from 'vuex';
+import EggsList from '@/components/EggsList.vue';
 import DatePicker from '@/components/DatePicker.vue';
+import DatePickerEggs from '@/components/DatePickerEggs.vue';
+import { format, parseISO } from 'date-fns';
 import io from 'socket.io-client';
-// import { parse } from 'date-fns';
+import { eggPriceMixin } from '@/mixins/eggPriceMixin.js';
 
 export default {
   name: 'NewCargoPacking',
+  mixins: [eggPriceMixin],
   components: {
     RHeader,
     DatePicker,
+    DatePickerEggs,
+    EggsList,
   },
   data() {
     return {
@@ -326,116 +412,178 @@ export default {
         ruralFundTax: 0,
         customerName: '',
         icmsTax: 0,
+        hasICMS: false,
+        paidAmount: null,
+        hasRuralFund: false,
         eggTrayAmount: 0,
         eggTrayPrice: 0,
         eggBoxAmount: 0,
         eggBoxPrice: 0,
-        receiptValue: 0,
-        receiptNumber: 0,
+        receiptValue: null,
+        receiptNumber: null,
+        redEggsTax: 0,
+        isBillet: false,
       },
-      eggsCargo: [],
-      rJumbo: {
-        color: 'Vermelho',
-        size: 'Jumbo',
-        amount: 0,
-        discount: 0,
-      },
-      rExtra: {
-        color: 'Vermelho',
-        size: 'Extra',
-        amount: 0,
-        discount: 0,
-      },
-      rGrande: {
-        color: 'Vermelho',
-        size: 'Grande',
-        amount: 0,
-        discount: 0,
-      },
-      rMedio: {
-        color: 'Vermelho',
-        size: 'Médio',
-        amount: 0,
-        discount: 0,
-      },
-      rPequeno: {
-        color: 'Vermelho',
-        size: 'Pequeno',
-        amount: 0,
-        discount: 0,
-      },
-      rIndustrial: {
-        color: 'Vermelho',
-        size: 'Industrial',
-        amount: 0,
-        discount: 0,
-      },
-      wJumbo: {
-        color: 'Branco',
-        size: 'Jumbo',
-        amount: 0,
-        discount: 0,
-      },
-      wExtra: {
-        color: 'Branco',
-        size: 'Extra',
-        amount: 0,
-        discount: 0,
-      },
-      wGrande: {
-        color: 'Branco',
-        size: 'Grande',
-        amount: 0,
-        discount: 0,
-      },
-      wMedio: {
-        color: 'Branco',
-        size: 'Médio',
-        amount: 0,
-        discount: 0,
-      },
-      wPequeno: {
-        color: 'Branco',
-        size: 'Pequeno',
-        amount: 0,
-        discount: 0,
-      },
-      wIndustrial: {
-        color: 'Branco',
-        size: 'Industrial',
-        amount: 0,
-        discount: 0,
-      },
+      eggsCargo: [
+        {
+          eggId: 1,
+          amount: 0,
+          eggPrice: 0,
+          discount: 0,
+        },
+        {
+          eggId: 2,
+          amount: 0,
+          eggPrice: 0,
+          discount: 0,
+        },
+        {
+          eggId: 3,
+          amount: 0,
+          eggPrice: 0,
+          discount: 0,
+        },
+        {
+          eggId: 4,
+          amount: 0,
+          eggPrice: 0,
+          discount: 0,
+        },
+        {
+          eggId: 5,
+          amount: 0,
+          eggPrice: 0,
+          discount: 0,
+        },
+        {
+          eggId: 6,
+          amount: 0,
+          eggPrice: 0,
+          discount: 0,
+        },
+        {
+          eggId: 7,
+          amount: 0,
+          eggPrice: 0,
+          discount: 0,
+        },
+        {
+          eggId: 8,
+          amount: 0,
+          eggPrice: 0,
+          discount: 0,
+        },
+        {
+          eggId: 9,
+          amount: 0,
+          eggPrice: 0,
+          discount: 0,
+        },
+        {
+          eggId: 10,
+          amount: 0,
+          eggPrice: 0,
+          discount: 0,
+        },
+        {
+          eggId: 11,
+          amount: 0,
+          eggPrice: 0,
+          discount: 0,
+        },
+        {
+          eggId: 12,
+          amount: 0,
+          eggPrice: 0,
+          discount: 0,
+        },
+      ],
+      customDateTimestamp: null,
       customersList: [],
       intermediariesList: [],
       customer: null,
       selectedIntermediaryId: null,
       selectedCustomerId: null,
-      selectedDate: null,
+      selectedDateCP: new Date(),
+      selectedDateEggs: null,
+      customDate: null,
       show: true,
     };
   },
   mounted() {
-    // const cargoPackingId = this.$route.params.id;
     this.io = io('http://localhost:3333');
     this.$route.params.id ? this.handleCargoPackingLoading(this.$route.params.id) : this.handleListLoading();
+    this.loadAdditionalFee();
+    this.handleEggsLoading();
   },
   methods: {
     ...mapActions([
-      'loadCustomers',
+      'loadAdditionalFee',
+      'loadAllCustomers',
       'loadSelectedCustomer',
       'loadSelectedIntermediary',
       'createCargoPacking',
       'loadCargoPackingToEdit',
       'updateCargoPacking',
       'loadIntermediaries',
+      'loadSelectedEggsPrices',
+      'loadEggsListComplete',
+      'updateAdditionalFee',
     ]),
+
+    async handleEggsLoading() {
+      await this.loadEggsListComplete();
+      this.form.redEggsTax = this.getAdditionalFee.current_fee_price;
+      this.handleEggPrices();
+    },
+    handleIcmsClick(payload) {
+      if (payload) {
+        this.form.icmsTax = this.customer.icms_tax;
+        this.form.hasICMS = true;
+      } else {
+        this.form.icmsTax = 0;
+      }
+    },
+    handleRuralFundClick(payload) {
+      if (payload) {
+        this.form.ruralFundTax = this.customer.rural_fund_tax;
+        this.form.hasRuralFund = true;
+      } else {
+        this.form.ruralFundTax = 0;
+      }
+    },
+    async handleRedEggsTaxEdit() {
+      const newRedEggsTax = {
+        ...this.getAdditionalFee,
+        current_fee_price: this.form.redEggsTax,
+      };
+
+      await this.updateAdditionalFee(newRedEggsTax);
+      this.updateRegEggs(this.form.redEggsTax);
+      this.$bvToast.toast(`R$ ${this.form.redEggsTax}`, {
+        title: 'Taxa dos ovos vermelhos atualizada',
+        autoHideDelay: 5000,
+        variant: 'success',
+      });
+    },
+    async handleEggPricesSelect(selectedDates) {
+      this.customDateTimestamp = selectedDates.formattedDateTimestamp;
+      if (this.selectedDateEggs) {
+        const objectToSend = {
+          selected_date: selectedDates.formattedSelectedDate,
+        };
+
+        await this.loadSelectedEggsPrices(objectToSend);
+        this.handleEggPrices();
+        this.customDate = selectedDates.formattedSelectedDate;
+      }
+    },
     async handleListLoading() {
-      await this.loadCustomers();
+      await this.loadAllCustomers();
       await this.loadIntermediaries();
-      const customersMap = [...this.getCustomers.map((c) => ({ value: c.id, text: `${c.name} - ${c.email}` }))];
+      const customersMap = [...this.getAllCustomers.map((c) => ({ value: c.id, text: `${c.name} - ${c.email}` }))];
       const intermediariesMap = [
-        ...this.getIntermediaries.map((c) => ({ value: c.id, text: `${c.name} - ${c.email}` })),
+        ...this.getIntermediaries.rows.map((c) => ({ value: c.id, text: `${c.name} - ${c.email}` })),
       ];
 
       this.customersList = customersMap;
@@ -451,75 +599,47 @@ export default {
         receipt_number: receiptNumber,
         receipt_value: receiptValue,
         has_insurance_fee: hasInsuranceFee,
+        icms_tax: icmsTax,
         is_paid: isPaid,
         egg_retail_box_amount: eggBoxAmount,
         egg_retail_box_price: eggBoxPrice,
         egg_tray_amount: eggTrayAmount,
         egg_tray_price: eggTrayPrice,
+        is_billet: isBillet,
       } = this.getSelectedCargoPacking.cargoPacking;
       const form = this.form;
       const test = this.customersList.find((customer) => customer.value === customerId);
       orderItems.forEach((oI) => {
-        const eggColor = oI.egg_details.color;
-        const eggSize = oI.egg_details.size;
+        const indexToUpdate = this.eggsCargo.findIndex((egg) => egg.eggId === oI.egg_details.id);
         const amount = oI.amount;
         const discount = oI.discount;
-        if (eggColor === 'Branco') {
-          if (eggSize === 'Jumbo') {
-            this.wJumbo.amount = amount;
-            this.wJumbo.discount = discount;
-          } else if (eggSize === 'Extra') {
-            this.wExtra.amount = amount;
-            this.wExtra.discount = discount;
-          } else if (eggSize === 'Grande') {
-            this.wGrande.amount = amount;
-            this.wGrande.discount = discount;
-          } else if (eggSize === 'Médio') {
-            this.wMedio.amount = amount;
-            this.wMedio.discount = discount;
-          } else if (eggSize === 'Pequeno') {
-            this.wPequeno.amount = amount;
-            this.wPequeno.discount = discount;
-          } else if (eggSize === 'Industrial') {
-            this.wIndustrial.amount = amount;
-            this.wIndustrial.discount = discount;
-          }
-        } else {
-          if (eggSize === 'Jumbo') {
-            this.rJumbo.amount = amount;
-            this.rJumbo.discount = discount;
-          } else if (eggSize === 'Extra') {
-            this.rExtra.amount = amount;
-            this.rExtra.discount = discount;
-          } else if (eggSize === 'Grande') {
-            this.rGrande.amount = amount;
-            this.rGrande.discount = discount;
-          } else if (eggSize === 'Médio') {
-            this.rMedio.amount = amount;
-            this.rMedio.discount = discount;
-          } else if (eggSize === 'Pequeno') {
-            this.rPequeno.amount = amount;
-            this.rPequeno.discount = discount;
-          } else if (eggSize === 'Industrial') {
-            this.rIndustrial.amount = amount;
-            this.rIndustrial.discount = discount;
-          }
-        }
+        this.eggsCargo[indexToUpdate] = {
+          ...this.eggsCargo[indexToUpdate],
+          amount: amount,
+          discount: discount,
+        };
       });
 
       this.selectedCustomerId = test.value;
-      this.selectedDate = dueTo;
+      this.selectedDateCP = dueTo;
       form.receiptNumber = receiptNumber;
       form.receiptValue = receiptValue;
       form.hasInsurance = hasInsuranceFee;
+      form.isBillet = isBillet;
+
       form.isPaid = isPaid;
+      form.hasICMS = icmsTax ? true : false;
       form.eggTrayPrice = eggTrayPrice;
       form.eggTrayAmount = eggTrayAmount;
       form.eggBoxPrice = eggBoxPrice;
       form.eggBoxAmount = eggBoxAmount;
       localStorage.setItem('editingCargoPackingDate', dueTo);
     },
-
+    sortArr(listToSort) {
+      return listToSort.sort((a, b) => {
+        return a.price < b.price ? 1 : a.price > b.price ? -1 : 0;
+      });
+    },
     async handleCustomerSelect() {
       await this.loadSelectedCustomer(this.selectedCustomerId);
       const customer = this.getSelectedCustomer;
@@ -529,51 +649,46 @@ export default {
       this.form.customerEmail = customer.email;
       this.form.discount = customer.discount;
       this.form.ruralFundTax = customer.rural_fund_tax;
-      this.form.icmsTax = customer.icms_tax;
-      this.wJumbo.discount = discount;
-      this.wExtra.discount = discount;
-      this.wGrande.discount = discount;
-      this.wMedio.discount = discount;
-      this.wPequeno.discount = discount;
-      this.wIndustrial.discount = discount;
-      // this.rJumbo.discount = discount;
-      // this.rExtra.discount = discount;
-      // this.rGrande.discount = discount;
-      // this.rMedio.discount = discount;
-      // this.rPequeno.discount = discount;
-      // this.rIndustrial.discount = discount;
+      this.eggsCargo[0].discount = discount;
+      this.eggsCargo[1].discount = discount;
+      this.eggsCargo[2].discount = discount;
+      this.eggsCargo[3].discount = discount;
+      this.eggsCargo[4].discount = discount;
+      this.eggsCargo[5].discount = discount;
+      this.handleEggPrices();
     },
+
+    handleEggPrices() {
+      const eggsList = this.getEggsList.length && this.getEggsList;
+      this.eggsCargo.forEach((eggs, idx) => {
+        const eggPrice = eggsList.length && eggsList.find((egg) => egg.id === this.eggsCargo[idx].eggId);
+        this.eggsCargo[idx] = {
+          ...this.eggsCargo[idx],
+          eggPrice: eggPrice.price,
+        };
+      });
+    },
+
     async handleIntermediarySelect(intermediaryId) {
-      console.log(intermediaryId);
       await this.loadSelectedIntermediary(intermediaryId);
     },
     async onSubmit(evt) {
       evt.preventDefault();
-      const eggsCargo = [
-        this.wJumbo,
-        this.wExtra,
-        this.wGrande,
-        this.wMedio,
-        this.wPequeno,
-        this.wIndustrial,
-        this.rJumbo,
-        this.rExtra,
-        this.rGrande,
-        this.rMedio,
-        this.rPequeno,
-        this.rIndustrial,
-      ];
 
       const cargoPacking = {
-        eggs_cargo: eggsCargo,
+        eggs_cargo: this.eggsCargo,
         is_paid: this.form.isPaid,
-        due_to: this.selectedDate,
+        custom_date: this.customDate || format(new Date(), 'dd/MM/yyyy'),
+        custom_date_timestamp: this.customDateTimestamp || new Date(),
+        due_to: this.selectedDateCP,
         has_insurance_fee: this.form.hasInsurance,
         customer_id: this.selectedCustomerId,
         intermediary_id: this.selectedIntermediaryId,
         icms_tax: this.form.icmsTax,
         created_by_user_id: parseInt(localStorage.getItem('userId')),
         updated_by_user_id: null,
+        paid_amount: this.form.paidAmount,
+        is_billet: this.form.isBillet,
         receipt_value: this.form.receiptValue,
         receipt_number: this.form.receiptNumber,
         rural_fund_tax: this.form.ruralFundTax,
@@ -583,10 +698,14 @@ export default {
         egg_retail_box_price: this.form.eggBoxPrice,
       };
 
-      this.$route.name === 'newCargoPacking'
-        ? await this.createCargoPacking(cargoPacking)
-        : this.handleUpdate(cargoPacking);
-      this.$router.push({ name: 'home' });
+      if (this.$route.name === 'newCargoPacking') {
+        let res = await this.createCargoPacking(cargoPacking);
+        const cargoPackingId = res.data.id;
+        this.$router.push({ path: `/cargo-packing-details/${cargoPackingId}` });
+      } else {
+        this.handleUpdate(cargoPacking);
+        this.$router.push({ path: `/cargo-packing-details/${this.$route.params.id}` });
+      }
     },
     async handleUpdate(cargoPacking) {
       await this.updateCargoPacking({
@@ -614,13 +733,18 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'getCustomers',
+      'getAllCustomers',
       'getSelectedCustomer',
       'getCargoPackings',
       'getRedEggsList',
       'getSelectedCargoPacking',
       'getIntermediaries',
+      'getEggsList',
+      'getAdditionalFee',
     ]),
+    testeDate() {
+      return parseISO(this.customDate);
+    },
   },
 };
 </script>
@@ -634,6 +758,39 @@ export default {
   margin: 50px auto;
   width: 800px;
 }
+
+.style-eggs-details {
+  position: relative;
+  top: 42px;
+  display: flex;
+  background: #fff;
+  margin: 50px auto;
+  width: 350px;
+}
+
+.style-red-egg-tax {
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  .style-save-red-egg-tax {
+    left: 5px;
+    position: relative;
+    top: 32px;
+    height: 30px;
+  }
+}
+
+.flex-cargo-packing {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.bg-white {
+  margin: auto;
+  padding-left: 15px;
+}
+
 .align-bottom {
   margin-bottom: 15px;
 }
@@ -659,10 +816,6 @@ export default {
   .same + .same {
     margin-left: 15px;
   }
-}
-.align-data {
-  position: relative;
-  left: 15px;
 }
 
 .align-disc {
@@ -706,8 +859,19 @@ h5 {
   justify-content: flex-end;
 }
 
+.align-due-date-header {
+  position: relative;
+  bottom: 32px;
+}
+
 .align-customer-select {
   position: relative;
   top: 32px;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 </style>

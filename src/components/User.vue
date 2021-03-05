@@ -34,9 +34,6 @@ export default {
   },
   methods: {
     handleClick() {
-      console.log(this.user);
-      // localStorage.setItem('selectedUser', JSON.stringify(this.user));
-      // this.$router.push({ name: 'userDetails' });
       this.$router.push({ path: `/user-edit/${this.user.id}` });
     },
   },

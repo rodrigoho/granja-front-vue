@@ -8,9 +8,7 @@
       </b-row>
       <!-- {{ eggs }} -->
       <div class="flex">
-        <button class="button-style" v-if="cardTitle === 'Branco'" variant="primary" @click="handleEditClick">
-          Editar
-        </button>
+        <button class="button-style" v-if="isEditable" variant="primary" @click="handleEditClick">Editar</button>
         <b-form class="align-body" @submit="onSubmit" @reset="onReset">
           <div class="card-height">
             <b-row v-for="egg in eggs" :key="egg.id">
@@ -30,7 +28,25 @@
         </b-form>
       </div>
 
-      <!-- {{ eggsList }} -->
+      <!-- raciocínio: criar um v-else com uma estrutura diferente, baseada
+no novo objeto após filtrar pela data. -->
+
+      <!-- <div class="flex">
+        <b-row class="align-buttons" v-if="isEditing">
+          <b-col class="buttons">
+            <b-button type="button" variant="danger" @click="handleCancel" size="sm">Cancelar</b-button>
+            <b-button type="submit" variant="primary" size="sm">Salvar</b-button>
+          </b-col>
+        </b-row>
+      </div> -->
+
+      <!-- <div class="card-height">
+        <b-row v-for="egg in eggsLists[eggsColor]" :key="egg.id">
+          <b-col class="bold">{{ egg.size }}</b-col>
+          <b-col v-show="!isEditing" class="align-price">R$ {{ egg.price }}</b-col>
+          <b-col v-show="isEditing"><b-input v-model="egg.price" type="number" class="input-size" step=".01" /></b-col>
+        </b-row>
+      </div> -->
     </div>
   </div>
 </template>
@@ -44,6 +60,11 @@ export default {
     eggsColor: String,
     cardTitle: String,
     eggsList: Array,
+    isEditable: Boolean,
+    opa: {
+      type: String,
+      default: 'teste',
+    },
   },
   data() {
     return {
@@ -55,12 +76,13 @@ export default {
     this.handleEggsListLoading();
   },
   methods: {
-    ...mapActions(['updateEgg', 'loadEggsList', 'loadAdditionalFee']),
+    ...mapActions(['updateEgg', 'loadEggsList', 'loadAdditionalFee', 'loadEggsListComplete']),
     async handleAdditionalFeeLoading() {
       await this.loadAdditionalFee();
     },
     async handleEggsListLoading() {
       await this.loadEggsList();
+      await this.loadEggsListComplete();
     },
     handleEditClick() {
       this.isEditing = !this.isEditing;
@@ -89,19 +111,20 @@ export default {
     handleCancel() {
       this.isEditing = false;
     },
+    sortArr(listToSort) {
+      return listToSort.sort((a, b) => {
+        return b.id < a.id ? 1 : b.id > a.id ? -1 : 0;
+      });
+    },
   },
   computed: {
-    ...mapGetters(['getAdditionalFee', 'getRedEggsList', 'getWhiteEggsList']),
+    ...mapGetters(['getAdditionalFee', 'getRedEggsList', 'getWhiteEggsList', 'getEggsList']),
     eggs: function () {
-      let test = [];
-      if (!this.isFromCargoPacking && this.eggsColor === 'white') {
-        test = this.getWhiteEggsList;
-      } else if (this.eggsList) {
-        test = this.eggsList;
+      if (this.eggsColor === 'red') {
+        return this.sortArr(this.getEggsList.filter((egg) => egg.color === 'Vermelho'));
       } else {
-        test = this.getRedEggsList;
+        return this.sortArr(this.getEggsList.filter((egg) => egg.color === 'Branco'));
       }
-      return test;
     },
   },
 };

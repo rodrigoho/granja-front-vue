@@ -9,6 +9,7 @@
         </b-row>
 
         <div class="flex" @submit="onSubmit" @reset="onReset">
+          <!-- {{ redEggsList }} -->
           <button class="align-button" variant="primary" @click="handleEditClick">Editar</button>
           <b-form @submit="onSubmit" @reset="onReset">
             <b-row cols="2">
@@ -54,9 +55,11 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import { eggPriceMixin } from '@/mixins/eggPriceMixin.js';
 
 export default {
   name: 'RCard',
+  mixins: [eggPriceMixin],
   props: ['cardTitle'],
   data() {
     return {
@@ -71,16 +74,20 @@ export default {
     this.handleAdditionalFeeLoading();
   },
   methods: {
-    ...mapActions(['updateEggs', 'loadEggsList', 'loadAdditionalFee', 'updateAdditionalFee']),
-    // clickValue(payload) {
-    //   console.log(payload.price, payload.id);
-    // },
+    ...mapActions(['updateRedEgg', 'loadEggsList', 'loadAdditionalFee', 'updateAdditionalFee']),
     async handleAdditionalFeeLoading() {
       await this.loadAdditionalFee();
       if (this.getAdditionalFee) {
-        const { current_fee_price: currentFeePrice, online_fee: onlineFee } = this.getAdditionalFee;
+        const {
+          current_fee_price: currentFeePrice,
+          online_fee: onlineFee,
+          min_fee: minFee,
+          max_fee: maxFee,
+        } = this.getAdditionalFee;
         this.additionalFeePrice = currentFeePrice;
         this.onlineFee = onlineFee;
+        this.leftNumber = minFee;
+        this.rightNumber = maxFee;
       }
     },
     handleEditClick() {
@@ -92,24 +99,26 @@ export default {
     onSubmit(e) {
       e.preventDefault();
       const { id } = this.getAdditionalFee;
+      const additionalFee = this.additionalFeePrice;
       const newOnlineFee = `R$ ${this.leftNumber} a R$ ${this.rightNumber}`;
       const updatedAdditionalFee = {
         id: id,
-        current_fee_price: this.additionalFeePrice,
+        current_fee_price: additionalFee,
         online_fee: newOnlineFee,
+        min_fee: this.leftNumber,
+        max_fee: this.rightNumber,
       };
       this.updateAdditionalFee(updatedAdditionalFee);
       this.onlineFee = newOnlineFee;
-
+      this.updateRegEggs(additionalFee);
       this.isEditing = false;
     },
     onReset(evt) {
       evt.preventDefault();
-      // Reset our form values
     },
   },
   computed: {
-    ...mapGetters(['getAdditionalFee']),
+    ...mapGetters(['getAdditionalFee', 'getEggsList']),
   },
 };
 </script>

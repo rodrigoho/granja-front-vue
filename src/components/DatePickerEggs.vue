@@ -12,11 +12,13 @@
 </template>
 
 <script>
+import { format } from 'date-fns';
+
 export default {
   name: 'DatePickerEggs',
   data() {
     return {
-      value: this.teste || '',
+      value: null,
       context: null,
     };
   },
@@ -26,10 +28,15 @@ export default {
   methods: {
     onContext(ctx) {
       this.context = ctx;
+      if (typeof this.value === 'string') {
+        const formattedSelectedDate = format(ctx.selectedDate, 'dd/MM/yyyy');
+        const formattedDateTimestamp = ctx.selectedDate;
+        this.$emit('uepa', { formattedSelectedDate, formattedDateTimestamp });
+      }
       this.$emit('update:selectedDateEggs', ctx.selectedDate);
     },
     handleSelectedDate() {
-      this.value = localStorage.getItem('editingCargoPackingDate');
+      this.value = new Date();
     },
   },
 };

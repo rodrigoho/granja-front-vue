@@ -11,7 +11,9 @@ export default new Vuex.Store({
     token: localStorage.getItem('token') || null,
     cargoPackings: [],
     customers: [],
+    allCustomers: [],
     intermediaries: [],
+    allIntermediaries: [],
     getNonRelatedCustomersList: [],
     users: [],
     isAdmin: false,
@@ -59,6 +61,9 @@ export default new Vuex.Store({
     getIntermediaries(state) {
       return state.intermediaries;
     },
+    getAllIntermediaries(state) {
+      return state.allIntermediaries;
+    },
     getSelectedIntermediary(state) {
       return state.selectedIntermediary;
     },
@@ -66,6 +71,9 @@ export default new Vuex.Store({
     // Customers
     getCustomers(state) {
       return state.customers;
+    },
+    getAllCustomers(state) {
+      return state.allCustomers;
     },
     getSelectedCustomer(state) {
       return state.selectedCustomer;
@@ -131,6 +139,10 @@ export default new Vuex.Store({
     SET_NOTIFICATIONS_COUNT(state, payload) {
       state.notifications = payload;
     },
+    DELETE_CARGO_PACKING(state, payload) {
+      const removeIndex = state.cargoPackings.rows.findIndex((c) => c.id === payload);
+      state.cargoPackings.rows.splice(removeIndex, 1);
+    },
 
     // Users
     SET_USERS_LIST(state, payload) {
@@ -154,13 +166,23 @@ export default new Vuex.Store({
     SET_INTERMEDIARIES_LIST(state, payload) {
       state.intermediaries = payload;
     },
+    SET_ALL_INTERMEDIARIES_LIST(state, payload) {
+      state.allIntermediaries = payload;
+    },
     SET_SELECTED_INTERMEDIARY(state, payload) {
       state.selectedIntermediary = payload;
+    },
+    DELETE_INTERMEDIARY_CUSTOMER(state, payload) {
+      const removeIndex = state.intermediaries.rows.findIndex((c) => c.id === payload);
+      state.intermediaries.rows.splice(removeIndex, 1);
     },
 
     // Customers
     SET_CUSTOMERS_LIST(state, payload) {
       state.customers = payload;
+    },
+    SET_ALL_CUSTOMERS_LIST(state, payload) {
+      state.allCustomers = payload;
     },
     SET_NON_RELATED_CUSTOMERS_LIST(state, payload) {
       state.getNonRelatedCustomersList = payload;
@@ -172,8 +194,8 @@ export default new Vuex.Store({
       state.customers.push(payload);
     },
     DELETE_CUSTOMER(state, payload) {
-      const removeIndex = state.customers.findIndex((c) => c.id === payload);
-      state.customers.splice(removeIndex, 1);
+      const removeIndex = state.customers.rows.findIndex((c) => c.id === payload);
+      state.customers.rows.splice(removeIndex, 1);
     },
     SET_CUSTOMER_TO_EDIT(state, payload) {
       state.customerToEdit = payload;
@@ -257,9 +279,11 @@ export default new Vuex.Store({
         throw err.response.data.error;
       }
     },
-    loadDueCargoPackings: async ({ commit }, page) => {
+    loadDueCargoPackings: async ({ commit }, payload) => {
       try {
-        const res = await api.get(`due-cargo-packing?page=${page}`);
+        const res = await api.get(
+          `due-cargo-packing?page=${payload.curPage}&sort_direction=${payload.sortDirection}&column_to_sort=${payload.columnToSort}`
+        );
         commit('SET_CARGO_PACKINGS', res.data);
         return res;
       } catch (err) {
@@ -279,6 +303,17 @@ export default new Vuex.Store({
       try {
         const res = await api.post('cargo-packing', payload);
         await dispatch('loadCargoPackings', 1);
+        return res;
+      } catch (err) {
+        console.log(err);
+        throw err.response.data.error;
+      }
+    },
+    deleteCargoPacking: async ({ commit }, payload) => {
+      try {
+        const res = await api.delete(`cargo-packing/${payload}`);
+        console.log(res.data);
+        commit('DELETE_CARGO_PACKING', payload);
         return res;
       } catch (err) {
         console.log(err);
@@ -305,7 +340,7 @@ export default new Vuex.Store({
     },
     loadCargoPackingToEdit: async ({ commit }, payload) => {
       try {
-        const res = await api.get(`/cargo-packing-edit/${payload}`);
+        const res = await api.get(`/cargo-packing/${payload}`);
         commit('SET_SELECTED_CARGO_PACKING', res.data);
       } catch (err) {
         throw err.response.data.error;
@@ -366,19 +401,28 @@ export default new Vuex.Store({
     // End of users
 
     // Intermediary Customers
-    createIntermediaryCustomer: async ({ commit }, payload) => {
+    createIntermediaryCustomer: async ({ dispatch }, payload) => {
       try {
         const res = await api.post('intermediaries', payload);
-        commit('CREATE_INTERMEDIARY', payload);
+        await dispatch('loadIntermediaries');
         return res;
       } catch (err) {
         throw err.response.data.error;
       }
     },
-    loadIntermediaries: async ({ commit }) => {
+    loadIntermediaries: async ({ commit }, page = 1) => {
+      try {
+        const res = await api.get(`intermediaries?page=${page}`);
+        commit('SET_INTERMEDIARIES_LIST', res.data);
+        return res.data;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+    loadAllIntermediaries: async ({ commit }) => {
       try {
         const res = await api.get('intermediaries');
-        commit('SET_INTERMEDIARIES_LIST', res.data);
+        commit('SET_ALL_INTERMEDIARIES_LIST', res.data);
         return res.data;
       } catch (err) {
         throw err.response.data.error;
@@ -412,11 +456,31 @@ export default new Vuex.Store({
       }
     },
 
-    // Customers
-    loadCustomers: async ({ commit }) => {
+    deleteIntermediaryCustomer: async ({ commit }, payload) => {
       try {
-        const res = await api.get('customers');
+        const res = await api.delete(`intermediary/${payload}`);
+        commit('DELETE_INTERMEDIARY_CUSTOMER', payload);
+        return res;
+      } catch (err) {
+        console.log(err.response.data.error);
+        throw err.response.data.error;
+      }
+    },
+
+    // Customers
+    loadCustomers: async ({ commit }, page = 1) => {
+      try {
+        const res = await api.get(`customers?page=${page}`);
         commit('SET_CUSTOMERS_LIST', res.data);
+        return res;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+    loadAllCustomers: async ({ commit }) => {
+      try {
+        const res = await api.get('customers-all');
+        commit('SET_ALL_CUSTOMERS_LIST', res.data);
         return res;
       } catch (err) {
         throw err.response.data.error;
@@ -424,6 +488,7 @@ export default new Vuex.Store({
     },
     loadSelectedCustomer: async ({ commit }, payload) => {
       try {
+        console.log('uepa');
         const res = await api.get(`customers/${payload}`);
         commit('SET_SELECTED_CUSTOMER', res.data);
         return res;
@@ -431,10 +496,10 @@ export default new Vuex.Store({
         throw err.response.data.error;
       }
     },
-    createCustomer: async ({ commit }, payload) => {
+    createCustomer: async ({ dispatch }, payload) => {
       try {
         const res = await api.post('customers', payload);
-        commit('CREATE_CUSTOMER', payload);
+        await dispatch('loadCustomers');
         return res;
       } catch (err) {
         throw err.response.data.error;
@@ -453,7 +518,7 @@ export default new Vuex.Store({
     setCustomerToEdit: ({ commit }, payload) => {
       commit('SET_CUSTOMER_TO_EDIT', payload);
     },
-    editCustomer: async (context, payload) => {
+    updateCustomer: async (context, payload) => {
       try {
         const res = await api.put(`customers/${payload.id}`, payload);
         return res;
@@ -495,9 +560,7 @@ export default new Vuex.Store({
 
     loadSelectedEggsPrices: async ({ commit }, payload) => {
       try {
-        console.log(payload);
         const res = await api.post(`eggs-prices-selected`, payload);
-        console.log(res.data);
         commit('SET_EGGS_LIST', res.data);
       } catch (err) {
         throw err.response.data.error;
@@ -515,12 +578,29 @@ export default new Vuex.Store({
           price: payload.price + parseInt(state.additionalFee.current_fee_price),
           size: payload.size,
         };
-        console.log(payload);
         const resWhite = await api.put(`eggs/${payload.id}`, whiteEgg);
         const resRed = await api.put(`eggs/${currentRedEgg.id}`, redEgg);
         commit('UPDATE_WHITE_EGG', whiteEgg);
         commit('UPDATE_RED_EGG', redEgg);
         return [resWhite, resRed];
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+    updateRedEgg: async ({ commit, dispatch }, payload) => {
+      try {
+        const { egg, additionalFee, whiteEggPrice } = payload;
+        const newPrice = parseFloat((parseInt(additionalFee) + parseFloat(whiteEggPrice)).toFixed(2));
+        const updatedEgg = {
+          ...egg,
+          price: newPrice,
+        };
+
+        const resRed = await api.put(`eggs/${updatedEgg.id}`, updatedEgg);
+        commit('UPDATE_RED_EGG', updatedEgg);
+        dispatch('loadEggsListComplete');
+
+        return resRed;
       } catch (err) {
         throw err.response.data.error;
       }

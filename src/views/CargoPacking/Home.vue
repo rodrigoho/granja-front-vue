@@ -25,11 +25,30 @@
     </b-col>
     <b-container>
       <b-row align-h="center" class="align-cards">
-        <cargo-packing
-          v-for="cargoPacking in getCargoPackings.rows"
-          :key="cargoPacking.id"
-          :cargoPacking="cargoPacking"
-        />
+        <b-table
+          @sort-changed="sortingChanged"
+          :items="items"
+          :fields="fields"
+          :current-page="currentPage"
+          striped
+          responsive="sm"
+          class="table-style"
+        >
+          <template #cell(customer.name)="row">
+            {{ row.value }}
+          </template>
+          <template #cell(intermediary.name)="row">
+            {{ row.value ? row.value : '-' }}
+          </template>
+          <template #cell(custom_date_timestamp)="row"> {{ row.item.custom_date }} </template>
+          <template #cell(due_to)="row">
+            {{ formattedSingleDate(row.value) }}
+          </template>
+          <template #cell(total_price)="row"> R$ {{ amountDue(row.value, row.item.paid_amount) }}</template>
+          <template #cell(show_details)="row">
+            <b-button size="sm" @click="handleDetailsClick(row.item.id)" class="mr-2"> Detalhes </b-button>
+          </template>
+        </b-table>
       </b-row>
       <b-row class="align-pagination">
         <b-pagination
@@ -49,21 +68,47 @@
 </template>
 
 <script>
-import CargoPacking from '@/components/CargoPacking.vue';
+import { format, parseISO } from 'date-fns';
 import RHeader from '@/components/RHeader.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'Home',
   components: {
-    CargoPacking,
     RHeader,
   },
   data() {
     return {
-      cargoPackingsList: [],
+      fields: [
+        {
+          key: 'customer.name',
+          label: 'Nome',
+        },
+        {
+          key: 'intermediary.name',
+          label: 'Intermediário',
+        },
+        {
+          key: 'custom_date_timestamp',
+          label: 'Data da Carga',
+          sortable: true,
+        },
+        {
+          key: 'due_to',
+          label: 'Vencimento',
+          sortable: true,
+        },
+        {
+          key: 'total_price',
+          label: 'Valor',
+        },
+        {
+          key: 'show_details',
+          label: 'Detalhes',
+        },
+      ],
       currentPage: 1,
-      perPage: 9,
+      perPage: 10,
       selectedCargoPackingFilter: 0,
       cargoPackingFilters: [
         {
@@ -94,11 +139,11 @@ export default {
   methods: {
     ...mapActions(['loadCargoPackings', 'loadDueCargoPackings', 'loadPaidCargoPackings', 'loadAnalysisCargoPackings']),
     async handleCargoPackingsLoading() {
-      await this.loadDueCargoPackings(this.currentPage);
-      this.cargoPackingsList = this.getCargoPackings;
+      const curPage = this.currentPage;
+      await this.loadDueCargoPackings({ curPage, sortDirection: 'DESC', columnToSort: 'due_to' });
     },
-    async paginate(currentPage) {
-      await this.loadCargoPackings(currentPage);
+    async paginate(curPage) {
+      await this.loadDueCargoPackings({ curPage, sortDirection: 'ASC', columnToSort: 'due_to' });
     },
     async handleCargoPackingFilter() {
       if (this.selectedCargoPackingFilter === 0) {
@@ -112,11 +157,37 @@ export default {
       }
       this.cargoPackingsList = this.getCargoPackings;
     },
+    handleDetailsClick(cargoPackingId) {
+      this.$router.push({
+        path: `cargo-packing-details/${cargoPackingId}`,
+      });
+    },
+    formattedDate(dateToFormat) {
+      if (dateToFormat.custom_date_timestamp) {
+        return format(parseISO(dateToFormat.custom_date_timestamp), 'dd/MM/yyyy');
+      } else return format(parseISO(dateToFormat.created_at), 'dd/MM/yyyy');
+    },
+    formattedSingleDate(dateToFormat) {
+      return dateToFormat && format(parseISO(dateToFormat), 'dd/MM/yyyy');
+    },
+    amountDue(totalValue, paidValue) {
+      const paidVal = paidValue ? paidValue : 0;
+
+      return (totalValue - paidVal).toFixed(2);
+    },
+    sortingChanged(ctx) {
+      const { currentPage: curPage, sortDesc: isSortDesc, sortBy: columnToSort } = ctx;
+      const sortDirection = isSortDesc ? 'DESC' : 'ASC';
+      this.loadDueCargoPackings({ curPage, sortDirection, columnToSort });
+    },
   },
   computed: {
     ...mapGetters(['getCargoPackings']),
     rows() {
-      return this.cargoPackingsList.count;
+      return this.getCargoPackings.count;
+    },
+    items() {
+      return this.getCargoPackings.rows;
     },
   },
 };
@@ -128,6 +199,10 @@ export default {
   top: 50px;
   display: flex;
   padding: 0 30px;
+}
+
+.table-style {
+  background: white;
 }
 
 .align-filter-counter {

@@ -18,11 +18,13 @@
             <b-row class="flex-evenly" v-for="egg in eggs" :key="egg.id">
               <b-col class="bold" sm="2">{{ egg.size }}</b-col>
               <b-col v-show="!isEditing" class="align-amount" sm="1">{{ egg.amount }}</b-col>
-              <b-col v-show="!isEditing" class="align-price" sm="4">R$ {{ egg.price - egg.discount }}</b-col>
+              <b-col v-show="!isEditing" class="align-price" sm="4">{{
+                formattedMoneyValue(egg.price - egg.discount)
+              }}</b-col>
 
-              <b-col class="align-total-price" sm="4"
-                >R$ {{ ((egg.price - egg.discount) * egg.amount).toFixed(2) }}</b-col
-              >
+              <b-col class="align-total-price" sm="4">{{
+                formattedMoneyValue((egg.price - egg.discount) * egg.amount)
+              }}</b-col>
             </b-row>
           </div>
           <b-row class="align-total-boxes"
@@ -39,9 +41,11 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import { priceFormatter } from '@/mixins/priceFormatter';
 
 export default {
   name: 'CargoPackingEggsList',
+  mixins: [priceFormatter],
   props: {
     eggsColor: String,
     cardTitle: String,
@@ -122,7 +126,7 @@ export default {
 
 .align-amount {
   position: relative;
-  left: 25px;
+  left: 20px;
 }
 
 .align-price-label {
@@ -132,7 +136,7 @@ export default {
 
 .align-price {
   position: relative;
-  left: 40px;
+  left: 30px;
 }
 
 .align-total-price-label {
@@ -142,7 +146,7 @@ export default {
 
 .align-total-price {
   position: relative;
-  right: 15px;
+  right: 20px;
 }
 
 .flex-evenly {

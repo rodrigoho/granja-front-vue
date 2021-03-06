@@ -82,7 +82,11 @@
                             eggPackages.eggTray.eggTrayAmount ? eggPackages.eggTray.eggTrayAmount : '-'
                           }}</b-col>
                           <b-col sm="4">
-                            {{ eggPackages.eggTray.eggTrayPrice > 0 ? `R$ ${eggPackages.eggTray.eggTrayPrice}` : '-' }}
+                            {{
+                              eggPackages.eggTray.eggTrayPrice > 0
+                                ? `${formattedMoneyValue(parseFloat(eggPackages.eggTray.eggTrayPrice))}`
+                                : '-'
+                            }}
                           </b-col>
                         </b-row>
                         <b-row>
@@ -93,7 +97,11 @@
                             eggPackages.eggBox.eggBoxAmount ? eggPackages.eggBox.eggBoxAmount : '-'
                           }}</b-col>
                           <b-col sm="4">
-                            {{ eggPackages.eggBox.eggBoxPrice > 0 ? `R$ ${eggPackages.eggBox.eggBoxPrice}` : '-' }}
+                            {{
+                              eggPackages.eggBox.eggBoxPrice > 0
+                                ? `${formattedMoneyValue(parseFloat(eggPackages.eggBox.eggBoxPrice))}`
+                                : '-'
+                            }}
                           </b-col>
                         </b-row>
                       </b-col>
@@ -148,6 +156,7 @@
 import RHeader from '@/components/RHeader.vue';
 import CargoPackingEggsList from '@/components/CargoPackingEggsList.vue';
 import LabelValue from '@/components/LabelValue.vue';
+import { priceFormatter } from '@/mixins/priceFormatter';
 import { mapActions, mapGetters } from 'vuex';
 import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt';
@@ -157,6 +166,7 @@ import io from 'socket.io-client';
 
 export default {
   name: 'CargoPackingDetails',
+  mixins: [priceFormatter],
   components: {
     RHeader,
     CargoPackingEggsList,
@@ -181,7 +191,7 @@ export default {
       isBillet: false,
     };
   },
-  created() {
+  mounted() {
     this.handleCargoPackingLoading();
     this.io = io('http://localhost:3333');
   },
@@ -204,7 +214,9 @@ export default {
     },
     async handleCargoPackingLoading() {
       await this.loadSelectedCargoPacking(this.$route.params.id);
+      console.log('recarreguei');
       this.isBillet = this.getSelectedCargoPacking.cargoPacking.is_billet;
+      localStorage.setItem('editingCargoPackingDate', this.getSelectedCargoPacking.cargoPacking.due_to);
       this.orderItems = this.getSelectedCargoPacking.cargoPacking.order_items;
       this.redEggsList = this.orderItems
         .filter((oI) => oI.egg_details.color === 'Vermelho')
@@ -246,7 +258,9 @@ export default {
         },
         {
           label: 'Valor: ',
-          value: cargoPacking.receipt_value ? `R$ ${cargoPacking.receipt_value}` : '-',
+          value: cargoPacking.receipt_value
+            ? `${this.formattedMoneyValue(parseFloat(cargoPacking.receipt_value))}`
+            : '-',
         },
       ];
 
@@ -269,28 +283,32 @@ export default {
       this.moneyData = [
         {
           label: 'Carga: ',
-          value: `R$ ${cargoPackingVD.totalEggsCargoPrice}`,
+          value: `${this.formattedMoneyValue(parseFloat(cargoPackingVD.totalEggsCargoPrice))}`,
         },
         {
           label: 'ICMS: ',
-          value: cargoPackingVD.icmsFee !== 0 ? `R$ ${cargoPackingVD.icmsFee}` : '-',
+          value: cargoPackingVD.icmsFee !== 0 ? `${this.formattedMoneyValue(cargoPackingVD.icmsFee)}` : '-',
         },
         {
           label: 'Seguro: ',
-          value: cargoPackingVD.insurancePrice === false ? '-' : `R$ ${cargoPackingVD.insurancePrice}`,
+          value: cargoPackingVD.insurancePrice > 0 ? `${this.formattedMoneyValue(cargoPackingVD.insurancePrice)}` : '-',
         },
         {
           label: 'Embalagens: ',
-          value: this.eggPackages.packagesValue > 0 ? `R$ ${this.eggPackages.packagesValue}` : '-',
+          value:
+            this.eggPackages.packagesValue > 0
+              ? `${this.formattedMoneyValue(parseFloat(this.eggPackages.packagesValue))}`
+              : '-',
         },
         {
           label: 'Fundo rural: ',
-          value: cargoPackingVD.ruralFundFee !== 0 ? `R$ ${cargoPackingVD.ruralFundFee}` : '-',
+          value: cargoPackingVD.ruralFundFee !== 0 ? `${this.formattedMoneyValue(cargoPackingVD.ruralFundFee)}` : '-',
         },
         {
           label: 'Saldo devedor: ',
-          value: `R$ ${cargoPackingVD.balanceDue.toFixed(2) - cargoPackingVD.paidAmount}`,
+          value: `${this.formattedMoneyValue(cargoPackingVD.balanceDue.toFixed(2) - cargoPackingVD.paidAmount)}`,
         },
+        // toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})
       ];
     },
     sendNotification() {
@@ -313,7 +331,7 @@ export default {
         .then(async (value) => {
           if (value) {
             this.deleteCargoPacking(this.$route.params.id);
-            await this.loadCargoPackings(1);
+            await this.loadCargoPackings({ curPage: 1, sortDirection: 'DESC', columnToSort: 'due_to' });
 
             this.$router.push({ name: 'home' });
           }

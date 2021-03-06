@@ -270,29 +270,11 @@ export default new Vuex.Store({
     },
 
     // Cargo Packings
-    loadCargoPackings: async ({ commit }, page) => {
-      try {
-        const res = await api.get(`cargo-packing?page=${page}`);
-        commit('SET_CARGO_PACKINGS', res.data);
-        return res;
-      } catch (err) {
-        throw err.response.data.error;
-      }
-    },
-    loadDueCargoPackings: async ({ commit }, payload) => {
+    loadCargoPackings: async ({ commit }, payload) => {
       try {
         const res = await api.get(
-          `due-cargo-packing?page=${payload.curPage}&sort_direction=${payload.sortDirection}&column_to_sort=${payload.columnToSort}`
+          `cargo-packing?page=${payload.curPage}&sort_direction=${payload.sortDirection}&column_to_sort=${payload.columnToSort}`
         );
-        commit('SET_CARGO_PACKINGS', res.data);
-        return res;
-      } catch (err) {
-        throw err.response.data.error;
-      }
-    },
-    loadPaidCargoPackings: async ({ commit }, page) => {
-      try {
-        const res = await api.get(`paid-cargo-packing?page=${page}`);
         commit('SET_CARGO_PACKINGS', res.data);
         return res;
       } catch (err) {
@@ -302,7 +284,7 @@ export default new Vuex.Store({
     createCargoPacking: async ({ dispatch }, payload) => {
       try {
         const res = await api.post('cargo-packing', payload);
-        await dispatch('loadCargoPackings', 1);
+        await dispatch('loadCargoPackings', { curPage: 1, sortDirection: 'ASC', columnToSort: 'due_to' });
         return res;
       } catch (err) {
         console.log(err);
@@ -323,7 +305,7 @@ export default new Vuex.Store({
     updateCargoPacking: async ({ dispatch }, payload) => {
       try {
         const res = await api.put(`cargo-packing/${payload.cargoPackingId}`, payload.cargoPacking);
-        await dispatch('loadCargoPackings', 1);
+        await dispatch('loadCargoPackings', { curPage: 1, sortDirection: 'ASC', columnToSort: 'due_to' });
         return res;
       } catch (err) {
         console.log(err);

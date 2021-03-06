@@ -41,7 +41,7 @@
                   </b-form-select>
                 </b-col>
                 <b-col>
-                  <date-picker :selectedDate.sync="selectedDateCP" class="align-due-date-header" />
+                  <date-picker :selectedDate.sync="selectedDateCP" :key="uepa2" class="align-due-date-header" />
                 </b-col>
               </b-row>
             </div>
@@ -209,7 +209,6 @@
                       id="input-receipt-value"
                       v-model="form.receiptValue"
                       type="number"
-                      required
                       size="sm"
                       placeholder="Digite o valor"
                     ></b-form-input>
@@ -499,6 +498,7 @@ export default {
           discount: 0,
         },
       ],
+      newDate: localStorage.getItem('editingCargoPackingDate'),
       customDateTimestamp: null,
       customersList: [],
       intermediariesList: [],
@@ -513,9 +513,10 @@ export default {
   },
   mounted() {
     this.io = io('http://localhost:3333');
+    this.handleAdditionalFeeLoading();
     this.$route.params.id ? this.handleCargoPackingLoading(this.$route.params.id) : this.handleListLoading();
-    this.loadAdditionalFee();
     this.handleEggsLoading();
+    this.newDate = localStorage.getItem('editingCargoPackingDate');
   },
   methods: {
     ...mapActions([
@@ -531,7 +532,9 @@ export default {
       'loadEggsListComplete',
       'updateAdditionalFee',
     ]),
-
+    async handleAdditionalFeeLoading() {
+      await this.loadAdditionalFee();
+    },
     async handleEggsLoading() {
       await this.loadEggsListComplete();
       this.form.redEggsTax = this.getAdditionalFee.current_fee_price;
@@ -600,8 +603,11 @@ export default {
         receipt_number: receiptNumber,
         receipt_value: receiptValue,
         has_insurance_fee: hasInsuranceFee,
+        rural_fund_tax: ruralFundTax,
         icms_tax: icmsTax,
         is_paid: isPaid,
+        paid_amount: paidAmount,
+        intermediary,
         egg_retail_box_amount: eggBoxAmount,
         egg_retail_box_price: eggBoxPrice,
         egg_tray_amount: eggTrayAmount,
@@ -609,7 +615,8 @@ export default {
         is_billet: isBillet,
       } = this.getSelectedCargoPacking.cargoPacking;
       const form = this.form;
-      const test = this.customersList.find((customer) => customer.value === customerId);
+      const test = this.getAllCustomers.find((customer) => customer.id === customerId);
+      this.customer = test;
       orderItems.forEach((oI) => {
         const indexToUpdate = this.eggsCargo.findIndex((egg) => egg.eggId === oI.egg_details.id);
         const amount = oI.amount;
@@ -621,15 +628,18 @@ export default {
         };
       });
 
-      this.selectedCustomerId = test.value;
+      this.selectedCustomerId = test.id;
+      this.selectedIntermediaryId = intermediary ? intermediary.id : null;
       this.selectedDateCP = dueTo;
       form.receiptNumber = receiptNumber;
       form.receiptValue = receiptValue;
       form.hasInsurance = hasInsuranceFee;
+      form.hasRuralFund = ruralFundTax > 0 ? true : false;
       form.isBillet = isBillet;
 
       form.isPaid = isPaid;
-      form.hasICMS = icmsTax ? true : false;
+      form.paidAmount = paidAmount;
+      form.hasICMS = icmsTax > 0 ? true : false;
       form.eggTrayPrice = eggTrayPrice;
       form.eggTrayAmount = eggTrayAmount;
       form.eggBoxPrice = eggBoxPrice;
@@ -743,6 +753,9 @@ export default {
       'getEggsList',
       'getAdditionalFee',
     ]),
+    uepa2() {
+      return this.newDate;
+    },
     testeDate() {
       return parseISO(this.customDate);
     },

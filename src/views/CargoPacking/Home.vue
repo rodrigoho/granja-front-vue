@@ -137,25 +137,25 @@ export default {
     this.handleCargoPackingsLoading();
   },
   methods: {
-    ...mapActions(['loadCargoPackings', 'loadDueCargoPackings', 'loadPaidCargoPackings', 'loadAnalysisCargoPackings']),
+    ...mapActions(['loadCargoPackings']),
     async handleCargoPackingsLoading() {
       const curPage = this.currentPage;
-      await this.loadDueCargoPackings({ curPage, sortDirection: 'DESC', columnToSort: 'due_to' });
+      await this.loadCargoPackings({ curPage, sortDirection: 'DESC', columnToSort: 'due_to' });
     },
     async paginate(curPage) {
-      await this.loadDueCargoPackings({ curPage, sortDirection: 'ASC', columnToSort: 'due_to' });
+      await this.loadCargoPackings({ curPage, sortDirection: 'ASC', columnToSort: 'due_to' });
     },
     async handleCargoPackingFilter() {
-      if (this.selectedCargoPackingFilter === 0) {
-        await this.loadDueCargoPackings(this.currentPage);
-      } else if (this.selectedCargoPackingFilter === 1) {
-        await this.loadPaidCargoPackings(this.currentPage);
-      } else if (this.selectedCargoPackingFilter === 2) {
-        await this.loadAnalysisCargoPackings(this.currentPage);
-      } else {
-        await this.loadCargoPackings(this.currentPage);
-      }
-      this.cargoPackingsList = this.getCargoPackings;
+      // if (this.selectedCargoPackingFilter === 0) {
+      //   await this.loadDueCargoPackings(this.currentPage);
+      // } else if (this.selectedCargoPackingFilter === 1) {
+      //   await this.loadPaidCargoPackings(this.currentPage);
+      // } else if (this.selectedCargoPackingFilter === 2) {
+      //   await this.loadAnalysisCargoPackings(this.currentPage);
+      // } else {
+      //   await this.loadCargoPackings(this.currentPage);
+      // }
+      // this.cargoPackingsList = this.getCargoPackings;
     },
     handleDetailsClick(cargoPackingId) {
       this.$router.push({
@@ -178,7 +178,7 @@ export default {
     sortingChanged(ctx) {
       const { currentPage: curPage, sortDesc: isSortDesc, sortBy: columnToSort } = ctx;
       const sortDirection = isSortDesc ? 'DESC' : 'ASC';
-      this.loadDueCargoPackings({ curPage, sortDirection, columnToSort });
+      this.loadCargoPackings({ curPage, sortDirection, columnToSort });
     },
   },
   computed: {

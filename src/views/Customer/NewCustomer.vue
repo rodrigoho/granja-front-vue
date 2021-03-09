@@ -78,7 +78,7 @@
                 <b-form-input
                   id="input-cnpj"
                   v-model="form.customerCnpj"
-                  v-mask="'##.###.###.####/##'"
+                  v-mask="'##.###.###/####-##'"
                   type="text"
                   size="sm"
                   placeholder="Digite o CNPJ"
@@ -361,7 +361,7 @@ export default {
       this.form.customerAddrNeighborhood = response.data.bairro;
     },
     formatNumber(numberToFormat) {
-      return numberToFormat > 0 ? numberToFormat.replace(',', '.') : numberToFormat;
+      return numberToFormat.length > 0 ? numberToFormat.replace(',', '.') : numberToFormat;
     },
     async onSubmit(evt) {
       evt.preventDefault();

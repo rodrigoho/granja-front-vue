@@ -138,8 +138,25 @@ export default {
   },
   mounted() {
     if (this.$route.params.id) {
-      const test = this.getIntermediaries.find((i) => i.id == this.$route.params.id);
-      const { id, email, name, phone, state, city } = test;
+      console.log();
+      this.handleIntermediaryLoading();
+    }
+  },
+  methods: {
+    ...mapActions([
+      'loadNonRelatedCustomers',
+      'loadSelectedCustomer',
+      'loadSelectedIntermediary',
+      'createIntermediaryCustomer',
+      'setCustomerToEdit',
+      'editCustomer',
+      'loadIntermediaries',
+      'updateIntermediary',
+    ]),
+    async handleIntermediaryLoading() {
+      await this.loadSelectedIntermediary(this.$route.params.id);
+
+      const { id, email, name, phone, state, city } = this.getSelectedIntermediary;
       this.form.id = id;
       this.form.intermediaryName = name;
       this.form.intermediaryEmail = email;
@@ -147,18 +164,7 @@ export default {
       this.form.intermediaryState = state;
       this.form.intermediaryCity = city;
       this.intermediaryEditing = true;
-    }
-  },
-  methods: {
-    ...mapActions([
-      'loadNonRelatedCustomers',
-      'loadSelectedCustomer',
-      'createIntermediaryCustomer',
-      'setCustomerToEdit',
-      'editCustomer',
-      'loadIntermediaries',
-      'updateIntermediary',
-    ]),
+    },
     handleCustomerClick(customer) {
       const removeIndex = this.addedCustomers.findIndex((c) => c.text === customer.text);
       const customerToRemove = this.addedCustomers.splice(removeIndex, 1);

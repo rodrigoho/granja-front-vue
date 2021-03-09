@@ -208,7 +208,7 @@
                     <b-form-input
                       id="input-receipt-value"
                       v-model="form.receiptValue"
-                      type="number"
+                      type="text"
                       size="sm"
                       placeholder="Digite o valor"
                     ></b-form-input>
@@ -220,7 +220,7 @@
                     <b-form-input
                       id="input-paid-amount"
                       v-model="form.paidAmount"
-                      type="number"
+                      type="text"
                       size="sm"
                       placeholder="Digite o valor"
                     ></b-form-input>
@@ -535,6 +535,9 @@ export default {
     async handleAdditionalFeeLoading() {
       await this.loadAdditionalFee();
     },
+    formatNumber(numberToFormat) {
+      return numberToFormat.length > 0 ? numberToFormat.replace(',', '.') : numberToFormat;
+    },
     async handleEggsLoading() {
       await this.loadEggsListComplete();
       this.form.redEggsTax = this.getAdditionalFee.current_fee_price;
@@ -632,11 +635,12 @@ export default {
       this.selectedIntermediaryId = intermediary ? intermediary.id : null;
       this.selectedDateCP = dueTo;
       form.receiptNumber = receiptNumber;
-      form.receiptValue = receiptValue;
+      form.receiptValue = this.formatNumber(receiptValue);
       form.hasInsurance = hasInsuranceFee;
       form.hasRuralFund = ruralFundTax > 0 ? true : false;
       form.isBillet = isBillet;
-
+      form.icmsTax = icmsTax;
+      form.ruralFundTax = ruralFundTax;
       form.isPaid = isPaid;
       form.paidAmount = paidAmount;
       form.hasICMS = icmsTax > 0 ? true : false;
@@ -698,9 +702,9 @@ export default {
         icms_tax: this.form.icmsTax,
         created_by_user_id: parseInt(localStorage.getItem('userId')),
         updated_by_user_id: null,
-        paid_amount: this.form.paidAmount,
+        paid_amount: this.formatNumber(this.form.paidAmount) || 0,
         is_billet: this.form.isBillet,
-        receipt_value: this.form.receiptValue,
+        receipt_value: this.formatNumber(this.form.receiptValue),
         receipt_number: this.form.receiptNumber,
         rural_fund_tax: this.form.ruralFundTax,
         egg_tray_amount: this.form.eggTrayAmount,

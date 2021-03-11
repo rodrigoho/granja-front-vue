@@ -51,7 +51,7 @@
                 <b-form-input
                   id="input-phone"
                   type="text"
-                  v-mask="'(##) #####-####'"
+                  v-mask="phoneMask"
                   v-model="form.customerPhone"
                   size="sm"
                   placeholder="Digite o telefone"
@@ -286,6 +286,7 @@ export default {
   },
   data() {
     return {
+      // phoneMask: this.phoneLength < 15 ? '(##) ####-####' : '(##) #####-####',
       form: {
         id: null,
         customerName: '',
@@ -427,6 +428,9 @@ export default {
   },
   computed: {
     ...mapGetters(['getCustomers', 'getSelectedCustomer', 'getCustomerToEdit']),
+    phoneMask() {
+      return this.form.customerPhone.length < 15 ? '(##) ####-####' : '(##) #####-####';
+    },
   },
 };
 </script>

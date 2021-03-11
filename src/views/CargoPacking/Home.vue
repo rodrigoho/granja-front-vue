@@ -44,7 +44,10 @@
           <template #cell(due_to)="row">
             {{ formattedSingleDate(row.value) }}
           </template>
-          <template #cell(total_price)="row"> R$ {{ amountDue(row.value, row.item.paid_amount) }}</template>
+          <template #cell(total_price)="row"> {{ formattedMoneyValue(row.value) }}</template>
+          <template #cell(paid_amount)="row">
+            {{ formattedMoneyValue(amountDue(row.item.total_price, row.value)) }}</template
+          >
           <template #cell(show_details)="row">
             <b-button size="sm" @click="handleDetailsClick(row.item.id)" class="mr-2"> Detalhes </b-button>
           </template>
@@ -70,10 +73,12 @@
 <script>
 import { format, parseISO } from 'date-fns';
 import RHeader from '@/components/RHeader.vue';
+import { priceFormatter } from '@/mixins/priceFormatter';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'Home',
+  mixins: [priceFormatter],
   components: {
     RHeader,
   },
@@ -100,7 +105,11 @@ export default {
         },
         {
           key: 'total_price',
-          label: 'Valor',
+          label: 'Valor Total',
+        },
+        {
+          key: 'paid_amount',
+          label: 'Saldo Devedor',
         },
         {
           key: 'show_details',
@@ -171,9 +180,11 @@ export default {
       return dateToFormat && format(parseISO(dateToFormat), 'dd/MM/yyyy');
     },
     amountDue(totalValue, paidValue) {
+      const floatTotalValue = parseFloat(totalValue);
       const paidVal = paidValue ? paidValue : 0;
+      const floatPaidValue = parseFloat(paidVal);
 
-      return (totalValue - paidVal).toFixed(2);
+      return (floatTotalValue - floatPaidValue).toFixed(2);
     },
     sortingChanged(ctx) {
       const { currentPage: curPage, sortDesc: isSortDesc, sortBy: columnToSort } = ctx;

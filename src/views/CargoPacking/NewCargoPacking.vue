@@ -663,7 +663,6 @@ export default {
       this.form.customerName = customer.name;
       this.form.customerEmail = customer.email;
       this.form.discount = customer.discount;
-      this.form.ruralFundTax = customer.rural_fund_tax;
       this.eggsCargo[0].discount = discount;
       this.eggsCargo[1].discount = discount;
       this.eggsCargo[2].discount = discount;
@@ -702,9 +701,9 @@ export default {
         icms_tax: this.form.icmsTax,
         created_by_user_id: parseInt(localStorage.getItem('userId')),
         updated_by_user_id: null,
-        paid_amount: this.formatNumber(this.form.paidAmount) || 0,
+        paid_amount: this.form.paidAmount ? this.formatNumber(this.form.paidAmount) : null,
         is_billet: this.form.isBillet,
-        receipt_value: this.formatNumber(this.form.receiptValue),
+        receipt_value: this.form.receiptValue ? this.formatNumber(this.form.receiptValue) : null,
         receipt_number: this.form.receiptNumber,
         rural_fund_tax: this.form.ruralFundTax,
         egg_tray_amount: this.form.eggTrayAmount,

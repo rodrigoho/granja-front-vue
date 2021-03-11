@@ -95,7 +95,6 @@ export default {
           size: e.size,
           price: parseFloat(e.price),
         };
-        console.log(updatedEgg.id, updatedEgg);
         this.updateEgg(updatedEgg);
       });
       await this.loadEggsList();

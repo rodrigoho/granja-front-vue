@@ -15,11 +15,7 @@
           <template #cell(customer.name)="row">
             {{ row.value }}
           </template>
-          <template #cell(custom_date_timestamp)="row"> {{ row.item.custom_date }} </template>
-          <template #cell(due_to)="row">
-            {{ formattedSingleDate(row.value) }}
-          </template>
-          <template #cell(total_price)="row"> R$ {{ amountDue(row.value, row.item.paid_amount) }}</template>
+          <template #cell(phone)="row"> {{ row.value ? row.value : '-' }} </template>
           <template #cell(show_details)="row">
             <b-button size="sm" @click="handleDetailsClick(row.item.id)" class="mr-2"> Detalhes </b-button>
           </template>

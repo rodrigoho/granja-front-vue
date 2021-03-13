@@ -1,11 +1,6 @@
 <template>
   <div class="eggs">
-    <r-header
-      :title="'Ovos'"
-      :buttonTitle="'Criar Ovos'"
-      :toRouteName="'newEggs'"
-      :shouldShowButton="!whiteEggsList.length"
-    />
+    <r-header :title="'Ovos'" :buttonTitle="'Criar Ovos'" :toRouteName="'newEggs'" />
     <b-container fluid>
       <b-row align-h="center" class="align-cards">
         <r-card :cardTitle="'Taxa Adicional'" />
@@ -25,9 +20,11 @@ import RHeader from '@/components/RHeader.vue';
 import EggsList from '@/components/EggsList.vue';
 import RCard from '@/components/RCard.vue';
 import { mapActions, mapGetters } from 'vuex';
+import { eggPriceMixin } from '@/mixins/eggPriceMixin.js';
 
 export default {
   name: 'Eggs',
+  mixins: [eggPriceMixin],
   components: {
     RHeader,
     EggsList,
@@ -35,23 +32,31 @@ export default {
   },
   data() {
     return {
-      whiteEggsList: [],
-      redEggsList: [],
+      // whiteEggsList: [],
+      // redEggsList: [],
     };
   },
   mounted() {
     this.handleLoadEggList();
   },
   methods: {
-    ...mapActions(['loadEggsList']),
+    ...mapActions(['loadEggsList', 'loadAdditionalFee', 'loadRedEggsList']),
     async handleLoadEggList() {
+      await this.loadAdditionalFee();
+      // await this.loadRedEggsList();
+      // console.log(this.getRedEggsList);
+
+      // await this.updateRedEggs;
       await this.loadEggsList();
-      this.whiteEggsList = this.getWhiteEggsList;
-      this.redEggsList = this.getRedEggsList;
+
+      console.log(this.getWhiteEggsList);
+      this.updateRedEggs(this.getAdditionalFee.current_fee_price);
+      // this.whiteEggsList = this.getWhiteEggsList;
+      // this.redEggsList = this.getRedEggsList;
     },
   },
   computed: {
-    ...mapGetters(['getRedEggsList', 'getWhiteEggsList']),
+    ...mapGetters(['getRedEggsList', 'getWhiteEggsList', 'getAdditionalFee']),
   },
 };
 </script>

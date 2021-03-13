@@ -27,26 +27,6 @@
           </b-row>
         </b-form>
       </div>
-
-      <!-- raciocínio: criar um v-else com uma estrutura diferente, baseada
-no novo objeto após filtrar pela data. -->
-
-      <!-- <div class="flex">
-        <b-row class="align-buttons" v-if="isEditing">
-          <b-col class="buttons">
-            <b-button type="button" variant="danger" @click="handleCancel" size="sm">Cancelar</b-button>
-            <b-button type="submit" variant="primary" size="sm">Salvar</b-button>
-          </b-col>
-        </b-row>
-      </div> -->
-
-      <!-- <div class="card-height">
-        <b-row v-for="egg in eggsLists[eggsColor]" :key="egg.id">
-          <b-col class="bold">{{ egg.size }}</b-col>
-          <b-col v-show="!isEditing" class="align-price">R$ {{ egg.price }}</b-col>
-          <b-col v-show="isEditing"><b-input v-model="egg.price" type="number" class="input-size" step=".01" /></b-col>
-        </b-row>
-      </div> -->
     </div>
   </div>
 </template>

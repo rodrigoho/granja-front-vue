@@ -222,10 +222,13 @@ export default new Vuex.Store({
 
     UPDATE_RED_EGG(state, payload) {
       const redEggs = state.redEggsList;
+      console.log('payload', payload);
       const removeIndex = redEggs.findIndex((i) => {
         return i.id === payload.id;
       });
+      console.log('removeIndex', removeIndex);
       redEggs.splice(removeIndex, 1, payload);
+      console.log('UPDATE_RED_EGG', redEggs);
     },
 
     SET_ADDITIONAL_FEE(state, payload) {
@@ -519,6 +522,15 @@ export default new Vuex.Store({
         throw err.response.data.error;
       }
     },
+    loadRedEggsList: async ({ commit }) => {
+      try {
+        const redRes = await api.get('red-eggs');
+        commit('SET_RED_EGGS_LIST', redRes.data);
+        return [redRes];
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
     loadEggsList: async ({ commit }) => {
       try {
         const redRes = await api.get('red-eggs');
@@ -569,17 +581,28 @@ export default new Vuex.Store({
         throw err.response.data.error;
       }
     },
+    // eslint-disable-next-line no-unused-vars
     updateRedEgg: async ({ commit, dispatch }, payload) => {
-      try {
-        const { egg, additionalFee, whiteEggPrice } = payload;
-        const newPrice = parseFloat((parseInt(additionalFee) + parseFloat(whiteEggPrice)).toFixed(2));
-        const updatedEgg = {
-          ...egg,
-          price: newPrice,
-        };
+      // additionalFee: "20"
 
-        const resRed = await api.put(`eggs/${updatedEgg.id}`, updatedEgg);
-        commit('UPDATE_RED_EGG', updatedEgg);
+      // updatedRedEgg: {
+      //   color: "Vermelho"
+      //   createdAt: "2021-03-06T18:32:21.295Z"
+      //   edited_by_user: null
+      //   id: 1
+      //   last_edited_by_user_id: null
+      //   price: "120.00"
+      //   size: "Jumbo"
+      //   updatedAt: "2021-03-06T19:12:57.700Z"
+      // }
+
+      // whiteEggPrice: "100.00"
+      console.log(payload);
+      try {
+        const { updatedRedEgg } = payload;
+
+        const resRed = await api.put(`eggs/${updatedRedEgg.id}`, updatedRedEgg);
+        commit('UPDATE_RED_EGG', updatedRedEgg);
         dispatch('loadEggsListComplete');
 
         return resRed;

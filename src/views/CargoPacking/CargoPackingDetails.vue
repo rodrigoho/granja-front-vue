@@ -61,6 +61,17 @@
                   <div class="general-data">
                     <label-value :values="generalData" />
                   </div>
+                  <br />
+                  <h4>Mario Hideki Ikeda</h4>
+                </b-col>
+                <b-col sm="4" class="data">
+                  <h5>Dados financeiros</h5>
+                  <div class="money-data">
+                    <label-value :values="moneyData" /> <label-value :values="dueDate" class="due-date" />
+                  </div>
+                </b-col>
+                <b-col sm="4" class="data">
+                  <!-- <br /> -->
                   <div class="style-packages">
                     <h6 class="align-packages-title">Embalagens</h6>
                     <b-row class="align-packages">
@@ -107,28 +118,21 @@
                       </b-col>
                     </b-row>
                   </div>
-                </b-col>
-                <b-col sm="4" class="data">
-                  <h5>Dados financeiros</h5>
-                  <div class="money-data">
-                    <label-value :values="moneyData" /> <label-value :values="dueDate" class="due-date" />
-                  </div>
-                </b-col>
-                <b-col sm="4" class="data" v-if="!isBillet">
                   <b-row>
-                    <b-col>
+                    <b-col class="align-bank-data" v-if="!isBillet">
                       <h5>Bradesco</h5>
 
                       <div class="bank-data">
                         <label-value :values="bankData" />
                       </div>
                     </b-col>
+                    <b-col v-else>
+                      <br />
+                      <br />
+                      <h4>Pagamento via Boleto</h4>
+                    </b-col>
                   </b-row>
-                  <br />
-                  <h4>Mario Hideki Ikeda</h4>
-                </b-col>
-                <b-col sm="4" class="align-name" v-else>
-                  <h4>Mario Hideki Ikeda</h4>
+                  <!-- <h4>Mario Hideki Ikeda</h4> -->
                 </b-col>
               </b-row>
             </div>
@@ -145,6 +149,15 @@
             <b-button @click="exportToPDF">Exportar para PDF</b-button>
             <b-button @click="handleEdit()">Editar</b-button>
             <b-button @click="handleDelete()">Deletar</b-button>
+          </div>
+        </div>
+        <div class="align-payments" v-if="payments">
+          <div class="data">
+            <h4 class="align-title">Valores Pagos</h4>
+            <b-row v-for="(payment, idx) in payments" :key="idx">
+              <b-col cols="6">{{ formattedMoneyValue(payment.paid_amount) }}</b-col>
+              <b-col cols="4">{{ payment.date }}</b-col>
+            </b-row>
           </div>
         </div>
       </b-col>
@@ -166,6 +179,7 @@ import io from 'socket.io-client';
 
 export default {
   name: 'CargoPackingDetails',
+  title: 'Detalhes do Romaneio',
   mixins: [priceFormatter],
   components: {
     RHeader,
@@ -256,10 +270,14 @@ export default {
           value: cargoPacking.receipt_number ? cargoPacking.receipt_number : '-',
         },
         {
-          label: 'Valor: ',
+          label: 'Valor da nota: ',
           value: cargoPacking.receipt_value
             ? `${this.formattedMoneyValue(parseFloat(cargoPacking.receipt_value))}`
             : '-',
+        },
+        {
+          label: 'Valor total: ',
+          value: cargoPacking.total_price ? `${this.formattedMoneyValue(parseFloat(cargoPackingVD.balanceDue))}` : '-',
         },
       ];
 
@@ -376,6 +394,9 @@ export default {
         `/ ${this.getSelectedCargoPacking.cargoPacking.intermediary.name}`
       );
     },
+    payments() {
+      return this.getSelectedCargoPacking && this.getSelectedCargoPacking.cargoPacking.payments;
+    },
   },
 };
 </script>
@@ -429,8 +450,8 @@ export default {
 
 .bank-data {
   position: relative;
-  left: 55px;
-  width: 170px;
+  left: 40px;
+  width: 210px;
 }
 
 .money-data {
@@ -452,11 +473,6 @@ export default {
   text-align: center;
 }
 
-.align-name {
-  display: flex;
-  align-self: center;
-}
-
 .align-data {
   position: relative;
   bottom: 25px;
@@ -466,6 +482,11 @@ export default {
   position: relative;
   right: 30px;
   top: 15px;
+}
+
+.align-bank-data {
+  position: relative;
+  top: 5px;
 }
 
 .align-packages {
@@ -490,10 +511,23 @@ export default {
   width: 220px;
   height: 220px;
   position: relative;
-  right: 220px;
+  right: 250px;
   bottom: 650px;
   display: flex;
   justify-content: center;
+}
+
+.align-payments {
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.9);
+  width: 250px;
+  height: 220px;
+  position: relative;
+  right: 265px;
+  bottom: 550px;
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
 }
 
 .teste {
@@ -546,6 +580,7 @@ export default {
 
 .style-packages {
   position: relative;
+  bottom: 20px;
   left: 30px;
   font-size: 12px;
 }

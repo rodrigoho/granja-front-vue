@@ -372,7 +372,7 @@
                   ></b-form-input>
                 </b-form-group>
                 <b-button variant="primary" @click="handleRedEggsTaxEdit" size="sm" class="style-save-red-egg-tax"
-                  >Salvar</b-button
+                  >Aplicar</b-button
                 >
               </div>
               <eggs-list :eggsColor="'red'" :cardTitle="'Vermelho'" class="bg-white" />
@@ -515,7 +515,6 @@ export default {
     this.io = io('http://localhost:3333');
     this.handleAdditionalFeeLoading();
     this.$route.params.id ? this.handleCargoPackingLoading(this.$route.params.id) : this.handleListLoading();
-    this.handleEggsLoading();
     this.newDate = localStorage.getItem('editingCargoPackingDate');
   },
   methods: {
@@ -560,13 +559,13 @@ export default {
       }
     },
     async handleRedEggsTaxEdit() {
-      const newRedEggsTax = {
-        ...this.getAdditionalFee,
-        current_fee_price: this.form.redEggsTax,
-      };
+      // const newRedEggsTax = {
+      //   ...this.getAdditionalFee,
+      //   current_fee_price: this.form.redEggsTax,
+      // };
 
-      await this.updateAdditionalFee(newRedEggsTax);
-      this.updateRegEggs(this.form.redEggsTax);
+      // await this.updateAdditionalFee(newRedEggsTax);
+      this.updateRedEggs(this.form.redEggsTax);
       this.$bvToast.toast(`R$ ${this.form.redEggsTax}`, {
         title: 'Taxa dos ovos vermelhos atualizada',
         autoHideDelay: 5000,
@@ -588,6 +587,8 @@ export default {
     async handleListLoading() {
       await this.loadAllCustomers();
       await this.loadIntermediaries();
+      this.handleEggsLoading();
+
       const customersMap = [...this.getAllCustomers.map((c) => ({ value: c.id, text: `${c.name} - ${c.email}` }))];
       const intermediariesMap = [
         ...this.getIntermediaries.rows.map((c) => ({ value: c.id, text: `${c.name} - ${c.email}` })),
@@ -616,6 +617,7 @@ export default {
         egg_tray_amount: eggTrayAmount,
         egg_tray_price: eggTrayPrice,
         is_billet: isBillet,
+        additional_fee: additionalFee,
       } = this.getSelectedCargoPacking.cargoPacking;
       const form = this.form;
       const test = this.getAllCustomers.find((customer) => customer.id === customerId);
@@ -631,6 +633,7 @@ export default {
         };
       });
 
+      this.form.redEggsTax = additionalFee;
       this.selectedCustomerId = test.id;
       this.selectedIntermediaryId = intermediary ? intermediary.id : null;
       this.selectedDateCP = dueTo;
@@ -710,6 +713,7 @@ export default {
         egg_tray_price: this.form.eggTrayPrice,
         egg_retail_box_amount: this.form.eggBoxAmount,
         egg_retail_box_price: this.form.eggBoxPrice,
+        additional_fee: this.form.additionalFee,
       };
 
       if (this.$route.name === 'newCargoPacking') {

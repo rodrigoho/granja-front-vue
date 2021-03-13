@@ -26,7 +26,7 @@ export default {
     },
     shouldShowButton: {
       type: Boolean,
-      required: true,
+      required: false,
     },
   },
   methods: {

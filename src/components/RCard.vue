@@ -110,7 +110,7 @@ export default {
       };
       this.updateAdditionalFee(updatedAdditionalFee);
       this.onlineFee = newOnlineFee;
-      this.updateRegEggs(additionalFee);
+      this.updateRedEggs(additionalFee);
       this.isEditing = false;
     },
     onReset(evt) {

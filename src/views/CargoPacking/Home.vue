@@ -78,6 +78,7 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'Home',
+  title: 'Granja',
   mixins: [priceFormatter],
   components: {
     RHeader,

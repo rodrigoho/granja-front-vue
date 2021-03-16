@@ -214,18 +214,6 @@
                     ></b-form-input>
                   </b-form-group>
                 </b-col>
-
-                <b-col>
-                  <b-form-group id="input-group-paid-amount" label="Valor pago:" label-for="input-paid-amount">
-                    <b-form-input
-                      id="input-paid-amount"
-                      v-model="form.paidAmount"
-                      type="text"
-                      size="sm"
-                      placeholder="Digite o valor"
-                    ></b-form-input>
-                  </b-form-group>
-                </b-col>
               </b-row>
               <b-row class="style-inputs">
                 <b-col class="align-data" sm="2">
@@ -329,7 +317,6 @@
                       </b-form-group>
                     </b-col>
 
-                    <!-- Customer CNPJ -->
                     <b-col>
                       <b-form-group
                         id="input-group-egg-box-amount"
@@ -347,6 +334,56 @@
                   </b-row>
                 </b-col>
               </b-row>
+              <b-row class="style-inputs">
+                <b-col cols="3">
+                  <b-form-group id="input-group-paid-amount" label="Pagamento:" label-for="input-paid-amount">
+                    <b-form-input
+                      id="input-paid-amount"
+                      v-model="form.paidAmount"
+                      type="text"
+                      size="sm"
+                      placeholder="Digite o valor"
+                    ></b-form-input>
+                  </b-form-group>
+                </b-col>
+                <b-col cols="3">
+                  <b-form-group id="input-group-payment-date" label="Data:" label-for="input-payment-date">
+                    <b-form-input
+                      id="input-payment-date"
+                      type="text"
+                      v-model="form.paymentDate"
+                      size="sm"
+                      v-mask="'##/##/####'"
+                      placeholder="Digite a data"
+                    ></b-form-input>
+                  </b-form-group>
+                </b-col>
+                <b-col
+                  ><b-button variant="primary" @click="handleNewPayment" size="sm" class="style-add-payment"
+                    >Adicionar</b-button
+                  ></b-col
+                >
+              </b-row>
+              <div v-if="payments.length">
+                <b-col offset="1"><h5>Pagamentos</h5></b-col>
+                <b-row v-for="(payment, idx) in payments" :key="idx" class="style-payments">
+                  <b-col cols="5">
+                    {{ formattedMoneyValue(payment.paid_amount) }}
+                  </b-col>
+                  <b-col cols="5">
+                    {{ payment.date }}
+                  </b-col>
+                  <b-col cols="1"
+                    ><b-button
+                      variant="danger"
+                      @click="handlePaymentDelete(payment)"
+                      size="sm"
+                      class="style-delete-payment"
+                      >X</b-button
+                    ></b-col
+                  >
+                </b-row>
+              </div>
 
               <div class="form-buttons">
                 <b-button type="reset" variant="danger" size="sm">Limpar</b-button>
@@ -391,12 +428,13 @@ import EggsList from '@/components/EggsList.vue';
 import DatePicker from '@/components/DatePicker.vue';
 import DatePickerEggs from '@/components/DatePickerEggs.vue';
 import { format, parseISO } from 'date-fns';
+import { priceFormatter } from '@/mixins/priceFormatter';
 import io from 'socket.io-client';
 import { eggPriceMixin } from '@/mixins/eggPriceMixin.js';
 
 export default {
   name: 'NewCargoPacking',
-  mixins: [eggPriceMixin],
+  mixins: [eggPriceMixin, priceFormatter],
   components: {
     RHeader,
     DatePicker,
@@ -414,6 +452,8 @@ export default {
         icmsTax: 0,
         hasICMS: false,
         paidAmount: null,
+        paymentDate: null,
+        payments: [],
         hasRuralFund: false,
         eggTrayAmount: 0,
         eggTrayPrice: 0,
@@ -424,6 +464,7 @@ export default {
         redEggsTax: 0,
         isBillet: false,
       },
+      payments: [],
       eggsCargo: [
         {
           eggId: 1,
@@ -534,6 +575,13 @@ export default {
     async handleAdditionalFeeLoading() {
       await this.loadAdditionalFee();
     },
+    handlePaymentDelete(payment) {
+      console.log(payment);
+      const removeIndex = this.payments.findIndex(
+        (c) => c.paidAmount === payment.paid_amound && c.date === payment.paymentDate
+      );
+      this.payments = this.payments.splice(removeIndex, 1);
+    },
     formatNumber(numberToFormat) {
       return numberToFormat.length > 0 ? numberToFormat.replace(',', '.') : numberToFormat;
     },
@@ -558,13 +606,18 @@ export default {
         this.form.ruralFundTax = 0;
       }
     },
+    handleNewPayment() {
+      const payment = {
+        paid_amount: this.form.paidAmount,
+        date: this.form.paymentDate,
+      };
+      console.log(typeof this.payments);
+      this.payments.push(payment);
+      this.form.paidAmount = null;
+      this.form.paymentDate = null;
+      console.log(this.form.paidAmount, this.form.paymentDate);
+    },
     async handleRedEggsTaxEdit() {
-      // const newRedEggsTax = {
-      //   ...this.getAdditionalFee,
-      //   current_fee_price: this.form.redEggsTax,
-      // };
-
-      // await this.updateAdditionalFee(newRedEggsTax);
       this.updateRedEggs(this.form.redEggsTax);
       this.$bvToast.toast(`R$ ${this.form.redEggsTax}`, {
         title: 'Taxa dos ovos vermelhos atualizada',
@@ -610,7 +663,7 @@ export default {
         rural_fund_tax: ruralFundTax,
         icms_tax: icmsTax,
         is_paid: isPaid,
-        paid_amount: paidAmount,
+        payments,
         intermediary,
         egg_retail_box_amount: eggBoxAmount,
         egg_retail_box_price: eggBoxPrice,
@@ -633,6 +686,7 @@ export default {
         };
       });
 
+      this.payments = payments;
       this.form.redEggsTax = additionalFee;
       this.selectedCustomerId = test.id;
       this.selectedIntermediaryId = intermediary ? intermediary.id : null;
@@ -645,7 +699,6 @@ export default {
       form.icmsTax = icmsTax;
       form.ruralFundTax = ruralFundTax;
       form.isPaid = isPaid;
-      form.paidAmount = paidAmount;
       form.hasICMS = icmsTax > 0 ? true : false;
       form.eggTrayPrice = eggTrayPrice;
       form.eggTrayAmount = eggTrayAmount;
@@ -702,6 +755,7 @@ export default {
         customer_id: this.selectedCustomerId,
         intermediary_id: this.selectedIntermediaryId,
         icms_tax: this.form.icmsTax,
+        payments: this.payments,
         created_by_user_id: parseInt(localStorage.getItem('userId')),
         updated_by_user_id: null,
         paid_amount: this.form.paidAmount ? this.formatNumber(this.form.paidAmount) : null,
@@ -773,7 +827,6 @@ export default {
 <style scoped lang="scss">
 .align-cards {
   position: relative;
-  top: 50px;
   display: flex;
   background: #fff;
   margin: 50px auto;
@@ -782,7 +835,6 @@ export default {
 
 .style-eggs-details {
   position: relative;
-  top: 42px;
   display: flex;
   background: #fff;
   margin: 50px auto;
@@ -799,6 +851,11 @@ export default {
     top: 32px;
     height: 30px;
   }
+}
+
+.style-add-payment {
+  position: relative;
+  top: 32px;
 }
 
 .flex-cargo-packing {
@@ -842,6 +899,15 @@ export default {
 .align-disc {
   position: relative;
   right: 8px;
+}
+
+.style-payments {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 20px;
+  width: 350px;
+  margin-bottom: 5px;
 }
 
 h5 {

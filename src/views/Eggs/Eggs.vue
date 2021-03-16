@@ -14,8 +14,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
-
 import RHeader from '@/components/RHeader.vue';
 import EggsList from '@/components/EggsList.vue';
 import RCard from '@/components/RCard.vue';
@@ -30,12 +28,6 @@ export default {
     EggsList,
     RCard,
   },
-  data() {
-    return {
-      // whiteEggsList: [],
-      // redEggsList: [],
-    };
-  },
   mounted() {
     this.handleLoadEggList();
   },
@@ -43,16 +35,9 @@ export default {
     ...mapActions(['loadEggsList', 'loadAdditionalFee', 'loadRedEggsList']),
     async handleLoadEggList() {
       await this.loadAdditionalFee();
-      // await this.loadRedEggsList();
-      // console.log(this.getRedEggsList);
-
-      // await this.updateRedEggs;
       await this.loadEggsList();
 
-      console.log(this.getWhiteEggsList);
       this.updateRedEggs(this.getAdditionalFee.current_fee_price);
-      // this.whiteEggsList = this.getWhiteEggsList;
-      // this.redEggsList = this.getRedEggsList;
     },
   },
   computed: {

@@ -580,7 +580,7 @@ export default {
       const removeIndex = this.payments.findIndex(
         (c) => c.paidAmount === payment.paid_amound && c.date === payment.paymentDate
       );
-      this.payments = this.payments.splice(removeIndex, 1);
+      this.payments.splice(removeIndex, 1);
     },
     formatNumber(numberToFormat) {
       return numberToFormat.length > 0 ? numberToFormat.replace(',', '.') : numberToFormat;

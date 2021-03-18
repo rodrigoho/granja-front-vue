@@ -224,11 +224,6 @@
                   </b-form-group>
                 </b-col>
                 <b-col sm="2">
-                  <b-form-group id="input-group-paid" label-for="input-paid">
-                    <b-form-checkbox v-model="form.isPaid" :value="true" :unchecked-value="false">Pago</b-form-checkbox>
-                  </b-form-group>
-                </b-col>
-                <b-col sm="2">
                   <b-form-group id="input-group-icms" label-for="input-icms">
                     <b-form-checkbox
                       v-model="form.hasICMS"
@@ -262,7 +257,7 @@
                 <!-- EggTray -->
                 <b-col>
                   <b-row>
-                    <b-col offset="4">
+                    <b-col offset="3">
                       <h5>Bandejas</h5>
                     </b-col>
                   </b-row>
@@ -282,11 +277,7 @@
 
                     <!-- Egg tray amount -->
                     <b-col>
-                      <b-form-group
-                        id="input-group-egg-tray-amount"
-                        label="Quantidade:"
-                        label-for="input-egg-tray-amount"
-                      >
+                      <b-form-group id="input-group-egg-tray-amount" label="Qtd:" label-for="input-egg-tray-amount">
                         <b-form-input
                           id="input-egg-tray-amount"
                           v-model="form.eggTrayAmount"
@@ -300,7 +291,7 @@
                 <!-- Egg box price -->
                 <b-col>
                   <b-row>
-                    <b-col offset="4">
+                    <b-col offset="3">
                       <h5>Caixas</h5>
                     </b-col>
                   </b-row>
@@ -318,14 +309,45 @@
                     </b-col>
 
                     <b-col>
-                      <b-form-group
-                        id="input-group-egg-box-amount"
-                        label="Quantidade:"
-                        label-for="input-egg-box-amount"
-                      >
+                      <b-form-group id="input-group-egg-box-amount" label="Qtd:" label-for="input-egg-box-amount">
                         <b-form-input
                           id="input-egg-box-amount"
                           v-model="form.eggBoxAmount"
+                          type="text"
+                          size="sm"
+                        ></b-form-input>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                </b-col>
+
+                <!-- Egg label -->
+                <b-col>
+                  <b-row>
+                    <b-col offset="3">
+                      <h5>Etiquetas</h5>
+                    </b-col>
+                  </b-row>
+                  <b-row class="flex-row">
+                    <!-- Egg label price -->
+                    <b-col>
+                      <b-form-group id="input-group-egg-label-price" label="Preço:" label-for="input-egg-label-price">
+                        <b-form-input
+                          id="input-egg-label-price"
+                          type="number"
+                          step="0.01"
+                          v-model="form.eggLabelPrice"
+                          size="sm"
+                        ></b-form-input>
+                      </b-form-group>
+                    </b-col>
+
+                    <!-- Egg label amount -->
+                    <b-col>
+                      <b-form-group id="input-group-egg-label-amount" label="Qtd:" label-for="input-egg-label-amount">
+                        <b-form-input
+                          id="input-egg-label-amount"
+                          v-model="form.eggLabelAmount"
                           type="text"
                           size="sm"
                         ></b-form-input>
@@ -364,7 +386,7 @@
                   ></b-col
                 >
               </b-row>
-              <div v-if="payments.length">
+              <div v-if="payments">
                 <b-col offset="1"><h5>Pagamentos</h5></b-col>
                 <b-row v-for="(payment, idx) in payments" :key="idx" class="style-payments">
                   <b-col cols="5">
@@ -444,7 +466,6 @@ export default {
   data() {
     return {
       form: {
-        isPaid: false,
         hasInsurance: false,
         discount: 0,
         ruralFundTax: 0,
@@ -459,6 +480,8 @@ export default {
         eggTrayPrice: 0,
         eggBoxAmount: 0,
         eggBoxPrice: 0,
+        eggLabelAmount: 0,
+        eggLabelPrice: 0,
         receiptValue: null,
         receiptNumber: null,
         redEggsTax: 0,
@@ -662,7 +685,6 @@ export default {
         has_insurance_fee: hasInsuranceFee,
         rural_fund_tax: ruralFundTax,
         icms_tax: icmsTax,
-        is_paid: isPaid,
         payments,
         intermediary,
         egg_retail_box_amount: eggBoxAmount,
@@ -698,7 +720,6 @@ export default {
       form.isBillet = isBillet;
       form.icmsTax = icmsTax;
       form.ruralFundTax = ruralFundTax;
-      form.isPaid = isPaid;
       form.hasICMS = icmsTax > 0 ? true : false;
       form.eggTrayPrice = eggTrayPrice;
       form.eggTrayAmount = eggTrayAmount;
@@ -747,7 +768,6 @@ export default {
 
       const cargoPacking = {
         eggs_cargo: this.eggsCargo,
-        is_paid: this.form.isPaid,
         custom_date: this.customDate || format(new Date(), 'dd/MM/yyyy'),
         custom_date_timestamp: this.customDateTimestamp || new Date(),
         due_to: this.selectedDateCP,

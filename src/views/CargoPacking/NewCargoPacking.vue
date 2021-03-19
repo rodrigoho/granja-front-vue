@@ -386,7 +386,7 @@
                   ></b-col
                 >
               </b-row>
-              <div v-if="payments">
+              <div v-if="payments & payments.length">
                 <b-col offset="1"><h5>Pagamentos</h5></b-col>
                 <b-row v-for="(payment, idx) in payments" :key="idx" class="style-payments">
                   <b-col cols="5">
@@ -692,23 +692,29 @@ export default {
         egg_tray_amount: eggTrayAmount,
         egg_tray_price: eggTrayPrice,
         is_billet: isBillet,
+        custom_date_timestamp: customDateTimestamp,
         additional_fee: additionalFee,
       } = this.getSelectedCargoPacking.cargoPacking;
       const form = this.form;
       const test = this.getAllCustomers.find((customer) => customer.id === customerId);
       this.customer = test;
+
+      console.log(`customDateTime\n\n\n ${customDateTimestamp}`);
+      console.log(`customDateTime\n\n\n ${format(parseISO(customDateTimestamp), 'dd/MM/yyyy')}`);
+
       orderItems.forEach((oI) => {
         const indexToUpdate = this.eggsCargo.findIndex((egg) => egg.eggId === oI.egg_details.id);
         const amount = oI.amount;
         const discount = oI.discount;
         this.eggsCargo[indexToUpdate] = {
           ...this.eggsCargo[indexToUpdate],
+          eggPrice: oI.cur_egg_price,
           amount: amount,
           discount: discount,
         };
       });
 
-      this.payments = payments;
+      this.payments = payments ? payments : [];
       this.form.redEggsTax = additionalFee;
       this.selectedCustomerId = test.id;
       this.selectedIntermediaryId = intermediary ? intermediary.id : null;

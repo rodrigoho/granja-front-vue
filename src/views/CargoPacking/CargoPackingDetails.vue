@@ -151,7 +151,7 @@
             <b-button @click="handleDelete()">Deletar</b-button>
           </div>
         </div>
-        <div class="align-payments" v-if="payments">
+        <div class="align-payments" v-if="payments && payments.length">
           <div class="data">
             <h4 class="align-title">Valores Pagos</h4>
             <b-row v-for="(payment, idx) in payments" :key="idx">

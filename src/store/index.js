@@ -222,13 +222,10 @@ export default new Vuex.Store({
 
     UPDATE_RED_EGG(state, payload) {
       const redEggs = state.redEggsList;
-      console.log('payload', payload);
       const removeIndex = redEggs.findIndex((i) => {
         return i.id === payload.id;
       });
-      console.log('removeIndex', removeIndex);
       redEggs.splice(removeIndex, 1, payload);
-      console.log('UPDATE_RED_EGG', redEggs);
     },
 
     SET_ADDITIONAL_FEE(state, payload) {
@@ -473,7 +470,6 @@ export default new Vuex.Store({
     },
     loadSelectedCustomer: async ({ commit }, payload) => {
       try {
-        console.log('uepa');
         const res = await api.get(`customers/${payload}`);
         commit('SET_SELECTED_CUSTOMER', res.data);
         return res;
@@ -581,23 +577,7 @@ export default new Vuex.Store({
         throw err.response.data.error;
       }
     },
-    // eslint-disable-next-line no-unused-vars
     updateRedEgg: async ({ commit, dispatch }, payload) => {
-      // additionalFee: "20"
-
-      // updatedRedEgg: {
-      //   color: "Vermelho"
-      //   createdAt: "2021-03-06T18:32:21.295Z"
-      //   edited_by_user: null
-      //   id: 1
-      //   last_edited_by_user_id: null
-      //   price: "120.00"
-      //   size: "Jumbo"
-      //   updatedAt: "2021-03-06T19:12:57.700Z"
-      // }
-
-      // whiteEggPrice: "100.00"
-      console.log(payload);
       try {
         const { updatedRedEgg } = payload;
 

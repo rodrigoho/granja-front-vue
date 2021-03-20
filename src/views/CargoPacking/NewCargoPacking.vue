@@ -336,7 +336,7 @@
                           id="input-egg-label-price"
                           type="number"
                           step="0.01"
-                          v-model="form.eggLabelPrice"
+                          v-model="form.labelPrice"
                           size="sm"
                         ></b-form-input>
                       </b-form-group>
@@ -347,7 +347,7 @@
                       <b-form-group id="input-group-egg-label-amount" label="Qtd:" label-for="input-egg-label-amount">
                         <b-form-input
                           id="input-egg-label-amount"
-                          v-model="form.eggLabelAmount"
+                          v-model="form.labelAmount"
                           type="text"
                           size="sm"
                         ></b-form-input>
@@ -386,13 +386,13 @@
                   ></b-col
                 >
               </b-row>
-              <div v-if="payments & payments.length">
+              <div v-if="hasPayments">
                 <b-col offset="1"><h5>Pagamentos</h5></b-col>
                 <b-row v-for="(payment, idx) in payments" :key="idx" class="style-payments">
                   <b-col cols="5">
                     {{ formattedMoneyValue(payment.paid_amount) }}
                   </b-col>
-                  <b-col cols="5">
+                  <b-col cols="4">
                     {{ payment.date }}
                   </b-col>
                   <b-col cols="1"
@@ -480,8 +480,8 @@ export default {
         eggTrayPrice: 0,
         eggBoxAmount: 0,
         eggBoxPrice: 0,
-        eggLabelAmount: 0,
-        eggLabelPrice: 0,
+        labelAmount: 0,
+        labelPrice: 0,
         receiptValue: null,
         receiptNumber: null,
         redEggsTax: 0,
@@ -599,7 +599,6 @@ export default {
       await this.loadAdditionalFee();
     },
     handlePaymentDelete(payment) {
-      console.log(payment);
       const removeIndex = this.payments.findIndex(
         (c) => c.paidAmount === payment.paid_amound && c.date === payment.paymentDate
       );
@@ -634,11 +633,10 @@ export default {
         paid_amount: this.form.paidAmount,
         date: this.form.paymentDate,
       };
-      console.log(typeof this.payments);
+
       this.payments.push(payment);
       this.form.paidAmount = null;
       this.form.paymentDate = null;
-      console.log(this.form.paidAmount, this.form.paymentDate);
     },
     async handleRedEggsTaxEdit() {
       this.updateRedEggs(this.form.redEggsTax);
@@ -691,6 +689,8 @@ export default {
         egg_retail_box_price: eggBoxPrice,
         egg_tray_amount: eggTrayAmount,
         egg_tray_price: eggTrayPrice,
+        label_amount: labelAmount,
+        label_price: labelPrice,
         is_billet: isBillet,
         custom_date_timestamp: customDateTimestamp,
         additional_fee: additionalFee,
@@ -731,6 +731,8 @@ export default {
       form.eggTrayAmount = eggTrayAmount;
       form.eggBoxPrice = eggBoxPrice;
       form.eggBoxAmount = eggBoxAmount;
+      form.labelAmount = labelAmount;
+      form.labelPrice = labelPrice;
       localStorage.setItem('editingCargoPackingDate', dueTo);
     },
     sortArr(listToSort) {
@@ -793,6 +795,8 @@ export default {
         egg_tray_price: this.form.eggTrayPrice,
         egg_retail_box_amount: this.form.eggBoxAmount,
         egg_retail_box_price: this.form.eggBoxPrice,
+        label_price: this.form.labelPrice,
+        label_amount: this.form.labelAmount,
         additional_fee: this.form.additionalFee,
       };
 
@@ -845,6 +849,9 @@ export default {
     },
     testeDate() {
       return parseISO(this.customDate);
+    },
+    hasPayments() {
+      return this.payments && this.payments.length;
     },
   },
 };
@@ -932,7 +939,7 @@ export default {
   flex-direction: row;
   align-items: center;
   padding: 0 20px;
-  width: 350px;
+  width: 450px;
   margin-bottom: 5px;
 }
 

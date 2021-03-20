@@ -115,6 +115,21 @@
                             }}
                           </b-col>
                         </b-row>
+                        <b-row>
+                          <b-col sm="2">
+                            <span>Etiquetas</span>
+                          </b-col>
+                          <b-col offset="1" sm="2">{{
+                            eggPackages.eggLabel.labelAmount ? eggPackages.eggLabel.labelAmount : '-'
+                          }}</b-col>
+                          <b-col sm="4">
+                            {{
+                              eggPackages.eggLabel.labelPrice > 0
+                                ? `${formattedMoneyValue(parseFloat(eggPackages.eggLabel.labelPrice))}`
+                                : '-'
+                            }}
+                          </b-col>
+                        </b-row>
                       </b-col>
                     </b-row>
                   </div>
@@ -373,11 +388,14 @@ export default {
         this.getSelectedCargoPacking && this.getSelectedCargoPacking.cargoPacking.egg_retail_box_amount;
       const eggBoxPrice =
         this.getSelectedCargoPacking && this.getSelectedCargoPacking.cargoPacking.egg_retail_box_price;
+      const labelAmount = this.getSelectedCargoPacking && this.getSelectedCargoPacking.cargoPacking.label_amount;
+      const labelPrice = this.getSelectedCargoPacking && this.getSelectedCargoPacking.cargoPacking.label_price;
 
       const packagesValue = (eggTrayAmount * eggTrayPrice + eggBoxAmount * eggBoxPrice).toFixed(2);
       return {
         eggTray: { eggTrayAmount, eggTrayPrice },
         eggBox: { eggBoxAmount, eggBoxPrice },
+        eggLabel: { labelAmount, labelPrice },
         packagesValue,
       };
     },
@@ -463,7 +481,7 @@ export default {
 .general-data {
   position: relative;
   left: 50px;
-  width: 200px;
+  width: 230px;
 }
 
 .mt-10 {

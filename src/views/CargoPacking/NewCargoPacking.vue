@@ -240,6 +240,7 @@
                       v-model="form.hasRuralFund"
                       @change="handleRuralFundClick"
                       :value="true"
+                      :disabled="!customerHasRuralFundTax"
                       :unchecked-value="false"
                       >F. Rural</b-form-checkbox
                     >
@@ -645,6 +646,13 @@ export default {
         autoHideDelay: 5000,
         variant: 'success',
       });
+      this.updateEggsCargo();
+    },
+    updateEggsCargo() {
+      this.eggsCargo.forEach((egg) => {
+        const tes = this.getEggsList.find((e) => e.id === egg.eggId);
+        egg.eggPrice = tes.price;
+      });
     },
     async handleEggPricesSelect(selectedDates) {
       this.customDateTimestamp = selectedDates.formattedDateTimestamp;
@@ -792,12 +800,12 @@ export default {
         receipt_number: this.form.receiptNumber,
         rural_fund_tax: this.form.ruralFundTax,
         egg_tray_amount: this.form.eggTrayAmount,
-        egg_tray_price: this.form.eggTrayPrice,
+        egg_tray_price: this.form.eggTrayPrice ? this.form.eggTrayPrice : 0,
         egg_retail_box_amount: this.form.eggBoxAmount,
-        egg_retail_box_price: this.form.eggBoxPrice,
-        label_price: this.form.labelPrice,
+        egg_retail_box_price: this.form.eggBoxPrice ? this.form.eggBoxPrice : 0,
+        label_price: this.form.labelPrice ? this.form.labelPrice : 0,
         label_amount: this.form.labelAmount,
-        additional_fee: this.form.additionalFee,
+        additional_fee: this.form.redEggsTax,
       };
 
       if (this.$route.name === 'newCargoPacking') {
@@ -852,6 +860,10 @@ export default {
     },
     hasPayments() {
       return this.payments && this.payments.length;
+    },
+    customerHasRuralFundTax() {
+      console.log(this.getSelectedCustomer);
+      return this.getSelectedCustomer && parseFloat(this.getSelectedCustomer.rural_fund_tax) > 0;
     },
   },
 };

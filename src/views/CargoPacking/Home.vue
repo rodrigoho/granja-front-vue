@@ -118,6 +118,8 @@ export default {
         },
       ],
       currentPage: 1,
+      sortDirection: 'DESC',
+      columnToSort: 'due_to',
       perPage: 10,
       selectedCargoPackingFilter: 0,
       cargoPackingFilters: [
@@ -153,7 +155,7 @@ export default {
       await this.loadCargoPackings({ curPage, sortDirection: 'DESC', columnToSort: 'due_to' });
     },
     async paginate(curPage) {
-      await this.loadCargoPackings({ curPage, sortDirection: 'ASC', columnToSort: 'due_to' });
+      await this.loadCargoPackings({ curPage, sortDirection: this.sortDirection, columnToSort: this.columnToSort });
     },
     async handleCargoPackingFilter() {
       // if (this.selectedCargoPackingFilter === 0) {
@@ -190,6 +192,8 @@ export default {
     sortingChanged(ctx) {
       const { currentPage: curPage, sortDesc: isSortDesc, sortBy: columnToSort } = ctx;
       const sortDirection = isSortDesc ? 'DESC' : 'ASC';
+      this.sortDirection = sortDirection;
+      this.columnToSort = columnToSort;
       this.loadCargoPackings({ curPage, sortDirection, columnToSort });
     },
   },

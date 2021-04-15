@@ -230,6 +230,7 @@
                       @change="handleIcmsClick"
                       :value="true"
                       :unchecked-value="false"
+                      :disabled="!customerHasICMS"
                       >ICMS</b-form-checkbox
                     >
                   </b-form-group>
@@ -418,8 +419,8 @@
         <div>
           <b-card class="style-eggs-details">
             <b-row>
-              <date-picker-eggs @uepa="handleEggPricesSelect" :selectedDateEggs.sync="selectedDateEggs" />
-              <eggs-list :opa="'opa'" :eggsColor="'white'" :cardTitle="'Branco'" :isEditable="false" class="bg-white" />
+              <date-picker-eggs @uepa="handleEggPricesSelect" :selectedDateEggs.sync="selectedDateEggs" :key="uepa3" />
+              <eggs-list :eggsColor="'white'" :cardTitle="'Branco'" :isEditable="false" class="bg-white" />
 
               <div class="style-red-egg-tax">
                 <b-form-group id="input-group-receipt-value" label="Taxa ovo vermelho:" label-for="input-receipt-value">
@@ -435,7 +436,7 @@
                   >Aplicar</b-button
                 >
               </div>
-              <eggs-list :eggsColor="'red'" :cardTitle="'Vermelho'" class="bg-white" />
+              <eggs-list :test="'teste'" :eggsColor="'red'" :cardTitle="'Vermelho'" class="bg-white" />
             </b-row>
           </b-card>
         </div>
@@ -454,6 +455,7 @@ import { format, parseISO } from 'date-fns';
 import { priceFormatter } from '@/mixins/priceFormatter';
 import io from 'socket.io-client';
 import { eggPriceMixin } from '@/mixins/eggPriceMixin.js';
+import { zonedTimeToUtc } from 'date-fns-tz';
 
 export default {
   name: 'NewCargoPacking',
@@ -564,6 +566,7 @@ export default {
         },
       ],
       newDate: localStorage.getItem('editingCargoPackingDate'),
+      eggPriceNewDate: localStorage.getItem('selectedEggPriceDate'),
       customDateTimestamp: null,
       customersList: [],
       intermediariesList: [],
@@ -571,7 +574,7 @@ export default {
       selectedIntermediaryId: null,
       selectedCustomerId: null,
       selectedDateCP: new Date(),
-      selectedDateEggs: null,
+      selectedDateEggs: localStorage.getItem('selectedEggPriceDate'),
       customDate: null,
       show: true,
     };
@@ -581,6 +584,7 @@ export default {
     this.handleAdditionalFeeLoading();
     this.$route.params.id ? this.handleCargoPackingLoading(this.$route.params.id) : this.handleListLoading();
     this.newDate = localStorage.getItem('editingCargoPackingDate');
+    this.eggPriceNewDate = localStorage.getItem('selectedEggPriceDate');
   },
   methods: {
     ...mapActions([
@@ -595,6 +599,7 @@ export default {
       'loadSelectedEggsPrices',
       'loadEggsListComplete',
       'updateAdditionalFee',
+      'updateRedEggsPriceOnCargoPacking',
     ]),
     async handleAdditionalFeeLoading() {
       await this.loadAdditionalFee();
@@ -640,7 +645,8 @@ export default {
       this.form.paymentDate = null;
     },
     async handleRedEggsTaxEdit() {
-      this.updateRedEggs(this.form.redEggsTax);
+      this.updateRedEggsPriceOnCargoPacking(this.form.redEggsTax);
+      // this.updateRedEggs(this.form.redEggsTax);
       this.$bvToast.toast(`R$ ${this.form.redEggsTax}`, {
         title: 'Taxa dos ovos vermelhos atualizada',
         autoHideDelay: 5000,
@@ -663,7 +669,9 @@ export default {
 
         await this.loadSelectedEggsPrices(objectToSend);
         this.handleEggPrices();
+        console.log(selectedDates);
         this.customDate = selectedDates.formattedSelectedDate;
+        console.log('customDate', this.customDate);
       }
     },
     async handleListLoading() {
@@ -703,12 +711,14 @@ export default {
         custom_date_timestamp: customDateTimestamp,
         additional_fee: additionalFee,
       } = this.getSelectedCargoPacking.cargoPacking;
+
+      await this.loadSelectedCustomer(customerId);
       const form = this.form;
       const test = this.getAllCustomers.find((customer) => customer.id === customerId);
       this.customer = test;
 
-      console.log(`customDateTime\n\n\n ${customDateTimestamp}`);
-      console.log(`customDateTime\n\n\n ${format(parseISO(customDateTimestamp), 'dd/MM/yyyy')}`);
+      // console.log(`customDateTime\n\n\n ${customDateTimestamp}`);
+      // console.log(`customDateTime\n\n\n ${format(parseISO(customDateTimestamp), 'dd/MM/yyyy')}`);
 
       orderItems.forEach((oI) => {
         const indexToUpdate = this.eggsCargo.findIndex((egg) => egg.eggId === oI.egg_details.id);
@@ -727,6 +737,22 @@ export default {
       this.selectedCustomerId = test.id;
       this.selectedIntermediaryId = intermediary ? intermediary.id : null;
       this.selectedDateCP = dueTo;
+
+      const parsedDate = parseISO(customDateTimestamp);
+      const znDate = zonedTimeToUtc(parsedDate, 'America/Sao_Paulo');
+      this.selectedDateEggs = znDate;
+
+      // console.log(format(znDate, 'dd/MM/yyyy'));
+      // console.log(znDate);
+      console.log(customDateTimestamp);
+
+      const objectToSend = {
+        selected_date: format(znDate, 'dd/MM/yyyy'),
+      };
+
+      await this.loadSelectedEggsPrices(objectToSend);
+      this.handleEggPrices();
+
       form.receiptNumber = receiptNumber;
       form.receiptValue = this.formatNumber(receiptValue);
       form.hasInsurance = hasInsuranceFee;
@@ -742,6 +768,7 @@ export default {
       form.labelAmount = labelAmount;
       form.labelPrice = labelPrice;
       localStorage.setItem('editingCargoPackingDate', dueTo);
+      localStorage.setItem('selectedEggPriceDate', customDateTimestamp);
     },
     sortArr(listToSort) {
       return listToSort.sort((a, b) => {
@@ -769,10 +796,13 @@ export default {
       const eggsList = this.getEggsList.length && this.getEggsList;
       this.eggsCargo.forEach((eggs, idx) => {
         const eggPrice = eggsList.length && eggsList.find((egg) => egg.id === this.eggsCargo[idx].eggId);
-        this.eggsCargo[idx] = {
-          ...this.eggsCargo[idx],
-          eggPrice: eggPrice.price,
-        };
+
+        if (eggPrice) {
+          this.eggsCargo[idx] = {
+            ...this.eggsCargo[idx],
+            eggPrice: eggPrice.price,
+          };
+        }
       });
     },
 
@@ -807,6 +837,8 @@ export default {
         label_amount: this.form.labelAmount,
         additional_fee: this.form.redEggsTax,
       };
+
+      console.log('custom_date', this.customDate);
 
       if (this.$route.name === 'newCargoPacking') {
         let res = await this.createCargoPacking(cargoPacking);
@@ -855,6 +887,9 @@ export default {
     uepa2() {
       return this.newDate;
     },
+    uepa3() {
+      return this.eggPriceNewDate;
+    },
     testeDate() {
       return parseISO(this.customDate);
     },
@@ -862,8 +897,10 @@ export default {
       return this.payments && this.payments.length;
     },
     customerHasRuralFundTax() {
-      console.log(this.getSelectedCustomer);
       return this.getSelectedCustomer && parseFloat(this.getSelectedCustomer.rural_fund_tax) > 0;
+    },
+    customerHasICMS() {
+      return this.getSelectedCustomer && parseFloat(this.getSelectedCustomer.icms_tax) > 0;
     },
   },
 };

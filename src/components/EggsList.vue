@@ -41,6 +41,7 @@ export default {
     cardTitle: String,
     eggsList: Array,
     isEditable: Boolean,
+    test: String,
     opa: {
       type: String,
       default: 'teste',
@@ -52,6 +53,7 @@ export default {
     };
   },
   created() {
+    if (this.test) console.log('eggslist-teste');
     this.handleAdditionalFeeLoading();
     this.handleEggsListLoading();
   },

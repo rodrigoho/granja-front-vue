@@ -14,6 +14,8 @@ import titleMixin from './mixins/titleMixin';
 
 library.add(fas);
 
+process.env.TZ = 'America/Sao_Paulo';
+
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.directive('mask', VueMaskDirective);
 Vue.mixin(titleMixin);

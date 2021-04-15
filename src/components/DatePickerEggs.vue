@@ -4,6 +4,7 @@
     <b-form-datepicker
       id="date-picker-eggs"
       v-model="value"
+      locale="pt-BR"
       class="mb-2 teste"
       @context="onContext"
       size="sm"
@@ -31,12 +32,21 @@ export default {
       if (typeof this.value === 'string') {
         const formattedSelectedDate = format(ctx.selectedDate, 'dd/MM/yyyy');
         const formattedDateTimestamp = ctx.selectedDate;
+        console.log('oi');
         this.$emit('uepa', { formattedSelectedDate, formattedDateTimestamp });
       }
       this.$emit('update:selectedDateEggs', ctx.selectedDate);
     },
     handleSelectedDate() {
-      this.value = new Date();
+      if (this.$route.params.id) {
+        this.value = localStorage.getItem('selectedEggPriceDate');
+        console.log('to aqui');
+        // const formattedSelectedDate = format(parseISO(localStorage.getItem('selectedEggPriceDate')), 'dd/MM/yyyy');
+        // const formattedDateTimestamp = localStorage.getItem('selectedEggPriceDate');
+        // this.$emit('uepa', { formattedSelectedDate, formattedDateTimestamp });
+      } else {
+        this.value = new Date();
+      }
     },
   },
 };

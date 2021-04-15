@@ -245,6 +245,7 @@ export default {
       await this.loadSelectedCargoPacking(this.$route.params.id);
       this.isBillet = this.getSelectedCargoPacking.cargoPacking.is_billet;
       localStorage.setItem('editingCargoPackingDate', this.getSelectedCargoPacking.cargoPacking.due_to);
+      localStorage.setItem('selectedEggPriceDate', this.getSelectedCargoPacking.cargoPacking.custom_date_timestamp);
       this.orderItems = this.getSelectedCargoPacking.cargoPacking.order_items;
       this.redEggsList = this.orderItems
         .filter((oI) => oI.egg_details.color === 'Vermelho')

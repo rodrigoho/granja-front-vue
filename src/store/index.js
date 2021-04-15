@@ -557,6 +557,28 @@ export default new Vuex.Store({
       }
     },
 
+    updateRedEggsPriceOnCargoPacking: async ({ commit, state }, redEggTax) => {
+      let updatedEggsList = [];
+      let eggsList = state.eggsList;
+      eggsList.map((egg) => {
+        if (egg.color === 'Vermelho') {
+          const whiteEgg = eggsList.find((e) => e.size === egg.size && e.color === 'Branco');
+          const updatedRedEgg = {
+            ...egg,
+            price: (parseFloat(whiteEgg.price) + parseFloat(redEggTax)).toFixed(2),
+          };
+
+          updatedEggsList.push(updatedRedEgg);
+        } else {
+          updatedEggsList.push(egg);
+        }
+      });
+
+      updatedEggsList.forEach((e) => console.log(JSON.stringify(e)));
+
+      commit('SET_EGGS_LIST', updatedEggsList);
+    },
+
     updateEgg: async ({ commit, state }, payload) => {
       try {
         const whiteEgg = { id: payload.id, price: payload.price, size: payload.size };
@@ -583,7 +605,7 @@ export default new Vuex.Store({
 
         const resRed = await api.put(`eggs/${updatedRedEgg.id}`, updatedRedEgg);
         commit('UPDATE_RED_EGG', updatedRedEgg);
-        dispatch('loadEggsListComplete');
+        dispatch('loadRedEggsList');
 
         return resRed;
       } catch (err) {

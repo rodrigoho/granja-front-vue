@@ -95,7 +95,7 @@ export default {
           label: 'Intermediário',
         },
         {
-          key: 'custom_date_timestamp',
+          key: 'custom_date' || 'custom_date_timestamp',
           label: 'Data da Carga',
           sortable: true,
         },

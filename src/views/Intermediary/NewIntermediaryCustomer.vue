@@ -138,7 +138,6 @@ export default {
   },
   mounted() {
     if (this.$route.params.id) {
-      console.log();
       this.handleIntermediaryLoading();
     }
   },

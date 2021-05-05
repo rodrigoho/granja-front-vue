@@ -294,7 +294,7 @@ export default new Vuex.Store({
     deleteCargoPacking: async ({ commit }, payload) => {
       try {
         const res = await api.delete(`cargo-packing/${payload}`);
-        console.log(res.data);
+
         commit('DELETE_CARGO_PACKING', payload);
         return res;
       } catch (err) {
@@ -573,8 +573,6 @@ export default new Vuex.Store({
           updatedEggsList.push(egg);
         }
       });
-
-      updatedEggsList.forEach((e) => console.log(JSON.stringify(e)));
 
       commit('SET_EGGS_LIST', updatedEggsList);
     },

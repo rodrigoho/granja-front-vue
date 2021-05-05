@@ -32,7 +32,7 @@ export default {
       if (typeof this.value === 'string') {
         const formattedSelectedDate = format(ctx.selectedDate, 'dd/MM/yyyy');
         const formattedDateTimestamp = ctx.selectedDate;
-        console.log('oi');
+
         this.$emit('uepa', { formattedSelectedDate, formattedDateTimestamp });
       }
       this.$emit('update:selectedDateEggs', ctx.selectedDate);
@@ -40,7 +40,7 @@ export default {
     handleSelectedDate() {
       if (this.$route.params.id) {
         this.value = localStorage.getItem('selectedEggPriceDate');
-        console.log('to aqui');
+
         // const formattedSelectedDate = format(parseISO(localStorage.getItem('selectedEggPriceDate')), 'dd/MM/yyyy');
         // const formattedDateTimestamp = localStorage.getItem('selectedEggPriceDate');
         // this.$emit('uepa', { formattedSelectedDate, formattedDateTimestamp });

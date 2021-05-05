@@ -411,7 +411,7 @@
 
               <div class="form-buttons">
                 <b-button type="reset" variant="danger" size="sm">Limpar</b-button>
-                <b-button type="submit" variant="primary" size="sm">Salvar</b-button>
+                <b-button type="submit" variant="primary" size="sm" :disabled="!isValid">Salvar</b-button>
               </div>
             </b-form>
           </b-card>
@@ -669,9 +669,8 @@ export default {
 
         await this.loadSelectedEggsPrices(objectToSend);
         this.handleEggPrices();
-        console.log(selectedDates);
+
         this.customDate = selectedDates.formattedSelectedDate;
-        console.log('customDate', this.customDate);
       }
     },
     async handleListLoading() {
@@ -742,15 +741,16 @@ export default {
       const znDate = zonedTimeToUtc(parsedDate, 'America/Sao_Paulo');
       this.selectedDateEggs = znDate;
 
-      // console.log(format(znDate, 'dd/MM/yyyy'));
-      // console.log(znDate);
-      console.log(customDateTimestamp);
-
       const objectToSend = {
         selected_date: format(znDate, 'dd/MM/yyyy'),
       };
 
       await this.loadSelectedEggsPrices(objectToSend);
+
+      if (additionalFee) {
+        this.updateRedEggsPriceOnCargoPacking(additionalFee);
+      }
+
       this.handleEggPrices();
 
       form.receiptNumber = receiptNumber;
@@ -838,8 +838,6 @@ export default {
         additional_fee: this.form.redEggsTax,
       };
 
-      console.log('custom_date', this.customDate);
-
       if (this.$route.name === 'newCargoPacking') {
         let res = await this.createCargoPacking(cargoPacking);
         const cargoPackingId = res.data.id;
@@ -884,6 +882,9 @@ export default {
       'getEggsList',
       'getAdditionalFee',
     ]),
+    isValid() {
+      return this.form.hasRuralFund ? !!(this.form.hasRuralFund && this.form.receiptValue) : true;
+    },
     uepa2() {
       return this.newDate;
     },

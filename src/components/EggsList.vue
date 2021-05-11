@@ -53,7 +53,7 @@ export default {
     };
   },
   created() {
-    if (this.test) console.log('eggslist-teste');
+    // if (this.test) console.log('eggslist-teste');
     this.handleAdditionalFeeLoading();
     this.handleEggsListLoading();
   },

@@ -41,7 +41,7 @@
                   </b-form-select>
                 </b-col>
                 <b-col>
-                  <date-picker :selectedDate.sync="selectedDateCP" :key="uepa2" class="align-due-date-header" />
+                  <date-picker :selectedDate.sync="selectedDateCP" :key="updateKey1" class="align-due-date-header" />
                 </b-col>
               </b-row>
             </div>
@@ -419,7 +419,11 @@
         <div>
           <b-card class="style-eggs-details">
             <b-row>
-              <date-picker-eggs @uepa="handleEggPricesSelect" :selectedDateEggs.sync="selectedDateEggs" :key="uepa3" />
+              <date-picker-eggs
+                @uepa="handleEggPricesSelect"
+                :selectedDateEggs.sync="selectedDateEggs"
+                :key="updateKey2"
+              />
               <eggs-list :eggsColor="'white'" :cardTitle="'Branco'" :isEditable="false" class="bg-white" />
 
               <div class="style-red-egg-tax">
@@ -451,11 +455,10 @@ import { mapActions, mapGetters } from 'vuex';
 import EggsList from '@/components/EggsList.vue';
 import DatePicker from '@/components/DatePicker.vue';
 import DatePickerEggs from '@/components/DatePickerEggs.vue';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns-tz';
 import { priceFormatter } from '@/mixins/priceFormatter';
 import io from 'socket.io-client';
 import { eggPriceMixin } from '@/mixins/eggPriceMixin.js';
-import { zonedTimeToUtc } from 'date-fns-tz';
 
 export default {
   name: 'NewCargoPacking',
@@ -661,7 +664,10 @@ export default {
       });
     },
     async handleEggPricesSelect(selectedDates) {
-      this.customDateTimestamp = selectedDates.formattedDateTimestamp;
+      this.customDateTimestamp = new Date(
+        format(new Date(selectedDates.formattedDateTimestamp), 'yyyy-MM-dd HH:mm:ss', 'America/Sao_Paulo')
+      );
+
       if (this.selectedDateEggs) {
         const objectToSend = {
           selected_date: selectedDates.formattedSelectedDate,
@@ -716,9 +722,6 @@ export default {
       const test = this.getAllCustomers.find((customer) => customer.id === customerId);
       this.customer = test;
 
-      // console.log(`customDateTime\n\n\n ${customDateTimestamp}`);
-      // console.log(`customDateTime\n\n\n ${format(parseISO(customDateTimestamp), 'dd/MM/yyyy')}`);
-
       orderItems.forEach((oI) => {
         const indexToUpdate = this.eggsCargo.findIndex((egg) => egg.eggId === oI.egg_details.id);
         const amount = oI.amount;
@@ -737,12 +740,13 @@ export default {
       this.selectedIntermediaryId = intermediary ? intermediary.id : null;
       this.selectedDateCP = dueTo;
 
-      const parsedDate = parseISO(customDateTimestamp);
-      const znDate = zonedTimeToUtc(parsedDate, 'America/Sao_Paulo');
-      this.selectedDateEggs = znDate;
+      this.customDateTimestamp = customDateTimestamp;
+
+      const teste = new Date(format(new Date(customDateTimestamp), 'yyyy-MM-dd HH:mm:ss', 'America/Sao_Paulo'));
+      this.selectedDateEggs = teste;
 
       const objectToSend = {
-        selected_date: format(znDate, 'dd/MM/yyyy'),
+        selected_date: format(teste, 'dd/MM/yyyy'),
       };
 
       await this.loadSelectedEggsPrices(objectToSend);
@@ -812,10 +816,12 @@ export default {
     async onSubmit(evt) {
       evt.preventDefault();
 
+      const defaultDate = new Date(format(new Date(), 'yyyy-MM-dd HH:mm:ss', 'America/Sao_Paulo'));
+
       const cargoPacking = {
         eggs_cargo: this.eggsCargo,
         custom_date: this.customDate || format(new Date(), 'dd/MM/yyyy'),
-        custom_date_timestamp: this.customDateTimestamp || new Date(),
+        custom_date_timestamp: this.customDateTimestamp || defaultDate,
         due_to: this.selectedDateCP,
         has_insurance_fee: this.form.hasInsurance,
         customer_id: this.selectedCustomerId,
@@ -858,7 +864,6 @@ export default {
     },
     onReset(evt) {
       evt.preventDefault();
-      // Reset our form values
       this.form.customerName = '';
       this.form.customerEmail = '';
       this.form.discount = '';
@@ -885,14 +890,11 @@ export default {
     isValid() {
       return this.form.hasRuralFund ? !!(this.form.hasRuralFund && this.form.receiptValue) : true;
     },
-    uepa2() {
+    updateKey1() {
       return this.newDate;
     },
-    uepa3() {
+    updateKey2() {
       return this.eggPriceNewDate;
-    },
-    testeDate() {
-      return parseISO(this.customDate);
     },
     hasPayments() {
       return this.payments && this.payments.length;
@@ -963,7 +965,7 @@ export default {
   position: relative;
   top: 2px;
   height: 21px;
-  width: 50px;
+  width: 55px;
   font-size: 12px;
   text-align: center;
 }

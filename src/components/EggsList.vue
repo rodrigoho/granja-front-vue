@@ -41,7 +41,6 @@ export default {
     cardTitle: String,
     eggsList: Array,
     isEditable: Boolean,
-    test: String,
     opa: {
       type: String,
       default: 'teste',
@@ -53,7 +52,6 @@ export default {
     };
   },
   created() {
-    // if (this.test) console.log('eggslist-teste');
     this.handleAdditionalFeeLoading();
     this.handleEggsListLoading();
   },
@@ -101,7 +99,7 @@ export default {
   },
   computed: {
     ...mapGetters(['getAdditionalFee', 'getRedEggsList', 'getWhiteEggsList', 'getEggsList']),
-    eggs: function () {
+    eggs() {
       if (this.eggsColor === 'red') {
         return this.sortArr(this.getEggsList.filter((egg) => egg.color === 'Vermelho'));
       } else {

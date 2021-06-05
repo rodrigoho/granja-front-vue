@@ -23,6 +23,7 @@ export default new Vuex.Store({
     selectedIntermediary: {},
     notifications: [],
     eggsList: [],
+    eggPricesList: [],
     whiteEggsList: null,
     redEggsList: null,
     additionalFee: null,
@@ -99,6 +100,10 @@ export default new Vuex.Store({
     },
     getEggsList(state) {
       return state.eggsList;
+    },
+
+    getEggPricesList(state) {
+      return state.eggPricesList;
     },
 
     // User
@@ -212,6 +217,9 @@ export default new Vuex.Store({
     },
     SET_EGGS_LIST(state, payload) {
       state.eggsList = payload;
+    },
+    SET_EGG_PRICES_LIST(state, payload) {
+      state.eggPricesList = payload;
     },
 
     UPDATE_WHITE_EGG(state, payload) {
@@ -552,6 +560,25 @@ export default new Vuex.Store({
       try {
         const res = await api.post(`eggs-prices-selected`, payload);
         commit('SET_EGGS_LIST', res.data);
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+
+    loadEggPricesList: async ({ commit }, payload) => {
+      try {
+        const res = await api.post(`eggs-prices-selected`, payload);
+        commit('SET_EGG_PRICES_LIST', res.data);
+      } catch (err) {
+        console.log('ue');
+        throw err.response.data.error;
+      }
+    },
+
+    createEggPrice: async (dispatch, payload) => {
+      try {
+        const res = await api.post('eggs-prices/create', payload);
+        return res.data;
       } catch (err) {
         throw err.response.data.error;
       }

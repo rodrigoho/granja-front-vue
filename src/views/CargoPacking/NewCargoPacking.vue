@@ -440,7 +440,7 @@
                   >Aplicar</b-button
                 >
               </div>
-              <eggs-list :test="'teste'" :eggsColor="'red'" :cardTitle="'Vermelho'" class="bg-white" />
+              <eggs-list :eggsColor="'red'" :cardTitle="'Vermelho'" class="bg-white" />
             </b-row>
           </b-card>
         </div>

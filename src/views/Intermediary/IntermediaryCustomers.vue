@@ -96,11 +96,6 @@ export default {
   },
   methods: {
     ...mapActions(['loadIntermediaries']),
-    // sortingChanged(ctx) {
-    //   const { currentPage: curPage } = ctx;
-    //   this.loadIntermediaries({ curPage });
-    //   console.log(ctx);
-    // },
     async paginate(curPage) {
       await this.loadIntermediaries(curPage);
     },

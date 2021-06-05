@@ -1,6 +1,6 @@
 <template>
   <div class="flex">
-    <label for="date-picker-eggs">Data</label>
+    <label v-if="shouldDisplayTitle" for="date-picker-eggs">Data</label>
     <b-form-datepicker
       id="date-picker-eggs"
       v-model="value"
@@ -17,6 +17,13 @@ import { format } from 'date-fns';
 
 export default {
   name: 'DatePickerEggs',
+  props: {
+    shouldDisplayTitle: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+  },
   data() {
     return {
       value: null,

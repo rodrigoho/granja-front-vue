@@ -289,6 +289,14 @@ export default new Vuex.Store({
         throw err.response.data.error;
       }
     },
+    loadSelectedCustomerCargoPackings: async ({ commit }, payload) => {
+      try {
+        const res = await api.get(`cargo-packing/by-customer/${payload}`);
+        commit('SET_CARGO_PACKINGS', res.data);
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
     createCargoPacking: async ({ dispatch }, payload) => {
       try {
         const res = await api.post('cargo-packing', payload);

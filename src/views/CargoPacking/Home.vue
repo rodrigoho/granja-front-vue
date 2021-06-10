@@ -20,6 +20,21 @@
             <b-form-select-option :value="null" disabled>Selecione o Filtro</b-form-select-option>
           </template>
         </b-form-select>
+        <div>
+          <b-form-input
+            list="my-list-id"
+            autocomplete="off"
+            @update="handleCustomerSelect"
+            debounce="500"
+          ></b-form-input>
+
+          <datalist id="my-list-id">
+            <option v-for="customer in getAllCustomers" :key="customer.id">{{ customer.name }}</option>
+          </datalist>
+          <div v-if="isLoading" class="text-center mt-3">
+            <b-spinner variant="success"></b-spinner>
+          </div>
+        </div>
         <span class="style-count">Total de romaneios: {{ getCargoPackings.count }}</span>
       </b-row>
     </b-col>
@@ -85,6 +100,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       fields: [
         {
           key: 'customer.name',
@@ -146,28 +162,36 @@ export default {
     if (this.$route.params.toRoute) {
       this.$router.push(this.$route.params.toRoute);
     }
+    this.handleCustomersLoading();
     this.handleCargoPackingsLoading();
   },
   methods: {
-    ...mapActions(['loadCargoPackings']),
+    ...mapActions(['loadCargoPackings', 'loadAllCustomers', 'loadSelectedCustomerCargoPackings']),
     async handleCargoPackingsLoading() {
       const curPage = this.currentPage;
       await this.loadCargoPackings({ curPage, sortDirection: 'DESC', columnToSort: 'due_to' });
+    },
+    async handleCustomerSelect(customerName) {
+      this.isLoading = true;
+      if (customerName.length) {
+        const { id: customerId } = this.getAllCustomers.find((c) => c.name === customerName);
+        await this.loadSelectedCustomerCargoPackings(customerId);
+      } else {
+        const curPage = this.currentPage;
+        await this.loadCargoPackings({ curPage, sortDirection: 'DESC', columnToSort: 'due_to' });
+      }
+      this.isLoading = false;
+    },
+    async handleCustomersLoading() {
+      await this.loadAllCustomers();
     },
     async paginate(curPage) {
       await this.loadCargoPackings({ curPage, sortDirection: this.sortDirection, columnToSort: this.columnToSort });
     },
     async handleCargoPackingFilter() {
-      // if (this.selectedCargoPackingFilter === 0) {
-      //   await this.loadDueCargoPackings(this.currentPage);
-      // } else if (this.selectedCargoPackingFilter === 1) {
-      //   await this.loadPaidCargoPackings(this.currentPage);
-      // } else if (this.selectedCargoPackingFilter === 2) {
-      //   await this.loadAnalysisCargoPackings(this.currentPage);
-      // } else {
-      //   await this.loadCargoPackings(this.currentPage);
-      // }
-      // this.cargoPackingsList = this.getCargoPackings;
+      /**
+       * Implement filters later
+       */
     },
     handleDetailsClick(cargoPackingId) {
       this.$router.push({
@@ -198,7 +222,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['getCargoPackings']),
+    ...mapGetters(['getCargoPackings', 'getAllCustomers']),
     rows() {
       return this.getCargoPackings.count;
     },

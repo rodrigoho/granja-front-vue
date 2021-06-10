@@ -23,7 +23,7 @@
             :eggsColor="'Vermelho'"
             isEditable
             class="bg-white"
-            :key="testeDate"
+            :key="testeDate2"
           />
         </b-row>
       </div>
@@ -52,6 +52,7 @@ export default {
       eggPriceNewDate: localStorage.getItem('selectedEggPriceDate'),
       customDateTimestamp: null,
       testeDate: format(new Date(), 'dd/MM/yyyy'),
+      testeDate2: 'a',
     };
   },
   mounted() {

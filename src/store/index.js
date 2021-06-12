@@ -578,7 +578,6 @@ export default new Vuex.Store({
         const res = await api.post(`eggs-prices-selected`, payload);
         commit('SET_EGG_PRICES_LIST', res.data);
       } catch (err) {
-        console.log('ue');
         throw err.response.data.error;
       }
     },
@@ -586,6 +585,15 @@ export default new Vuex.Store({
     createEggPrice: async (dispatch, payload) => {
       try {
         const res = await api.post('eggs-prices/create', payload);
+        return res.data;
+      } catch (err) {
+        throw err.response.data.error;
+      }
+    },
+
+    updateEggPrice: async (dispatch, payload) => {
+      try {
+        const res = await api.put('eggs-prices/update', payload);
         return res.data;
       } catch (err) {
         throw err.response.data.error;

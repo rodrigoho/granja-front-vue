@@ -132,7 +132,7 @@ export default {
     this.handleEggsListLoading();
   },
   methods: {
-    ...mapActions(['loadEggPricesList', 'createEggPrice']),
+    ...mapActions(['loadEggPricesList', 'createEggPrice', 'updateEggPrice']),
     async handleEggsListLoading() {
       try {
         if (this.selectedDate) await this.loadEggPricesList({ selected_date: this.selectedDate });
@@ -148,23 +148,33 @@ export default {
         this.eggs.map((e) => {
           const eggPrice = {
             ...e,
+            egg_price_id: e.egg_price_id,
+            egg_id: e.id,
             size: e.size,
             price_date: this.selectedDate,
             cur_egg_price: parseFloat(e.price),
           };
-          this.createEggPrice(eggPrice);
-          this.isEditing = false;
+          if (this.isEditing) {
+            this.updateEggPrice(eggPrice);
+          } else {
+            this.createEggPrice(eggPrice);
+          }
         });
       } else {
         this.eggsAlternate.map((e) => {
           const eggPrice = {
             ...e,
+            egg_price_id: e.egg_price_id,
+            egg_id: e.id,
             size: e.size,
             price_date: this.selectedDate,
             cur_egg_price: parseFloat(e.price),
           };
-          this.createEggPrice(eggPrice);
-          this.isEditing = false;
+          if (this.isEditing) {
+            this.updateEggPrice(eggPrice);
+          } else {
+            this.createEggPrice(eggPrice);
+          }
         });
       }
       this.isEditing = false;

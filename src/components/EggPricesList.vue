@@ -11,15 +11,12 @@
         <b-form v-if="eggs.length" class="flex" @submit="onSubmit" @reset="onReset">
           <b-row v-for="egg in eggs" :key="egg.id">
             <b-col class="bold">{{ egg.size }}</b-col>
-            <b-col v-show="!isEditing" class="align-price">R$ {{ egg.price }}</b-col>
-            <b-col v-show="isEditing"
-              ><b-input v-model="egg.price" type="number" class="input-size" step=".01"
-            /></b-col>
+            <b-col v-if="!isEditing" class="align-price">R$ {{ egg.price }}</b-col>
+            <b-col v-else><b-input v-model="egg.price" type="number" class="input-size" step=".01" /></b-col>
           </b-row>
           <b-row class="align-buttons" v-if="isEditing">
             <b-col class="buttons">
               <b-button type="reset" variant="danger" size="sm">Cancelar</b-button>
-
               <b-button type="submit" variant="primary" size="sm">Salvar</b-button>
             </b-col>
           </b-row>
@@ -28,9 +25,10 @@
         <b-form v-else class="flex" @submit="onSubmit" @reset="onReset">
           <b-row v-for="egg in eggsAlternate" :key="egg.id">
             <b-col class="bold">{{ egg.size }}</b-col>
-            <b-col><b-input v-model="egg.price" type="number" class="input-size" step=".01" /></b-col>
+            <b-col v-if="isCreating"><b-input v-model="egg.price" type="number" class="input-size" step=".01" /></b-col>
+            <b-col v-else class="align-price">R$ {{ egg.price }}</b-col>
           </b-row>
-          <b-row class="align-buttons">
+          <b-row class="align-buttons" v-if="isCreating">
             <b-col class="buttons">
               <b-button type="reset" variant="danger" size="sm">Cancelar</b-button>
               <b-button type="submit" variant="primary" size="sm">Salvar</b-button>
@@ -62,6 +60,7 @@ export default {
   data() {
     return {
       isEditing: false,
+      isCreating: true,
       eggsCargoWhite: [
         {
           egg_id: 1,
@@ -135,7 +134,9 @@ export default {
     ...mapActions(['loadEggPricesList', 'createEggPrice', 'updateEggPrice']),
     async handleEggsListLoading() {
       try {
-        if (this.selectedDate) await this.loadEggPricesList({ selected_date: this.selectedDate });
+        if (this.selectedDate) {
+          await this.loadEggPricesList({ selected_date: this.selectedDate });
+        }
       } catch (err) {
         console.log('oi', err);
       }
@@ -154,29 +155,35 @@ export default {
             price_date: this.selectedDate,
             cur_egg_price: parseFloat(e.price),
           };
-          if (this.isEditing) {
-            this.updateEggPrice(eggPrice);
-          } else {
-            this.createEggPrice(eggPrice);
-          }
+          this.updateEggPrice(eggPrice);
+        });
+        this.$bvToast.toast(`Taxa dos ovos ${this.eggsColor}s atualizada`, {
+          title: `Preços atualizados com sucesso`,
+          autoHideDelay: 5000,
+          variant: 'success',
         });
       } else {
         this.eggsAlternate.map((e) => {
           const eggPrice = {
             ...e,
-            egg_price_id: e.egg_price_id,
-            egg_id: e.id,
+            egg_id: e.egg_id,
             size: e.size,
             price_date: this.selectedDate,
             cur_egg_price: parseFloat(e.price),
           };
-          if (this.isEditing) {
-            this.updateEggPrice(eggPrice);
-          } else {
+          if (this.isCreating) {
             this.createEggPrice(eggPrice);
+          } else {
+            this.updateEggPrice(eggPrice);
           }
         });
+        this.$bvToast.toast(`Taxa dos ovos ${this.eggsColor}s atualizada`, {
+          title: `Preços salvos com sucesso`,
+          autoHideDelay: 5000,
+          variant: 'success',
+        });
       }
+      this.isCreating = false;
       this.isEditing = false;
     },
     onReset(evt) {
